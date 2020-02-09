@@ -1,0 +1,19 @@
+# IDE folders
+.vscode
+.idea
+
+# Output folders
+out
+build
+
+# Java
+.gradle
+
+# js/ts
+node_modules/
+npm-debug.log*
+.env*
+
+# Misc
+.DS_Store
+*.tgz
