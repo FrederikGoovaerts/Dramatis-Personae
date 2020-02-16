@@ -35,7 +35,7 @@ class GoogleOpenIdClient(private val authenticationConfig: AuthenticationConfig)
         return TokenSet(response.access_token, response.id_token, response.refresh_token, response.expires_in)
     }
 
-    fun refreshTokenSet(refreshToken: String): RefreshedTokenSet {
+    fun refreshTokenSet(refreshToken: String): TokenSet {
         val formData = mapOf(
                 "refresh_token" to refreshToken,
                 "client_id" to authenticationConfig.clientId,
@@ -43,7 +43,7 @@ class GoogleOpenIdClient(private val authenticationConfig: AuthenticationConfig)
                 "grant_type" to "refresh_token"
         )
         val response = gson.fromJson(postToTokenUrl(formData), RefreshResponse::class.java)
-        return RefreshedTokenSet(response.access_token, response.id_token, response.expires_in)
+        return TokenSet(response.access_token, response.id_token, refreshToken, response.expires_in)
     }
 
     private fun postToTokenUrl(formData: Map<String, String>): String {
