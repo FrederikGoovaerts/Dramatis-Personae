@@ -1,7 +1,6 @@
 package dev.frederik.dramatispersonae.model
 
 import org.springframework.data.repository.CrudRepository
-import org.springframework.security.authentication.AbstractAuthenticationToken
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
