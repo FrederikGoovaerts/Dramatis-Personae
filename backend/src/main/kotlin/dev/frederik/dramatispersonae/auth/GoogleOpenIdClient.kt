@@ -62,17 +62,14 @@ class GoogleOpenIdClient(private val authenticationConfig: AuthenticationConfig)
     }
 }
 
-class DiscoveryDocument(val issuer: String,
-                        val authorization_endpoint: String,
-                        val token_endpoint: String)
+data class DiscoveryDocument(val issuer: String, val authorization_endpoint: String, val token_endpoint: String)
 
-class CodeResponse(val access_token: String,
+data class CodeResponse(val access_token: String,
                    val id_token: String,
                    val expires_in: Int,
                    val token_type: String,
                    val refresh_token: String)
 
-class RefreshResponse(val access_token: String,
-                      val id_token: String,
-                      val expires_in: Int,
-                      val token_type: String)
+data class RefreshResponse(val access_token: String, val id_token: String, val expires_in: Int, val token_type: String)
+
+data class TokenSet(val accessToken: String, val idToken: String, val refreshToken: String, val expiresIn: Int)
