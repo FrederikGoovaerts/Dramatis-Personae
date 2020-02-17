@@ -6,8 +6,6 @@ import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
 
-class CreateCampaignDto(var name: String)
-
 @Entity
 class Campaign(var name: String,
                var inviteCode: UUID = UUID.randomUUID(),

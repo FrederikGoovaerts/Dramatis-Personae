@@ -2,8 +2,9 @@ package dev.frederik.dramatispersonae
 
 import dev.frederik.dramatispersonae.model.Campaign
 import dev.frederik.dramatispersonae.model.CampaignRepository
-import dev.frederik.dramatispersonae.model.CreateCampaignDto
 import org.springframework.web.bind.annotation.*
+
+class CreateCampaignDto(var name: String)
 
 @RestController
 @RequestMapping("/api/campaign")
