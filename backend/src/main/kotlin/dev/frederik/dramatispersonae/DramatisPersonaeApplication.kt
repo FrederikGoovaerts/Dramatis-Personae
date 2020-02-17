@@ -17,9 +17,7 @@ fun main(args: Array<String>) {
 
 @Component
 @Profile("dev-local")
-class LocalDevFixtures (
-	private val campaignRepository: CampaignRepository
-): CommandLineRunner {
+class LocalDevFixtures (private val campaignRepository: CampaignRepository): CommandLineRunner {
 
 	override fun run(vararg args: String?) {
 		val campaign1 = Campaign("Test camp1")
