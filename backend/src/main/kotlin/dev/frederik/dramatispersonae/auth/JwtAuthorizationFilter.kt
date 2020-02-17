@@ -58,3 +58,25 @@ class JwtAuthorizationFilter(authenticationManager: AuthenticationManager,
         chain.doFilter(req, res)
     }
 }
+
+class DummyJwtAuthorizationFilter(
+        authenticationManager: AuthenticationManager,
+        private val userRepository: UserRepository
+) : BasicAuthenticationFilter(authenticationManager) {
+
+    private val DUMMY_GOOGLE_ID = "1"
+    private val DUMMY_NAME = "Name"
+    private val DUMMY_EMAIL = "name@example.com"
+
+    override fun doFilterInternal(req: HttpServletRequest, res: HttpServletResponse, chain: FilterChain) {
+        var user: User? = userRepository.findByGoogleId(DUMMY_GOOGLE_ID)
+        if (user == null) {
+            val newUser = userRepository.save(User(DUMMY_GOOGLE_ID, DUMMY_NAME, DUMMY_EMAIL))
+            user = newUser
+        }
+        val authentication = GoogleAuthentication("", user)
+        authentication.isAuthenticated = true
+        SecurityContextHolder.getContext().authentication = authentication
+        chain.doFilter(req, res)
+    }
+}
