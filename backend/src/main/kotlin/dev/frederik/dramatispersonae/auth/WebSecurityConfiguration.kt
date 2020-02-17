@@ -18,21 +18,19 @@ class WebSecurity(private val userRepository: UserRepository,
             .antMatchers(HttpMethod.OPTIONS).permitAll()
             .antMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
             .anyRequest().authenticated()
-            .and()
-            .addFilter(JwtAuthorizationFilter(authenticationManager(), authenticationConfig, userRepository))
+            .and().addFilter(JwtAuthorizationFilter(authenticationManager(), authenticationConfig, userRepository))
     }
 
 }
 
 @EnableWebSecurity
 @Profile("dev-light")
-class WebSecurityDevLocal(private val userRepository: UserRepository,
-                  private val authenticationConfig: AuthenticationConfig) : WebSecurityConfigurerAdapter() {
+class DummyWebSecurity(private val userRepository: UserRepository,
+                       private val authenticationConfig: AuthenticationConfig) : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity) {
-        http.authorizeRequests().anyRequest().permitAll()
-                .and()
-                .addFilter(JwtAuthorizationFilter(authenticationManager(), authenticationConfig, userRepository))
+        http.cors().and().csrf().disable().authorizeRequests().anyRequest().permitAll()
+                .and().addFilter(DummyJwtAuthorizationFilter(authenticationManager(), userRepository))
     }
 
 }
