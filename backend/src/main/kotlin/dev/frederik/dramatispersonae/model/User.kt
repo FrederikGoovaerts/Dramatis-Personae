@@ -9,10 +9,10 @@ import javax.validation.constraints.NotNull
 
 
 @Entity
-class User(@NotNull var googleId: String,
-           @NotEmpty var fullName: String,
-           @NotEmpty var email: String,
-           @Id @GeneratedValue var id: Long? = null)
+data class User(var googleId: String,
+                var fullName: String,
+                var email: String,
+                @Id @GeneratedValue var id: Long? = null)
 
 interface UserRepository: CrudRepository<User, Long> {
     fun findByGoogleId(googleId: String): User?
