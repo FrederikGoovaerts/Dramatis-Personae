@@ -15,8 +15,11 @@ fun main(args: Array<String>) {
 	runApplication<DramatisPersonaeApplication>(*args)
 }
 
+/**
+ * Initializer for dev mode fixtures in in-memory database.
+ */
 @Component
-@Profile("dev-light")
+@Profile("dev")
 class LocalDevFixtures (private val campaignRepository: CampaignRepository): CommandLineRunner {
 
 	override fun run(vararg args: String?) {

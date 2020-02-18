@@ -59,6 +59,9 @@ class JwtAuthorizationFilter(authenticationManager: AuthenticationManager,
     }
 }
 
+/**
+ * Dummy authorization filter for dev mode that regardless of request contents acts as if a dummy user is authenticated.
+ */
 class DummyJwtAuthorizationFilter(
         authenticationManager: AuthenticationManager,
         private val userRepository: UserRepository
