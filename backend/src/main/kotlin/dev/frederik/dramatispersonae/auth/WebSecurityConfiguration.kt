@@ -9,12 +9,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 
 @EnableWebSecurity
-@Profile("!dev-light")
+@Profile("!dev")
 class WebSecurity(private val userRepository: UserRepository,
                   private val authenticationConfig: AuthenticationConfig) : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity) {
-        http.cors().and().csrf().disable().authorizeRequests()
+        http.cors().and().authorizeRequests()
             .antMatchers(HttpMethod.OPTIONS).permitAll()
             .antMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
             .anyRequest().authenticated()
@@ -23,8 +23,12 @@ class WebSecurity(private val userRepository: UserRepository,
 
 }
 
+/**
+ * In case of dev mode, no authentication is required for calls and a fake authorization filter is added to act like a
+ * dummy user is authenticated.
+ */
 @EnableWebSecurity
-@Profile("dev-light")
+@Profile("dev")
 class DummyWebSecurity(private val userRepository: UserRepository,
                        private val authenticationConfig: AuthenticationConfig) : WebSecurityConfigurerAdapter() {
 
