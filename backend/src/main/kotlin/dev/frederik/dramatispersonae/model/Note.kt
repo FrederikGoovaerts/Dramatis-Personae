@@ -1,15 +1,13 @@
 package dev.frederik.dramatispersonae.model
 
 import org.springframework.data.repository.CrudRepository
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
-import javax.persistence.ManyToOne
+import java.util.*
+import javax.persistence.*
 
 @Entity
 data class Note(var contents: String,
-                var author: User,
+                @OneToOne var author: User,
                 @ManyToOne var character: Character,
-                @Id @GeneratedValue var id: Long? = null)
+                @Id @GeneratedValue var id: UUID? = null)
 
-interface NoteRepository: CrudRepository<Note, Long>
+interface NoteRepository: CrudRepository<Note, UUID>
