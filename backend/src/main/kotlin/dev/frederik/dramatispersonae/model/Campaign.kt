@@ -11,6 +11,8 @@ data class Campaign(var name: String,
                     @OneToMany(mappedBy = "campaign", cascade = [CascadeType.REMOVE]) var characters: MutableList<Character>,
                     var inviteCode: UUID = UUID.randomUUID(),
                     @Id @GeneratedValue var id: UUID? = null) {
+    fun isAccessibleBy(user: User) = members.contains(user)
+    fun isOwnedBy(user: User) = owner == user
 }
 
 interface CampaignRepository: CrudRepository<Campaign, UUID>
