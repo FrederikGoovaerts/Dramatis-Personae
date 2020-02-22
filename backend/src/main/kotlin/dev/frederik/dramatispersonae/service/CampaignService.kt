@@ -20,11 +20,11 @@ data class CampaignMemberView(val name: String, val owner: Boolean)
 @RequestMapping("/api/campaign")
 class CampaignController(private val service: CampaignService) {
 
-    @GetMapping("/")
+    @GetMapping
     fun getCampaigns(auth: GoogleAuthentication) =
             service.getCampaignsForUser(auth.principal).map { CampaignView(it.name, it.id!!, it.isOwnedBy(auth.principal)) }
 
-    @PostMapping("/")
+    @PostMapping
     fun postCampaign(auth: GoogleAuthentication, @RequestBody campaign: CreateCampaignDto): ResponseEntity<Unit> {
         this.service.createCampaign(auth.principal, campaign.name)
         return ResponseEntity(HttpStatus.CREATED)
@@ -48,10 +48,10 @@ class CampaignController(private val service: CampaignService) {
     fun getCampaignCharacterList(auth: GoogleAuthentication,
                                  @PathVariable id: UUID): ResponseEntity<List<CharacterListView>> {
         val list = this.service.getCampaignCharacters(auth.principal, id)
-        if (list === null) {
-            return ResponseEntity(HttpStatus.FORBIDDEN)
+        return if (list === null) {
+            ResponseEntity(HttpStatus.FORBIDDEN)
         } else {
-            return ResponseEntity(list.map { CharacterListView(it.name, it.id!!) }, HttpStatus.OK)
+            ResponseEntity(list.map { CharacterListView(it.name, it.id!!) }, HttpStatus.OK)
         }
     }
 
@@ -67,10 +67,10 @@ class CampaignController(private val service: CampaignService) {
     fun getCampaignMembers(auth: GoogleAuthentication,
                            @PathVariable id: UUID): ResponseEntity<List<CampaignMemberView>> {
         val map = this.service.getCampaignMembers(auth.principal, id)
-        if (map === null) {
-            return ResponseEntity(HttpStatus.FORBIDDEN)
+        return if (map === null) {
+            ResponseEntity(HttpStatus.FORBIDDEN)
         } else {
-            return ResponseEntity(map.map { CampaignMemberView(it.key.fullName, it.value) }.toList(), HttpStatus.OK)
+            ResponseEntity(map.map { CampaignMemberView(it.key.fullName, it.value) }.toList(), HttpStatus.OK)
         }
     }
 

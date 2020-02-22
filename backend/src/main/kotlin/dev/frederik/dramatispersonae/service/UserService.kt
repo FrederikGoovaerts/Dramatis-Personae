@@ -10,7 +10,7 @@ data class UserView(val name: String, val email: String)
 @RequestMapping("/api/user")
 class UserController(val userRepository: UserRepository) {
 
-    @GetMapping("/")
+    @GetMapping
     fun getSelf(auth: GoogleAuthentication) = UserView(auth.principal.fullName, auth.principal.email)
 
 }
