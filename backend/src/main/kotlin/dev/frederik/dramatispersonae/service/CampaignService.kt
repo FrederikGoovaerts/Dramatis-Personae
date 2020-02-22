@@ -55,6 +55,14 @@ class CampaignController(private val service: CampaignService) {
         }
     }
 
+    @PostMapping("/{id}/character")
+    fun createCampaignCharacter(auth: GoogleAuthentication,
+                                @PathVariable id: UUID,
+                                @RequestBody dto: CreateCharacterDto): ResponseEntity<Unit> {
+        val success = this.service.createCharacter(auth.principal, id, dto.name, dto.description)
+        return ResponseEntity(if (success) HttpStatus.CREATED else HttpStatus.FORBIDDEN)
+    }
+
     @GetMapping("/{id}/members")
     fun getCampaignMembers(auth: GoogleAuthentication,
                            @PathVariable id: UUID): ResponseEntity<List<CampaignMemberView>> {
@@ -105,6 +113,18 @@ class CampaignService(private val repository: CampaignRepository) {
         }
         val campaign = campaignQuery.get()
         return campaign.characters.filter { campaign.isOwnedBy(user) || it.isVisible }
+    }
+
+    fun createCharacter(user: User, id: UUID, name: String, description: String): Boolean {
+        val campaignQuery = repository.findById(id)
+        if (!campaignQuery.isPresent || !campaignQuery.get().isOwnedBy(user)) {
+            return false
+        }
+        val campaign = campaignQuery.get()
+        val newCharacter = Character(name, description, false, campaign, mutableListOf())
+        campaign.characters.add(newCharacter)
+        this.repository.save(campaign)
+        return true
     }
 
     fun getCampaignMembers(user: User, id: UUID): Map<User, Boolean>? {
