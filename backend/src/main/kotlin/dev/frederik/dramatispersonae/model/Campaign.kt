@@ -8,7 +8,7 @@ import javax.persistence.*
 data class Campaign(var name: String,
                     @ManyToOne var owner: User,
                     @ManyToMany var members: MutableList<User>,
-                    @OneToMany(mappedBy = "campaign", cascade = [CascadeType.REMOVE]) var characters: MutableList<Character>,
+                    @OneToMany(mappedBy = "campaign", cascade = [CascadeType.ALL]) var characters: MutableList<Character>,
                     var inviteCode: UUID = UUID.randomUUID(),
                     @Id @GeneratedValue var id: UUID? = null) {
     fun isAccessibleBy(user: User) = members.contains(user)

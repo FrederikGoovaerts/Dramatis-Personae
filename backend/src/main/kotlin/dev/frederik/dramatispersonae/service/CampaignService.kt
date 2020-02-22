@@ -3,6 +3,7 @@ package dev.frederik.dramatispersonae.service
 import dev.frederik.dramatispersonae.auth.GoogleAuthentication
 import dev.frederik.dramatispersonae.model.Campaign
 import dev.frederik.dramatispersonae.model.CampaignRepository
+import dev.frederik.dramatispersonae.model.Character
 import dev.frederik.dramatispersonae.model.User
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -42,6 +43,17 @@ class CampaignController(private val service: CampaignService) {
         return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
     }
 
+    @GetMapping("/{id}/character")
+    fun getCampaignCharacterList(auth: GoogleAuthentication,
+                                 @PathVariable id: UUID): ResponseEntity<List<CharacterListView>> {
+        val list = this.service.getCampaignCharacters(auth.principal, id)
+        if (list === null) {
+            return ResponseEntity(HttpStatus.FORBIDDEN)
+        } else {
+            return ResponseEntity(list.map { CharacterListView(it.name, it.id!!) }, HttpStatus.OK)
+        }
+    }
+
 }
 
 @Component
@@ -72,5 +84,14 @@ class CampaignService(private val repository: CampaignRepository) {
         }
         repository.delete(campaignQuery.get())
         return true
+    }
+
+    fun getCampaignCharacters(user: User, id: UUID): List<Character>? {
+        val campaignQuery = repository.findById(id)
+        if (!campaignQuery.isPresent || !(campaignQuery.get().members.contains(user))) {
+            return null
+        }
+        val campaign = campaignQuery.get()
+        return campaign.characters.filter { campaign.isOwnedBy(user) || it.isVisible }
     }
 }
