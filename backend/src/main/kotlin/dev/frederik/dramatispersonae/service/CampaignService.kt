@@ -14,6 +14,7 @@ import java.util.*
 data class CreateCampaignDto(val name: String)
 
 data class CampaignView(val name: String, val id: UUID, val owner: Boolean)
+data class CampaignMemberView(val name: String, val owner: Boolean)
 
 @RestController
 @RequestMapping("/api/campaign")
@@ -51,6 +52,17 @@ class CampaignController(private val service: CampaignService) {
             return ResponseEntity(HttpStatus.FORBIDDEN)
         } else {
             return ResponseEntity(list.map { CharacterListView(it.name, it.id!!) }, HttpStatus.OK)
+        }
+    }
+
+    @GetMapping("/{id}/members")
+    fun getCampaignMembers(auth: GoogleAuthentication,
+                           @PathVariable id: UUID): ResponseEntity<List<CampaignMemberView>> {
+        val map = this.service.getCampaignMembers(auth.principal, id)
+        if (map === null) {
+            return ResponseEntity(HttpStatus.FORBIDDEN)
+        } else {
+            return ResponseEntity(map.map { CampaignMemberView(it.key.fullName, it.value) }.toList(), HttpStatus.OK)
         }
     }
 
@@ -93,5 +105,14 @@ class CampaignService(private val repository: CampaignRepository) {
         }
         val campaign = campaignQuery.get()
         return campaign.characters.filter { campaign.isOwnedBy(user) || it.isVisible }
+    }
+
+    fun getCampaignMembers(user: User, id: UUID): Map<User, Boolean>? {
+        val campaignQuery = repository.findById(id)
+        if (!campaignQuery.isPresent || !(campaignQuery.get().members.contains(user))) {
+            return null
+        }
+        val campaign = campaignQuery.get()
+        return campaign.members.map { it to campaign.isOwnedBy(it) }.toMap()
     }
 }
