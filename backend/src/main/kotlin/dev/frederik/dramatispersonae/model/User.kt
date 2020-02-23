@@ -7,7 +7,7 @@ import javax.persistence.GeneratedValue
 import javax.persistence.Id
 
 
-@Entity
+@Entity(name = "_user")
 data class User(var googleId: String,
                 var fullName: String,
                 var email: String,
