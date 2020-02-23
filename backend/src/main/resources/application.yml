@@ -17,3 +17,10 @@ spring:
     generate-ddl: true
   flyway:
     enabled: true
+
+---
+
+spring:
+  profiles: dev
+  flyway:
+    enabled: false
