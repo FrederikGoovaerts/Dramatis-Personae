@@ -4,7 +4,7 @@ import org.springframework.data.repository.CrudRepository
 import java.util.*
 import javax.persistence.*
 
-@Entity
+@Entity(name = "_character")
 data class Character(var name: String,
                      var description: String,
                      var isVisible: Boolean,
