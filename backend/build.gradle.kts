@@ -55,6 +55,10 @@ tasks.withType<KotlinCompile> {
 	}
 }
 
+tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
+   this.archiveFileName.set("${archiveBaseName.get()}.${archiveExtension.get()}")
+}
+
 allOpen {
 	annotation("javax.persistence.Entity")
 	annotation("javax.persistence.Embeddable")
