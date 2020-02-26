@@ -1,11 +1,8 @@
-import { stringify, ParsedUrlQueryInput } from "querystring";
-import { format } from "url";
-import { api } from "../config/constants";
+import { stringify, ParsedUrlQueryInput } from 'querystring';
+import { format } from 'url';
+import { api } from '../config/constants';
 
-export function buildPath(
-    resource: string,
-    parameters: ParsedUrlQueryInput = {}
-): string {
+export function buildPath(resource: string, parameters: ParsedUrlQueryInput = {}): string {
     const currentRequest = {
         host: api.API_HOST,
         pathname: resource,

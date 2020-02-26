@@ -10,7 +10,7 @@ export interface CharacterState {
 
 const characterReducers = combineReducers<CharacterState>({
     loading: createReducer(false, characterActions.names.setCharacterLoading, applicationActions.names.clearStore),
-    character: createReducer(null, characterActions.names.setCharacter, applicationActions.names.clearStore),
+    character: createReducer(null, characterActions.names.setCharacter, applicationActions.names.clearStore)
 });
 
 export default characterReducers;

@@ -60,12 +60,7 @@ class App extends React.Component<TMapProps & TActionProps & RouteComponentProps
 
 const mapStateToProps = (state: RootState): TMapProps => ({
     authorized: state.application.authorized,
-    initialized: state.application.initialized,
+    initialized: state.application.initialized
 });
 
-export default withRouter(
-    connect(
-        mapStateToProps,
-        { initialize: applicationActions.actions.initialize },
-    )(App),
-);
+export default withRouter(connect(mapStateToProps, { initialize: applicationActions.actions.initialize })(App));

@@ -43,14 +43,11 @@ class NewCampaignFormRaw extends React.Component<AllProps, State> {
             <div className={this.props.className}>
                 <TextField label="Name" value={this.state.name} onChange={this.handleChange} margin="dense" />
                 <Button variant="contained" color="primary" onClick={this.handleSubmit}>
-          Create
+                    Create
                 </Button>
             </div>
         );
     }
 }
 
-export const NewCampaignForm = connect(
-    null,
-    { newCampaign: campaignActions.actions.newCampaign },
-)(NewCampaignFormRaw);
+export const NewCampaignForm = connect(null, { newCampaign: campaignActions.actions.newCampaign })(NewCampaignFormRaw);

@@ -24,7 +24,7 @@ import {
     CharacterDeletePayload,
     NoteUpdatePayload,
     TabContent,
-    VisibilityUpdatePayload,
+    VisibilityUpdatePayload
 } from '../../types';
 import { SpacedDivider } from '../atoms/SpacedDivider';
 import { CampaignCharacterBreadcrumb } from '../molecules/CampaignCharacterBreadcrumbs';
@@ -67,7 +67,7 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
             note: undefined,
             tab: 0,
             deleteCheck: false,
-            deleted: false,
+            deleted: false
         };
     }
 
@@ -179,7 +179,12 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
                         control={<Checkbox checked={this.state.deleteCheck} onChange={this.handleCheckDelete} />}
                         label="I want to delete this character"
                     />
-                    <Button variant="contained" color="secondary" disabled={!this.state.deleteCheck} onClick={this.onDelete}>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        disabled={!this.state.deleteCheck}
+                        onClick={this.onDelete}
+                    >
                         Delete permanently
                     </Button>
                 </div>
@@ -190,19 +195,19 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
     tabs: TabContent[] = [
         {
             name: 'Character information',
-            component: this.renderDescription,
+            component: this.renderDescription
         },
         {
             name: 'Personal notes',
-            component: this.renderNotes,
-        },
+            component: this.renderNotes
+        }
     ];
 
     ownerTabs: TabContent[] = [
         {
             name: 'Manage Character',
-            component: this.renderManageCharacter,
-        },
+            component: this.renderManageCharacter
+        }
     ];
 
     getTabs = (): TabContent[] =>
@@ -262,16 +267,13 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
 const mapStateToProps = (state: RootState) => ({
     character: state.character.character,
     campaign: state.campaign.campaign,
-    loading: state.character.loading && state.campaign.loading,
+    loading: state.character.loading && state.campaign.loading
 });
 
-export const CharacterDetailScreen = connect(
-    mapStateToProps,
-    {
-        fetchCharacter: characterActions.actions.fetchCharacter,
-        setNote: characterActions.actions.setNote,
-        fetchCampaign: campaignActions.actions.fetchCampaign,
-        setVisible: characterActions.actions.setVisible,
-        deleteCharacter: characterActions.actions.deleteCharacter,
-    },
-)(CharacterDetailRaw);
+export const CharacterDetailScreen = connect(mapStateToProps, {
+    fetchCharacter: characterActions.actions.fetchCharacter,
+    setNote: characterActions.actions.setNote,
+    fetchCampaign: campaignActions.actions.fetchCampaign,
+    setVisible: characterActions.actions.setVisible,
+    deleteCharacter: characterActions.actions.deleteCharacter
+})(CharacterDetailRaw);

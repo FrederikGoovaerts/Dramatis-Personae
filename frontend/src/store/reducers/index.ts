@@ -12,7 +12,7 @@ export interface RootState {
 const rootReducer = combineReducers<RootState>({
     application,
     campaign,
-    character,
+    character
 });
 
 export default rootReducer;

@@ -42,7 +42,7 @@ class NewCharacterFormRaw extends React.Component<AllProps, State> {
         this.props.newCharacter({
             name: this.state.name,
             description: this.state.description,
-            campaignId: this.props.campaignId,
+            campaignId: this.props.campaignId
         });
         this.setState({ name: '', description: '' });
         if (this.props.onSubmitComplete) {
@@ -63,14 +63,13 @@ class NewCharacterFormRaw extends React.Component<AllProps, State> {
                     margin="normal"
                 />
                 <Button variant="contained" color="primary" onClick={this.handleSubmit}>
-          Create
+                    Create
                 </Button>
             </div>
         );
     }
 }
 
-export const NewCharacterForm = connect(
-    null,
-    { newCharacter: characterActions.actions.newCharacter },
-)(NewCharacterFormRaw);
+export const NewCharacterForm = connect(null, { newCharacter: characterActions.actions.newCharacter })(
+    NewCharacterFormRaw
+);

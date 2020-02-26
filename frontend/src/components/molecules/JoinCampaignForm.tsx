@@ -44,14 +44,13 @@ class JoinCampaignFormRaw extends React.Component<AllProps, State> {
             <div className={this.props.className}>
                 <TextField label="Invite code" value={this.state.input} onChange={this.handleChange} margin="dense" />
                 <Button variant="contained" onClick={this.handleSubmit}>
-          Join
+                    Join
                 </Button>
             </div>
         );
     }
 }
 
-export const JoinCampaignForm = connect(
-    null,
-    { joinCampaign: campaignActions.actions.joinCampaign },
-)(JoinCampaignFormRaw);
+export const JoinCampaignForm = connect(null, { joinCampaign: campaignActions.actions.joinCampaign })(
+    JoinCampaignFormRaw
+);

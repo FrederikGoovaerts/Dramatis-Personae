@@ -10,7 +10,7 @@ export enum names {
     setCampaign = 'SET_CAMPAIGN',
     newCampaign = 'NEW_CAMPAIGN',
     joinCampaign = 'JOIN_CAMPAIGN',
-    deleteCampaign = 'DELETE_CAMPAIGN',
+    deleteCampaign = 'DELETE_CAMPAIGN'
 }
 
 export const actions = {
@@ -22,7 +22,7 @@ export const actions = {
     setCampaign: (p: CampaignDetail) => createAction(names.setCampaign, p),
     newCampaign: (p: string) => createAction(names.newCampaign, p),
     joinCampaign: (p: string) => createAction(names.joinCampaign, p),
-    deleteCampaign: (p: number) => createAction(names.deleteCampaign, p),
+    deleteCampaign: (p: number) => createAction(names.deleteCampaign, p)
 };
 
 export type allTypes = ActionUnion<typeof actions>;

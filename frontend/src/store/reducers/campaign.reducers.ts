@@ -13,8 +13,12 @@ export interface CampaignState {
 const campaignReducers = combineReducers<CampaignState>({
     loading: createReducer(false, campaignActions.names.setCampaignsLoading, applicationActions.names.clearStore),
     campaigns: createReducer([], campaignActions.names.setCampaigns, applicationActions.names.clearStore),
-    campaignLoading: createReducer(false, campaignActions.names.setCampaignLoading, applicationActions.names.clearStore),
-    campaign: createReducer(null, campaignActions.names.setCampaign, applicationActions.names.clearStore),
+    campaignLoading: createReducer(
+        false,
+        campaignActions.names.setCampaignLoading,
+        applicationActions.names.clearStore
+    ),
+    campaign: createReducer(null, campaignActions.names.setCampaign, applicationActions.names.clearStore)
 });
 
 export default campaignReducers;

@@ -26,19 +26,20 @@ const HeaderRaw = (props: Props) => (
                         <PersonaeNoCircleIcon className={'Header__icon'} width={2} height={2} color={'#ffffff'} />
                     </Link>
                     <Link to={routes.root} className="unstyled">
-                        <Typography variant="h6" color="inherit">Dramatis Personae</Typography>
+                        <Typography variant="h6" color="inherit">
+                            Dramatis Personae
+                        </Typography>
                     </Link>
                 </div>
 
                 <div className="Header__side">
-                    <Button variant="contained" color="primary" onClick={props.logout}>Logout</Button>
+                    <Button variant="contained" color="primary" onClick={props.logout}>
+                        Logout
+                    </Button>
                 </div>
             </div>
         </Toolbar>
     </AppBar>
 );
 
-export const Header = connect(
-    null,
-    { logout: applicationActions.actions.logout },
-)(HeaderRaw);
+export const Header = connect(null, { logout: applicationActions.actions.logout })(HeaderRaw);

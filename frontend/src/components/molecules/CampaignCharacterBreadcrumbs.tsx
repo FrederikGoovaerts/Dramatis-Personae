@@ -22,7 +22,10 @@ export const CampaignCharacterBreadcrumb = (props: Props) => (
         </Link>
         {!!props.character && <Typography className="Breadcrumbs__separator">&gt;</Typography>}
         {!!props.character && (
-            <Link to={`${routes.campaign}${props.campaign.id}${routes.character}${props.character.id}`} className="unstyled">
+            <Link
+                to={`${routes.campaign}${props.campaign.id}${routes.character}${props.character.id}`}
+                className="unstyled"
+            >
                 <Typography>{props.character.name}</Typography>
             </Link>
         )}

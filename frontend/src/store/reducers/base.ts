@@ -1,10 +1,11 @@
 export const createReducer = <T>(initialState: T, setType: string, clearType?: string) => (
     state: T = initialState,
-    action: { type: string; payload: T },
+    action: { type: string; payload: T }
 ): T => {
     if (action.type === setType) {
         return action.payload;
-    }  if (clearType !== undefined && action.type === clearType) {
+    }
+    if (clearType !== undefined && action.type === clearType) {
         return initialState;
     }
     return state;

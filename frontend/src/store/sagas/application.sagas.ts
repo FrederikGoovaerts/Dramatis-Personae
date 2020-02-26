@@ -5,7 +5,7 @@ import { put, takeEvery } from 'redux-saga/effects';
 import { removeAxiosAuthToken, setAxiosAuthToken } from '../../config/axios';
 import { oauth, storage } from '../../config/constants';
 import { applicationActions } from '../actions';
-import {exchangeCode, refresh} from "../../api/authentication.api";
+import { exchangeCode, refresh } from '../../api/authentication.api';
 
 interface FormAttribute {
     name: string;
@@ -23,14 +23,14 @@ function redirectToOauth() {
     form.setAttribute('method', 'GET');
     form.setAttribute('action', 'https://accounts.google.com/o/oauth2/v2/auth');
     const params: FormAttribute[] = [
-        {name: 'client_id', value: oauth.CLIENT_ID},
-        {name: 'redirect_uri', value: oauth.REDIRECT_URI},
-        {name: 'response_type', value: 'code'},
-        {name: 'access_type', value: 'offline'},
-        {name: 'prompt', value: 'consent'},
-        {name: 'scope', value: 'profile email openid'}
+        { name: 'client_id', value: oauth.CLIENT_ID },
+        { name: 'redirect_uri', value: oauth.REDIRECT_URI },
+        { name: 'response_type', value: 'code' },
+        { name: 'access_type', value: 'offline' },
+        { name: 'prompt', value: 'consent' },
+        { name: 'scope', value: 'profile email openid' }
     ];
-    for (let p of params) {
+    for (const p of params) {
         const input = document.createElement('input');
         input.setAttribute('type', 'hidden');
         input.setAttribute('name', p.name);
