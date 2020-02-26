@@ -1,0 +1,20 @@
+.CampaignList__content {
+  margin-top: 2em;
+  display: flex;
+  flex-direction: column;
+}
+
+.CampaignList__tabs {
+  margin-top: 2em;
+}
+
+.CampaignList__formContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  button {
+    margin-left: 1em;
+  }
+}
