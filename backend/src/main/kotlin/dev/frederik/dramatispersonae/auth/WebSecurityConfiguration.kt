@@ -2,11 +2,21 @@ package dev.frederik.dramatispersonae.auth
 
 import dev.frederik.dramatispersonae.AuthenticationConfig
 import dev.frederik.dramatispersonae.model.UserRepository
+import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.web.servlet.config.annotation.CorsRegistry
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
+
+@Configuration
+class WebMvcConfig : WebMvcConfigurer {
+    override fun addCorsMappings(registry: CorsRegistry) {
+        registry.addMapping("/**").allowedMethods("GET", "POST", "DELETE")
+    }
+}
 
 @EnableWebSecurity
 @Profile("!dev")
