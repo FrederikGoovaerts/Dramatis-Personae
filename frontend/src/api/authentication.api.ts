@@ -1,6 +1,6 @@
 import { call } from 'redux-saga/effects';
 import { axiosInstance } from '../config/axios';
-import {api, oauth} from '../config/constants';
+import { api, oauth } from '../config/constants';
 import { buildPath } from './base.api';
 
 export function* exchangeCode(code: string) {

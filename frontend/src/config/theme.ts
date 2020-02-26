@@ -1,5 +1,5 @@
-import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
-import { SimplePaletteColorOptions } from "@material-ui/core/styles/createPalette";
+import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
+import { SimplePaletteColorOptions } from '@material-ui/core/styles/createPalette';
 import {
     primaryColor,
     primaryDarkColor,
@@ -7,20 +7,20 @@ import {
     secondaryColor,
     secondaryDarkColor,
     secondaryLightColor
-} from "../assets/Colors";
+} from '../assets/Colors';
 
 const primary: SimplePaletteColorOptions = {
     light: primaryLightColor,
     main: primaryColor,
     dark: primaryDarkColor,
-    contrastText: "#ffffff"
+    contrastText: '#ffffff'
 };
 
 const secondary: SimplePaletteColorOptions = {
     light: secondaryLightColor,
     main: secondaryColor,
     dark: secondaryDarkColor,
-    contrastText: "#ffffff"
+    contrastText: '#ffffff'
 };
 
 export const theme = createMuiTheme({

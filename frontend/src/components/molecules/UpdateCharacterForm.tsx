@@ -44,8 +44,8 @@ class UpdateCharacterFormRaw extends React.Component<AllProps, State> {
             characterId: this.props.characterId,
             update: {
                 name: this.state.name || this.props.initialName,
-                description: this.state.description,
-            },
+                description: this.state.description
+            }
         });
     };
 
@@ -65,14 +65,13 @@ class UpdateCharacterFormRaw extends React.Component<AllProps, State> {
                     margin="normal"
                 />
                 <Button variant="contained" color="primary" onClick={this.handleSubmit} disabled={!this.isDirty()}>
-          Update
+                    Update
                 </Button>
             </div>
         );
     }
 }
 
-export const UpdateCharacterForm = connect(
-    null,
-    { updateCharacter: characterActions.actions.updateCharacter },
-)(UpdateCharacterFormRaw);
+export const UpdateCharacterForm = connect(null, { updateCharacter: characterActions.actions.updateCharacter })(
+    UpdateCharacterFormRaw
+);

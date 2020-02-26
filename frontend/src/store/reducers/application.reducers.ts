@@ -9,7 +9,7 @@ export interface ApplicationState {
 
 const applicationReducers = combineReducers<ApplicationState>({
     authorized: createReducer(false, applicationActions.names.setAuthorized),
-    initialized: createReducer(false, applicationActions.names.setInitialized),
+    initialized: createReducer(false, applicationActions.names.setInitialized)
 });
 
 export default applicationReducers;

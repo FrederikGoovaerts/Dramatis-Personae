@@ -1,10 +1,10 @@
 import axios, { AxiosError } from 'axios';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
-import {api, storage} from "./constants";
-import {buildPath} from "../api/base.api";
+import { api, storage } from './constants';
+import { buildPath } from '../api/base.api';
 
-export let axiosInstance = axios.create({
-    timeout: 10000,
+export const axiosInstance = axios.create({
+    timeout: 10000
 });
 
 async function manualRefresh(refreshToken: string) {
@@ -20,18 +20,22 @@ export const removeAxiosAuthToken = () => {
     delete axiosInstance.defaults.headers.common.Authorization;
 };
 
-createAuthRefreshInterceptor(axiosInstance, async (failedRequest: AxiosError) => {
-    removeAxiosAuthToken();
-    const refreshToken = localStorage.getItem(storage.refreshToken);
-    if (refreshToken) {
-        const tokens = (await manualRefresh(refreshToken)).data;
-        if (tokens.idToken) {
-            localStorage.setItem(storage.idToken, tokens.idToken);
-            setAxiosAuthToken(tokens.idToken);
-            if (failedRequest.response) {
-                failedRequest.response.config.headers['Authorization'] = 'Bearer ' + tokens.idToken;
+createAuthRefreshInterceptor(
+    axiosInstance,
+    async (failedRequest: AxiosError) => {
+        removeAxiosAuthToken();
+        const refreshToken = localStorage.getItem(storage.refreshToken);
+        if (refreshToken) {
+            const tokens = (await manualRefresh(refreshToken)).data;
+            if (tokens.idToken) {
+                localStorage.setItem(storage.idToken, tokens.idToken);
+                setAxiosAuthToken(tokens.idToken);
+                if (failedRequest.response) {
+                    failedRequest.response.config.headers['Authorization'] = 'Bearer ' + tokens.idToken;
+                }
             }
         }
-    }
-    return Promise.resolve();
-}, {statusCodes: [ 401, 403 ]});
+        return Promise.resolve();
+    },
+    { statusCodes: [401, 403] }
+);

@@ -30,7 +30,7 @@ export function* setNote(payload: NoteUpdatePayload) {
         axiosInstance.post,
         url,
         { note: payload.note },
-        { headers: { 'Content-Type': 'application/json' } },
+        { headers: { 'Content-Type': 'application/json' } }
     );
 }
 

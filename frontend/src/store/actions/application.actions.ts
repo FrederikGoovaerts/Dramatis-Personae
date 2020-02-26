@@ -6,7 +6,7 @@ export enum names {
     setInitialized = 'SET_INITIALIZED',
     setAuthenticationToken = 'SET_AUTHENTICATION_TOKEN',
     logout = 'LOGOUT',
-    clearStore = 'CLEAR_STORE',
+    clearStore = 'CLEAR_STORE'
 }
 
 export const actions = {
@@ -15,7 +15,7 @@ export const actions = {
     setAuthorized: (p: boolean) => createAction(names.setAuthorized, p),
     setInitialized: (p: boolean) => createAction(names.setInitialized, p),
     logout: () => createAction(names.logout),
-    clearStore: () => createAction(names.clearStore),
+    clearStore: () => createAction(names.clearStore)
 };
 
 export type allTypes = ActionUnion<typeof actions>;

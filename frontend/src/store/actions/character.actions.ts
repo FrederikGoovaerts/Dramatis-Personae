@@ -4,7 +4,7 @@ import {
     CharacterPrototype,
     CharacterUpdatePayload,
     NoteUpdatePayload,
-    VisibilityUpdatePayload,
+    VisibilityUpdatePayload
 } from '../../types';
 import { ActionTypeMapping, ActionUnion, createAction } from './base';
 
@@ -16,7 +16,7 @@ export enum names {
     updateCharacter = 'UPDATE_CHARACTER',
     deleteCharacter = 'DELETE_CHARACTER',
     setNote = 'SET_CHARACTER_NOTE',
-    setVisibility = 'SET_CHARACTER_VISIBILITY',
+    setVisibility = 'SET_CHARACTER_VISIBILITY'
 }
 
 export const actions = {
@@ -27,7 +27,7 @@ export const actions = {
     updateCharacter: (p: CharacterUpdatePayload) => createAction(names.updateCharacter, p),
     deleteCharacter: (p: CharacterDeletePayload) => createAction(names.deleteCharacter, p),
     setNote: (p: NoteUpdatePayload) => createAction(names.setNote, p),
-    setVisible: (p: VisibilityUpdatePayload) => createAction(names.setVisibility, p),
+    setVisible: (p: VisibilityUpdatePayload) => createAction(names.setVisibility, p)
 };
 
 export type allTypes = ActionUnion<typeof actions>;

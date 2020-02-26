@@ -86,16 +86,16 @@ class CampaignListRaw extends React.Component<AllProps, State> {
     tabs: TabContent[] = [
         {
             name: 'Campaign List',
-            component: this.renderList,
+            component: this.renderList
         },
         {
             name: 'New Campaign',
-            component: this.renderNewCampaignForm,
+            component: this.renderNewCampaignForm
         },
         {
             name: 'Join Campaign',
-            component: this.renderJoinCampaignForm,
-        },
+            component: this.renderJoinCampaignForm
+        }
     ];
 
     handleTabChange = (event: ChangeEvent, value: number) => {
@@ -109,7 +109,7 @@ class CampaignListRaw extends React.Component<AllProps, State> {
             <div className="CampaignList__container">
                 <Header />
                 <Typography variant="h4" gutterBottom>
-          Campaigns
+                    Campaigns
                 </Typography>
                 <div className="CampaignList__tabs">
                     <Paper>
@@ -134,10 +134,9 @@ class CampaignListRaw extends React.Component<AllProps, State> {
 
 const mapStateToProps = (state: RootState) => ({
     campaigns: state.campaign.campaigns,
-    loading: state.campaign.loading,
+    loading: state.campaign.loading
 });
 
-export const CampaignList = connect(
-    mapStateToProps,
-    { fetchCampaigns: campaignActions.actions.fetchCampaigns },
-)(CampaignListRaw);
+export const CampaignList = connect(mapStateToProps, { fetchCampaigns: campaignActions.actions.fetchCampaigns })(
+    CampaignListRaw
+);

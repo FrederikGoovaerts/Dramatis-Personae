@@ -77,7 +77,9 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                             ))}
                         </List>
                     </Paper>
-                    {campaign.ownedByMe && <Typography variant="caption">Invite code: {campaign.inviteCode}</Typography>}
+                    {campaign.ownedByMe && (
+                        <Typography variant="caption">Invite code: {campaign.inviteCode}</Typography>
+                    )}
                 </div>
             </div>
         );
@@ -147,7 +149,12 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                         control={<Checkbox checked={this.state.deleteCheck} onChange={this.handleCheckDelete} />}
                         label="I want to delete this campaign"
                     />
-                    <Button variant="contained" color="secondary" disabled={!this.state.deleteCheck} onClick={this.onDelete}>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        disabled={!this.state.deleteCheck}
+                        onClick={this.onDelete}
+                    >
                         Delete permanently
                     </Button>
                 </div>
@@ -158,23 +165,23 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
     tabs: TabContent[] = [
         {
             name: 'Characters',
-            component: this.renderCharacters,
+            component: this.renderCharacters
         },
         {
             name: 'Campaign players',
-            component: this.renderMemberList,
-        },
+            component: this.renderMemberList
+        }
     ];
 
     ownerTabs: TabContent[] = [
         {
             name: 'Create Character',
-            component: this.renderCreateCharacter,
+            component: this.renderCreateCharacter
         },
         {
             name: 'Manage Campaign',
-            component: this.renderManageCampaign,
-        },
+            component: this.renderManageCampaign
+        }
     ];
 
     getTabs = (): TabContent[] =>
@@ -203,7 +210,9 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                     <CampaignCharacterBreadcrumb campaign={campaign} />
                     <Typography variant={'h4'}>{campaign.name}</Typography>
                     <div className="bottomSpaced">
-                        <Typography variant={'subtitle1'}>{`Run by ${campaign.ownedByMe ? 'you' : campaign.owner}`}</Typography>
+                        <Typography variant={'subtitle1'}>{`Run by ${
+                            campaign.ownedByMe ? 'you' : campaign.owner
+                        }`}</Typography>
                     </div>
                     <div className="bottomSpaced">
                         <Paper>
@@ -235,10 +244,10 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
 
 const mapStateToProps = (state: RootState) => ({
     campaign: state.campaign.campaign,
-    loading: state.campaign.campaignLoading,
+    loading: state.campaign.campaignLoading
 });
 
-export const CampaignDetailScreen = connect(
-    mapStateToProps,
-    { fetchCampaign: campaignActions.actions.fetchCampaign, deleteCampaign: campaignActions.actions.deleteCampaign },
-)(CampaignDetailRaw);
+export const CampaignDetailScreen = connect(mapStateToProps, {
+    fetchCampaign: campaignActions.actions.fetchCampaign,
+    deleteCampaign: campaignActions.actions.deleteCampaign
+})(CampaignDetailRaw);
