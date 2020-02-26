@@ -1,0 +1,61 @@
+{
+    "name": "dramatis-personae-frontend",
+    "version": "0.1.0",
+    "description": "Frontend for the Dramatis Personae project",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/FrederikGoovaerts/Dramatis-Personae.git"
+    },
+    "scripts": {
+        "start": "webpack-dev-server --mode development --content-base src",
+        "build": "npm run build:clean && npm run build:webpack",
+        "build:clean": "rimraf build",
+        "build:webpack": "webpack --mode production",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "lint": "eslint src/**/*.ts{,x}",
+        "lint-fix": "eslint src/**/*.ts{,x} --fix"
+    },
+    "author": "Frederik Goovaerts",
+    "license": "MIT",
+    "devDependencies": {
+        "@types/history": "^4.7.5",
+        "@types/jsonwebtoken": "^8.3.7",
+        "@types/react-dom": "^16.9.5",
+        "@types/react-redux": "^7.1.7",
+        "@types/react-router": "^5.1.4",
+        "@types/react-router-dom": "^5.1.3",
+        "css-loader": "^3.4.2",
+        "dotenv-webpack": "^1.7.0",
+        "eslint": "^6.8.0",
+        "html-webpack-plugin": "^3.2.0",
+        "raw-loader": "^4.0.0",
+        "react-router": "^5.1.2",
+        "rimraf": "^3.0.2",
+        "sass": "^1.26.1",
+        "sass-loader": "^8.0.2",
+        "source-map-loader": "^0.2.4",
+        "style-loader": "^1.1.3",
+        "ts-loader": "^6.2.1",
+        "typescript": "^3.8.2",
+        "webpack": "^4.41.6",
+        "webpack-cli": "^3.3.11",
+        "webpack-dev-server": "^3.10.3"
+    },
+    "dependencies": {
+        "@material-ui/core": "^4.9.4",
+        "@material-ui/icons": "^4.9.1",
+        "axios": "^0.19.2",
+        "axios-auth-refresh": "^2.2.3",
+        "jsonwebtoken": "^8.5.1",
+        "moment": "^2.24.0",
+        "query-string": "^6.11.0",
+        "react": "^16.12.0",
+        "react-dom": "^16.12.0",
+        "react-redux": "^7.2.0",
+        "react-router-dom": "^5.1.2",
+        "react-svg-inline": "^2.1.1",
+        "redux": "^4.0.5",
+        "redux-devtools-extension": "^2.13.8",
+        "redux-saga": "^1.1.3"
+    }
+}
