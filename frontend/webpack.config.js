@@ -45,6 +45,7 @@ module.exports = (env, argv) => {
         config.devServer = {
             open: true,
             historyApiFallback: true,
+            port: 8081
         };
         config.plugins.push(
             new DotEnv({
