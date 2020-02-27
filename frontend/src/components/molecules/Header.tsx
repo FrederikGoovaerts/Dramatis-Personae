@@ -9,9 +9,9 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { PersonaeNoCircleIcon } from '../../assets/svg/Svg';
 import { routes } from '../../config/constants';
 import { applicationActions } from '../../store/actions';
+import { PersonaeNoCircleIcon } from '../../assets/svg/PersonaeNoCircleIcon';
 
 export interface Props {
     logout: () => void;
@@ -23,7 +23,12 @@ const HeaderRaw = (props: Props) => (
             <div className="Header__content">
                 <div className="Header__side">
                     <Link to={routes.root}>
-                        <PersonaeNoCircleIcon className={'Header__icon'} width={2} height={2} color={'#ffffff'} />
+                        <PersonaeNoCircleIcon
+                            className={'Header__icon'}
+                            width={'2em'}
+                            height={'2em'}
+                            fill={'#ffffff'}
+                        />
                     </Link>
                     <Link to={routes.root} className="unstyled">
                         <Typography variant="h6" color="inherit">
