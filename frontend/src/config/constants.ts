@@ -1,15 +1,16 @@
-export const environment = {
-    BASE_URL: process.env.BASE_URL || ''
+export const hosting = {
+    BASE_URL: process.env.BASE_URL ?? ''
 };
 
 export const oauth = {
-    CLIENT_ID: process.env.OAUTH_CLIENT_ID || '',
-    REDIRECT_URI: process.env.OAUTH_REDIRECT_URI || ''
+    AUTH_NOT_REQUIRED: process.env.AUTH_NOT_REQUIRED !== 'true' ? true : false,
+    CLIENT_ID: process.env.OAUTH_CLIENT_ID ?? '',
+    REDIRECT_URI: process.env.OAUTH_REDIRECT_URI ?? ''
 };
 
 export const api = {
-    API_HOST: process.env.API_HOST || '',
-    API_PROTOCOL: process.env.API_PROTOCOL || '',
+    API_HOST: process.env.API_HOST ?? '',
+    API_PROTOCOL: process.env.API_PROTOCOL ?? '',
     EXAMPLE_API: {
         PATH: '/example',
         SUBPATH_EXAMPLE: '/subexample'
