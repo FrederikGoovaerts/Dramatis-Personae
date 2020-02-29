@@ -1,6 +1,6 @@
 import { createBrowserHistory } from 'history';
-import { environment } from './constants';
+import { hosting } from './constants';
 
 export const history = createBrowserHistory({
-    basename: environment.BASE_URL
+    basename: hosting.BASE_URL
 });

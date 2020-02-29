@@ -42,6 +42,12 @@ function redirectToOauth() {
 }
 
 function* initializeApplication() {
+    if (oauth.AUTH_NOT_REQUIRED) {
+        yield put(applicationActions.actions.setAuthorized(true));
+        yield put(applicationActions.actions.setInitialized(true));
+        return;
+    }
+
     if (window.location.search) {
         const search = parse(window.location.search);
         if (search.code && typeof search.code === 'string') {
@@ -86,11 +92,15 @@ function* initializeApplication() {
 }
 
 function* logout() {
-    localStorage.removeItem(storage.idToken);
-    removeAxiosAuthToken();
-    yield put(applicationActions.actions.clearStore());
-    yield put(applicationActions.actions.setAuthorized(false));
-    redirectToOauth();
+    if (!oauth.AUTH_NOT_REQUIRED) {
+        localStorage.removeItem(storage.idToken);
+        removeAxiosAuthToken();
+        yield put(applicationActions.actions.clearStore());
+        yield put(applicationActions.actions.setAuthorized(false));
+        redirectToOauth();
+    } else {
+        window.location.reload();
+    }
 }
 
 export default function* watcher() {
