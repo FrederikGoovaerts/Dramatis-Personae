@@ -22,15 +22,17 @@ export const api = {
     },
     CAMPAIGN: {
         PATH: '/campaign',
-        SUBPATH_CREATE: '/create',
-        SUBPATH_JOIN: '/join'
+        SUBPATH_CHARACTER: '/character',
+        SUBPATH_JOIN: '/join',
+        SUBPATH_MEMBERS: '/members'
     },
     CHARACTER: {
         PATH: '/character',
-        SUBPATH_CREATE: '/create',
-        SUBPATH_UPDATE: '/update',
         SUBPATH_NOTE: '/note',
         SUBPATH_VISIBLE: '/visible'
+    },
+    NOTE: {
+        PATH: '/note'
     }
 };
 
