@@ -74,6 +74,14 @@ class CampaignController(private val service: CampaignService) {
         }
     }
 
+
+    @PutMapping("/join/{code}")
+    fun joinCampaign(auth: GoogleAuthentication,
+                     @PathVariable code: UUID): ResponseEntity<Unit> {
+        val success = this.service.joinCampaign(auth.principal, code)
+        return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
+    }
+
 }
 
 @Component
@@ -93,6 +101,17 @@ class CampaignService(private val repository: CampaignRepository) {
         }
         val campaign = campaignQuery.get()
         campaign.name = name
+        this.repository.save(campaign)
+        return true
+    }
+
+    fun joinCampaign(user: User, code: UUID): Boolean {
+        val campaignQuery = repository.findByInviteCode(code)
+        if (!campaignQuery.isPresent || campaignQuery.get().members.contains(user)) {
+            return false
+        }
+        val campaign = campaignQuery.get()
+        campaign.members.add(user)
         this.repository.save(campaign)
         return true
     }
