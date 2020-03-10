@@ -3,7 +3,7 @@ export const hosting = {
 };
 
 export const oauth = {
-    AUTH_NOT_REQUIRED: process.env.AUTH_NOT_REQUIRED !== 'true' ? true : false,
+    AUTH_NOT_REQUIRED: process.env.AUTH_NOT_REQUIRED === 'true' ? true : false,
     CLIENT_ID: process.env.OAUTH_CLIENT_ID ?? '',
     REDIRECT_URI: process.env.OAUTH_REDIRECT_URI ?? ''
 };
