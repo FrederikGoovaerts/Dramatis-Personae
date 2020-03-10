@@ -41,6 +41,14 @@ class CharacterController(private val service: CharacterService) {
         return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
     }
 
+    @PutMapping("/{id}/visible")
+    fun updateCharacterVisibility(auth: GoogleAuthentication,
+                                  @PathVariable id: UUID,
+                                  @RequestBody visible: Boolean): ResponseEntity<Unit> {
+        val success = this.service.updateCharacterVisibility(auth.principal, id, visible)
+        return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
+    }
+
     @DeleteMapping("/{id}")
     fun deleteCharacter(auth: GoogleAuthentication, @PathVariable id: UUID): ResponseEntity<Unit> {
         val success = this.service.deleteCharacter(auth.principal, id)
@@ -88,6 +96,17 @@ class CharacterService(private val repository: CharacterRepository) {
         val character = characterQuery.get()
         character.name = name
         character.description = description
+        this.repository.save(character)
+        return true
+    }
+
+    fun updateCharacterVisibility(user: User, id: UUID, visible: Boolean): Boolean {
+        val characterQuery = repository.findById(id)
+        if (!characterQuery.isPresent || !characterQuery.get().campaign.isOwnedBy(user)) {
+            return false
+        }
+        val character = characterQuery.get()
+        character.isVisible = visible
         this.repository.save(character)
         return true
     }
