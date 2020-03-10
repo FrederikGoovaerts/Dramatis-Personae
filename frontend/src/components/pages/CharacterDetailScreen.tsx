@@ -22,7 +22,7 @@ import {
     Campaign,
     Character,
     CharacterDeletePayload,
-    NoteUpdatePayload,
+    CreateNotePayload,
     TabContent,
     VisibilityUpdatePayload
 } from '../../types';
@@ -46,7 +46,7 @@ interface MapProps {
     loading: boolean;
     fetchCharacter: (id: string) => void;
     fetchCampaign: (id: string) => void;
-    setNote: (payload: NoteUpdatePayload) => void;
+    setNote: (payload: CreateNotePayload) => void;
     setVisible: (payload: VisibilityUpdatePayload) => void;
     deleteCharacter: (payload: CharacterDeletePayload) => void;
 }

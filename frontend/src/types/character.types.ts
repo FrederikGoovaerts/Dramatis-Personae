@@ -1,5 +1,5 @@
 export interface Character {
-    id: number;
+    id: string;
     name: string;
     description: string;
     note: string;
@@ -7,38 +7,32 @@ export interface Character {
 }
 
 export interface CharacterPrototype {
-    campaignId: number;
     name: string;
     description: string;
 }
 
 export interface CharacterUpdatePayload {
-    characterId: number;
-    update: CharacterUpdate;
+    characterId: string;
+    update: CharacterPrototype;
 }
 
 export interface CharacterDeletePayload {
-    campaignId: number;
-    characterId: number;
+    campaignId: string;
+    characterId: string;
 }
 
-export interface CharacterUpdate {
-    name: string;
-    description: string;
-}
-
-export interface NoteUpdatePayload {
-    characterId: number;
+export interface CreateNotePayload {
+    characterId: string;
     note: string;
 }
 
 export interface VisibilityUpdatePayload {
-    characterId: number;
+    characterId: string;
     visible: boolean;
 }
 
 export interface ListCharacter {
-    id: number;
+    id: string;
     name: string;
     visible: boolean;
 }

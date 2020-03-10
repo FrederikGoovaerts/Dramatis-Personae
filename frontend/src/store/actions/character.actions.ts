@@ -3,7 +3,7 @@ import {
     CharacterDeletePayload,
     CharacterPrototype,
     CharacterUpdatePayload,
-    NoteUpdatePayload,
+    CreateNotePayload,
     VisibilityUpdatePayload
 } from '../../types';
 import { ActionTypeMapping, ActionUnion, createAction } from './base';
@@ -26,7 +26,7 @@ export const actions = {
     newCharacter: (p: CharacterPrototype) => createAction(names.newCharacter, p),
     updateCharacter: (p: CharacterUpdatePayload) => createAction(names.updateCharacter, p),
     deleteCharacter: (p: CharacterDeletePayload) => createAction(names.deleteCharacter, p),
-    setNote: (p: NoteUpdatePayload) => createAction(names.setNote, p),
+    setNote: (p: CreateNotePayload) => createAction(names.setNote, p),
     setVisible: (p: VisibilityUpdatePayload) => createAction(names.setVisibility, p)
 };
 
