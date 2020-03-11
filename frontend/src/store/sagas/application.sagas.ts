@@ -12,12 +12,6 @@ interface FormAttribute {
     value: string;
 }
 
-interface TokenResponse {
-    idToken?: string;
-    refreshToken?: string;
-    expiresIn?: number;
-}
-
 function redirectToOauth() {
     const form = document.createElement('form');
     form.setAttribute('method', 'GET');

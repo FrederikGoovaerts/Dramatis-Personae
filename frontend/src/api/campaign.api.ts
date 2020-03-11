@@ -1,45 +1,44 @@
-import { call } from 'redux-saga/effects';
 import { axiosInstance } from '../config/axios';
 import { api } from '../config/constants';
-import { CampaignPrototype, CharacterPrototype } from '../types';
+import { CampaignPrototype, CharacterPrototype, Campaign, ListCharacter, CampaignMember } from '../types';
 import { buildPath } from './base.api';
 
-export function* getAll() {
+export async function getAll(): Promise<Array<Campaign>> {
     const url = buildPath(`${api.CAMPAIGN.PATH}`);
-    return yield call(axiosInstance.get, url);
+    return (await axiosInstance.get(url)).data;
 }
 
-export function* create(campaignPrototype: CampaignPrototype) {
+export async function create(campaignPrototype: CampaignPrototype): Promise<void> {
     const url = buildPath(`${api.CAMPAIGN.PATH}`);
-    return yield call(axiosInstance.post, url, campaignPrototype);
+    await axiosInstance.post(url, campaignPrototype);
 }
 
-export function* update(id: string, campaignPrototype: CampaignPrototype) {
+export async function update(id: string, campaignPrototype: CampaignPrototype): Promise<void> {
     const url = buildPath(`${api.CAMPAIGN.PATH}/${id}`);
-    return yield call(axiosInstance.put, url, campaignPrototype);
+    await axiosInstance.put(url, campaignPrototype);
 }
 
-export function* deletePermanently(campaignId: number) {
+export async function deletePermanently(campaignId: number): Promise<void> {
     const url = buildPath(`${api.CAMPAIGN.PATH}/${campaignId}`);
-    return yield call(axiosInstance.delete, url);
+    await axiosInstance.delete(url);
 }
 
-export function* getCharacters(id: string) {
+export async function getCharacters(id: string): Promise<ListCharacter> {
     const url = buildPath(`${api.CAMPAIGN.PATH}/${id}${api.CAMPAIGN.SUBPATH_CHARACTER}`);
-    return yield call(axiosInstance.get, url);
+    return (await axiosInstance.get(url)).data;
 }
 
-export function* createCharacter(id: string, characterPrototype: CharacterPrototype) {
+export async function createCharacter(id: string, characterPrototype: CharacterPrototype): Promise<void> {
     const url = buildPath(`${api.CAMPAIGN.PATH}/${id}${api.CAMPAIGN.SUBPATH_CHARACTER}`);
-    return yield call(axiosInstance.post, url, characterPrototype);
+    await axiosInstance.post(url, characterPrototype);
 }
 
-export function* getMembers(id: string) {
+export async function getMembers(id: string): Promise<Array<CampaignMember>> {
     const url = buildPath(`${api.CAMPAIGN.PATH}/${id}${api.CAMPAIGN.SUBPATH_MEMBERS}`);
-    return yield call(axiosInstance.get, url);
+    return await axiosInstance.get(url);
 }
 
-export function* join(code: string) {
+export async function join(code: string): Promise<void> {
     const url = buildPath(`${api.CAMPAIGN.PATH}${api.CAMPAIGN.SUBPATH_JOIN}/${code}`);
-    return yield call(axiosInstance.post, url);
+    await axiosInstance.post(url);
 }

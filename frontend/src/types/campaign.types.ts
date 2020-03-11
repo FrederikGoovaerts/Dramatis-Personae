@@ -1,22 +1,14 @@
-import { ListCharacter } from './character.types';
-
 export interface Campaign {
-    id: number;
-    owner: string;
+    id: string;
     name: string;
-    ownedByMe: boolean;
-}
-
-export interface CampaignDetail {
-    id: number;
-    owner: string;
-    members: string[];
-    name: string;
-    characters: ListCharacter[];
-    ownedByMe: boolean;
-    inviteCode: string | null;
+    owner: boolean;
 }
 
 export interface CampaignPrototype {
     name: string;
+}
+
+export interface CampaignMember {
+    name: string;
+    owner: boolean;
 }

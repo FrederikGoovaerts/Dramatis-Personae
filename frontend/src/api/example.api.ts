@@ -1,14 +1,13 @@
-import { call } from 'redux-saga/effects';
 import { axiosInstance } from '../config/axios';
 import { api } from '../config/constants';
 import { buildPath } from './base.api';
 
-export function* get(id: number) {
+export async function get(id: number): Promise<object> {
     const url = buildPath(`${api.EXAMPLE_API.PATH}/${id}`);
-    return yield call(axiosInstance.get, url);
+    return await axiosInstance.get(url);
 }
 
-export function* update(id: number, param: string) {
+export async function update(id: number, param: string): Promise<void> {
     const url = buildPath(`${api.EXAMPLE_API.PATH}/${id}${api.EXAMPLE_API.SUBPATH_EXAMPLE}`);
-    return yield call(axiosInstance.post, url, { param });
+    await axiosInstance.post(url, { param });
 }

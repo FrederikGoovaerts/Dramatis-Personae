@@ -1,35 +1,34 @@
-import { call } from 'redux-saga/effects';
 import { axiosInstance } from '../config/axios';
 import { api } from '../config/constants';
-import { CharacterPrototype, VisibilityUpdatePayload, CreateNotePayload } from '../types';
+import { CharacterPrototype, CreateNotePayload, Character, Note, VisibilityUpdatePayload } from '../types';
 import { buildPath } from './base.api';
 
-export function* get(id: string) {
+export async function get(id: string): Promise<Character> {
     const url = buildPath(`${api.CHARACTER.PATH}/${id}`);
-    return yield call(axiosInstance.get, url);
+    return (await axiosInstance.get(url)).data;
 }
 
-export function* update(id: string, update: CharacterPrototype) {
+export async function update(id: string, update: CharacterPrototype): Promise<void> {
     const url = buildPath(`${api.CHARACTER.PATH}/${id}`);
-    return yield call(axiosInstance.put, url, update);
+    await axiosInstance.put(url, update);
 }
 
-export function* setVisible(payload: VisibilityUpdatePayload) {
+export async function setVisible(payload: VisibilityUpdatePayload): Promise<void> {
     const url = buildPath(`${api.CHARACTER.PATH}/${payload.characterId}${api.CHARACTER.SUBPATH_VISIBLE}`);
-    return yield call(axiosInstance.put, url, payload.visible, { headers: { 'Content-Type': 'application/json' } });
+    await axiosInstance.put(url, payload.visible, { headers: { 'Content-Type': 'application/json' } });
 }
 
-export function* deletePermanently(id: string) {
+export async function deletePermanently(id: string): Promise<void> {
     const url = buildPath(`${api.CHARACTER.PATH}/${id}`);
-    return yield call(axiosInstance.delete, url);
+    await axiosInstance.delete(url);
 }
 
-export function* getNotes(id: string) {
+export async function getNotes(id: string): Promise<Array<Note>> {
     const url = buildPath(`${api.CHARACTER.PATH}/${id}${api.CHARACTER.SUBPATH_NOTE}`);
-    return yield call(axiosInstance.get, url);
+    return await axiosInstance.get(url);
 }
 
-export function* createNote(payload: CreateNotePayload) {
+export async function createNote(payload: CreateNotePayload): Promise<void> {
     const url = buildPath(`${api.CHARACTER.PATH}/${payload.characterId}${api.CHARACTER.SUBPATH_NOTE}`);
-    return yield call(axiosInstance.post, url, { contents: payload.note });
+    await axiosInstance.post(url, { contents: payload.note });
 }
