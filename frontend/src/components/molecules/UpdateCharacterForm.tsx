@@ -8,7 +8,7 @@ import { characterActions } from '../../store/actions';
 import { CharacterUpdatePayload } from '../../types';
 
 interface Props {
-    characterId: number;
+    characterId: string;
     className?: string;
     initialName: string;
     initialDescription: string;

@@ -8,7 +8,7 @@ import { characterActions } from '../../store/actions';
 import { CharacterPrototype } from '../../types';
 
 interface Props {
-    campaignId: number;
+    campaignId: string;
     className?: string;
     onSubmitComplete?: () => void;
 }
@@ -41,8 +41,7 @@ class NewCharacterFormRaw extends React.Component<AllProps, State> {
     handleSubmit = () => {
         this.props.newCharacter({
             name: this.state.name,
-            description: this.state.description,
-            campaignId: this.props.campaignId
+            description: this.state.description
         });
         this.setState({ name: '', description: '' });
         if (this.props.onSubmitComplete) {

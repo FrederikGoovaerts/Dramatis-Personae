@@ -6,6 +6,7 @@ import { removeAxiosAuthToken, setAxiosAuthToken } from '../../config/axios';
 import { oauth, storage } from '../../config/constants';
 import { applicationActions } from '../actions';
 import { exchangeCode, refresh } from '../../api/authentication.api';
+import { TokenResponse } from '../../types';
 
 interface FormAttribute {
     name: string;

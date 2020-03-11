@@ -1,4 +1,4 @@
-import { Campaign, CampaignDetail } from '../../types';
+import { Campaign } from '../../types';
 import { ActionTypeMapping, ActionUnion, createAction } from './base';
 
 export enum names {
@@ -19,7 +19,7 @@ export const actions = {
     setCampaignsLoading: (p: boolean) => createAction(names.setCampaignsLoading, p),
     setCampaigns: (p: Campaign[]) => createAction(names.setCampaigns, p),
     setCampaignLoading: (p: boolean) => createAction(names.setCampaignLoading, p),
-    setCampaign: (p: CampaignDetail) => createAction(names.setCampaign, p),
+    setCampaign: (p: Campaign) => createAction(names.setCampaign, p),
     newCampaign: (p: string) => createAction(names.newCampaign, p),
     joinCampaign: (p: string) => createAction(names.joinCampaign, p),
     deleteCampaign: (p: number) => createAction(names.deleteCampaign, p)

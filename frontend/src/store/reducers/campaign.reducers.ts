@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { Campaign, CampaignDetail } from '../../types';
+import { Campaign } from '../../types';
 import { applicationActions, campaignActions } from '../actions';
 import { createReducer } from './base';
 
@@ -7,7 +7,7 @@ export interface CampaignState {
     loading: boolean;
     campaigns: Campaign[];
     campaignLoading: boolean;
-    campaign: CampaignDetail | null;
+    campaign: Campaign | null;
 }
 
 const campaignReducers = combineReducers<CampaignState>({

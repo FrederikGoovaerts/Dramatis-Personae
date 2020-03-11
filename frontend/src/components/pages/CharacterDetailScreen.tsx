@@ -109,17 +109,6 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         const character = this.props.character;
         return (
             <div>
-                <div style={{ flexDirection: 'column' }}>
-                    <TextField
-                        label="Notes"
-                        multiline
-                        fullWidth
-                        value={this.state.note !== undefined ? this.state.note : character.note}
-                        onChange={this.handleChangeNote}
-                        margin="normal"
-                        variant="outlined"
-                    />
-                </div>
                 <div>
                     <Button
                         disabled={this.state.note === undefined}
@@ -211,7 +200,7 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
     ];
 
     getTabs = (): TabContent[] =>
-        this.props.campaign && this.props.campaign.ownedByMe ? [...this.tabs, ...this.ownerTabs] : this.tabs;
+        this.props.campaign && this.props.campaign.owner ? [...this.tabs, ...this.ownerTabs] : this.tabs;
 
     handleTabChange = (event: ChangeEvent, value: number) => {
         this.setState({ tab: value });
@@ -235,7 +224,7 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
                 <div>
                     <CampaignCharacterBreadcrumb campaign={campaign} character={character} />
                     <Typography variant="h4">{character.name}</Typography>
-                    {this.props.campaign.ownedByMe && this.renderVisibilityToggle(this.props.character)}
+                    {this.props.campaign.owner && this.renderVisibilityToggle(this.props.character)}
                     <div className="bottomSpaced">
                         <Paper>
                             <Tabs
