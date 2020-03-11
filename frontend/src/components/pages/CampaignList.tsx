@@ -39,7 +39,7 @@ interface State {
 
 const campaignToListItemLink = (campaign: Campaign) => (
     <ListItemLink to={`/campaign/${campaign.id}`} key={campaign.id}>
-        <ListItemText primary={campaign.name} secondary={`Run by ${campaign.ownedByMe ? 'you' : campaign.owner}`} />
+        <ListItemText primary={campaign.name} secondary={campaign.owner ? `Run by you` : undefined} />
     </ListItemLink>
 );
 

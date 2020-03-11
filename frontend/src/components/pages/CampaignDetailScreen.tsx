@@ -21,7 +21,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import { routes } from '../../config/constants';
 import { campaignActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
-import { CampaignDetail, ListCharacter, TabContent } from '../../types';
+import { ListCharacter, TabContent } from '../../types';
 import { ListItemLink } from '../atoms/ListItemLink';
 import { CampaignCharacterBreadcrumb } from '../molecules/CampaignCharacterBreadcrumbs';
 import { Header } from '../molecules/Header';
@@ -36,7 +36,7 @@ interface Props {
 }
 
 interface MapProps {
-    campaign: CampaignDetail | null;
+    campaign: any | null;
     loading: boolean;
     fetchCampaign: (id: string) => void;
     deleteCampaign: (id: number) => void;
