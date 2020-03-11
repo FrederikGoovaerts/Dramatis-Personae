@@ -10,7 +10,7 @@ import java.util.*
 
 data class CreateCharacterDto(val name: String, val description: String)
 
-data class CharacterListView(val name: String, val id: UUID)
+data class CharacterListView(val name: String, val visible: Boolean, val id: UUID)
 data class CharacterDetailView(val name: String, val description: String, val visible: Boolean, val id: UUID)
 
 @RestController
