@@ -1,14 +1,14 @@
-import { call } from 'redux-saga/effects';
 import { axiosInstance } from '../config/axios';
 import { api, oauth } from '../config/constants';
 import { buildPath } from './base.api';
+import { TokenResponse } from '../types/auth.types';
 
-export function* exchangeCode(code: string) {
+export async function exchangeCode(code: string): Promise<TokenResponse> {
     const url = buildPath(`${api.AUTH.PATH}${api.AUTH.SUBPATH_CODE}`);
-    return yield call(axiosInstance.post, url, { code: code, redirectUri: oauth.REDIRECT_URI });
+    return (await axiosInstance.post(url, { code: code, redirectUri: oauth.REDIRECT_URI })).data;
 }
 
-export function* refresh(refreshToken: string) {
+export async function refresh(refreshToken: string): Promise<TokenResponse> {
     const url = buildPath(`${api.AUTH.PATH}${api.AUTH.SUBPATH_REFRESH}`);
-    return yield call(axiosInstance.post, url, { token: refreshToken });
+    return (await axiosInstance.post(url, { token: refreshToken })).data;
 }

@@ -2,7 +2,12 @@ export interface Character {
     id: string;
     name: string;
     description: string;
-    note: string;
+    visible: boolean;
+}
+
+export interface ListCharacter {
+    id: string;
+    name: string;
     visible: boolean;
 }
 
@@ -21,18 +26,7 @@ export interface CharacterDeletePayload {
     characterId: string;
 }
 
-export interface CreateNotePayload {
-    characterId: string;
-    note: string;
-}
-
 export interface VisibilityUpdatePayload {
     characterId: string;
-    visible: boolean;
-}
-
-export interface ListCharacter {
-    id: string;
-    name: string;
     visible: boolean;
 }
