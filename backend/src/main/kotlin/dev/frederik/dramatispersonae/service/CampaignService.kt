@@ -51,7 +51,7 @@ class CampaignController(private val service: CampaignService) {
         return if (list === null) {
             ResponseEntity(HttpStatus.FORBIDDEN)
         } else {
-            ResponseEntity(list.map { CharacterListView(it.name, it.id!!) }, HttpStatus.OK)
+            ResponseEntity(list.map { CharacterListView(it.name, it.isVisible, it.id!!) }, HttpStatus.OK)
         }
     }
 
@@ -73,7 +73,6 @@ class CampaignController(private val service: CampaignService) {
             ResponseEntity(map.map { CampaignMemberView(it.key.fullName, it.value) }.toList(), HttpStatus.OK)
         }
     }
-
 
     @PutMapping("/join/{code}")
     fun joinCampaign(auth: GoogleAuthentication,
