@@ -1,21 +1,15 @@
 import './CampaignList.scss';
 
-import Paper from '@material-ui/core/Paper';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import List from '@material-ui/core/List';
-import ListItemText from '@material-ui/core/ListItemText';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
+import { Grid, Paper, CircularProgress, Typography } from '@material-ui/core';
 import { ChangeEvent } from 'react';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { match } from 'react-router';
+import { Link } from 'react-router-dom';
 
 import { campaignActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
-import { Campaign, TabContent } from '../../types';
-import { ListItemLink } from '../atoms/ListItemLink';
+import { Campaign } from '../../types';
 
 import { Header } from '../molecules/Header';
 import { JoinCampaignForm } from '../molecules/JoinCampaignForm';
@@ -38,9 +32,14 @@ interface State {
 }
 
 const campaignToListItemLink = (campaign: Campaign) => (
-    <ListItemLink to={`/campaign/${campaign.id}`} key={campaign.id}>
-        <ListItemText primary={campaign.name} secondary={campaign.owner ? `Run by you` : undefined} />
-    </ListItemLink>
+    <Link to={`/campaign/${campaign.id}`} key={campaign.id} className="CampaignList__campaignLink">
+        <Paper className="CampaignList__campaignPaper">
+            <Typography variant="h5" gutterBottom>
+                {campaign.name}
+            </Typography>
+            <Typography variant="subtitle1">Run by {campaign.ownerName}</Typography>
+        </Paper>
+    </Link>
 );
 
 class CampaignListRaw extends React.Component<AllProps, State> {
@@ -57,53 +56,28 @@ class CampaignListRaw extends React.Component<AllProps, State> {
         this.setState({ tab: 0 });
     };
 
-    renderList = () => {
-        if (this.props.loading) {
-            return <CircularProgress />;
-        } else if (this.props.campaigns.length === 0) {
-            return (
-                <div>
-                    <Typography>You currently are not part of any campaigns!</Typography>
-                </div>
-            );
-        } else {
-            return (
-                <Paper>
-                    <List component="nav">{this.props.campaigns.map(campaignToListItemLink)}</List>
-                </Paper>
-            );
-        }
-    };
-
-    renderNewCampaignForm = () => (
-        <NewCampaignForm className="CampaignList__formContainer" onSubmitComplete={this.goToList} />
-    );
-
-    renderJoinCampaignForm = () => (
-        <JoinCampaignForm className="CampaignList__formContainer" onSubmitComplete={this.goToList} />
-    );
-
-    tabs: TabContent[] = [
-        {
-            name: 'Campaign List',
-            component: this.renderList
-        },
-        {
-            name: 'New Campaign',
-            component: this.renderNewCampaignForm
-        },
-        {
-            name: 'Join Campaign',
-            component: this.renderJoinCampaignForm
-        }
-    ];
-
     handleTabChange = (event: ChangeEvent, value: number) => {
         this.setState({ tab: value });
     };
 
     render() {
-        const contents = this.tabs[this.state.tab].component();
+        const contents = this.props.loading ? (
+            <CircularProgress />
+        ) : (
+            <div>
+                {this.props.campaigns.length === 0 ? (
+                    <Typography>You are currently not part of any campaigns!</Typography>
+                ) : (
+                    <Grid container justify="flex-start" spacing={2}>
+                        {this.props.campaigns.map(campaignToListItemLink)}
+                    </Grid>
+                )}
+                <div className="CampaignList__forms">
+                    <NewCampaignForm className="CampaignList__formContainer" onSubmitComplete={this.goToList} />
+                    <JoinCampaignForm className="CampaignList__formContainer" onSubmitComplete={this.goToList} />
+                </div>
+            </div>
+        );
 
         return (
             <div className="CampaignList__container">
@@ -111,21 +85,6 @@ class CampaignListRaw extends React.Component<AllProps, State> {
                 <Typography variant="h4" gutterBottom>
                     Campaigns
                 </Typography>
-                <div className="CampaignList__tabs">
-                    <Paper>
-                        <Tabs
-                            value={this.state.tab}
-                            onChange={this.handleTabChange}
-                            indicatorColor="primary"
-                            textColor="primary"
-                            centered
-                        >
-                            {this.tabs.map((tab) => (
-                                <Tab key={tab.name} label={tab.name} />
-                            ))}
-                        </Tabs>
-                    </Paper>
-                </div>
                 <div className="CampaignList__content">{contents}</div>
             </div>
         );

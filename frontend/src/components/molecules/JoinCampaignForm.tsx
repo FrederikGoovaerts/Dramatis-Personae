@@ -42,7 +42,12 @@ class JoinCampaignFormRaw extends React.Component<AllProps, State> {
     render() {
         return (
             <div className={this.props.className}>
-                <TextField label="Invite code" value={this.state.input} onChange={this.handleChange} margin="dense" />
+                <TextField
+                    label="Campaign invite code"
+                    value={this.state.input}
+                    onChange={this.handleChange}
+                    margin="dense"
+                />
                 <Button variant="contained" onClick={this.handleSubmit}>
                     Join
                 </Button>
