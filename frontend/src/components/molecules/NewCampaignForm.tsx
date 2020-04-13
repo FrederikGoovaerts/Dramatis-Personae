@@ -41,7 +41,12 @@ class NewCampaignFormRaw extends React.Component<AllProps, State> {
     render() {
         return (
             <div className={this.props.className}>
-                <TextField label="Name" value={this.state.name} onChange={this.handleChange} margin="dense" />
+                <TextField
+                    label="New campaign name"
+                    value={this.state.name}
+                    onChange={this.handleChange}
+                    margin="dense"
+                />
                 <Button variant="contained" color="primary" onClick={this.handleSubmit}>
                     Create
                 </Button>
