@@ -5,10 +5,11 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 
 import App from './components/App';
-import { history } from './config/history';
 import configureStore from './config/store';
 import { theme } from './config/theme';
+import { createBrowserHistory } from 'history';
 
+const history = createBrowserHistory();
 const store = configureStore({});
 
 ReactDOM.render(
