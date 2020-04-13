@@ -22,6 +22,7 @@ module.exports = {
     ],
     rules: {
         'prettier/prettier': 'error',
+        '@typescript-eslint/no-explicit-any': 'error',
         '@typescript-eslint/explicit-member-accessibility': 0,
         '@typescript-eslint/explicit-function-return-type': 0
     }
