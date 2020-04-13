@@ -37,9 +37,10 @@ interface Props {
 
 interface MapProps {
     campaign: Campaign | null;
+    characters: ListCharacter[];
     loading: boolean;
     fetchCampaign: (id: string) => void;
-    deleteCampaign: (id: number) => void;
+    deleteCampaign: (id: string) => void;
 }
 
 type AllProps = Props & MapProps;
@@ -70,16 +71,15 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                 <div>
                     <Paper className="bottomSpaced">
                         <List>
-                            {campaign.members.map((name: string) => (
+                            one
+                            {/* {campaign.members.map((name: string) => (
                                 <ListItem key={name}>
                                     <ListItemText primary={name} />
                                 </ListItem>
-                            ))}
+                            ))} */}
                         </List>
                     </Paper>
-                    {campaign.ownedByMe && (
-                        <Typography variant="caption">Invite code: {campaign.inviteCode}</Typography>
-                    )}
+                    {campaign.owner && <Typography variant="caption">Invite code: {campaign.id}</Typography>}
                 </div>
             </div>
         );
@@ -88,25 +88,13 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
     renderCharacter = (character: ListCharacter) => (
         <ListItemLink to={`${this.props.match.url}${routes.character}${character.id}`}>
             <ListItemText primary={character.name} />
-            {this.props.campaign && this.props.campaign.ownedByMe && (
+            {this.props.campaign && this.props.campaign.owner && (
                 <Icon color={character.visible ? 'primary' : 'disabled'}>
                     <Visibility />
                 </Icon>
             )}
         </ListItemLink>
     );
-
-    renderCharacters = () => {
-        if (!this.props.campaign) {
-            return undefined;
-        }
-        const campaign = this.props.campaign;
-        return (
-            <Paper>
-                <List>{campaign.characters.map(this.renderCharacter)}</List>
-            </Paper>
-        );
-    };
 
     goToList = (): void => {
         this.setState({ tab: 0 });
@@ -162,35 +150,6 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
         );
     };
 
-    tabs: TabContent[] = [
-        {
-            name: 'Characters',
-            component: this.renderCharacters
-        },
-        {
-            name: 'Campaign players',
-            component: this.renderMemberList
-        }
-    ];
-
-    ownerTabs: TabContent[] = [
-        {
-            name: 'Create Character',
-            component: this.renderCreateCharacter
-        },
-        {
-            name: 'Manage Campaign',
-            component: this.renderManageCampaign
-        }
-    ];
-
-    getTabs = (): TabContent[] =>
-        this.props.campaign && this.props.campaign.ownedByMe ? [...this.tabs, ...this.ownerTabs] : this.tabs;
-
-    handleTabChange = (event: ChangeEvent, value: number) => {
-        this.setState({ tab: value });
-    };
-
     render() {
         if (this.state.deleted) {
             return (
@@ -204,32 +163,23 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
         if (this.props.loading || !this.props.campaign) {
             contents = <CircularProgress />;
         } else {
-            const { campaign } = this.props;
+            const { campaign, characters } = this.props;
             contents = (
                 <div>
                     <CampaignCharacterBreadcrumb campaign={campaign} />
                     <Typography variant={'h4'}>{campaign.name}</Typography>
                     <div className="bottomSpaced">
                         <Typography variant={'subtitle1'}>{`Run by ${
-                            campaign.ownedByMe ? 'you' : campaign.owner
+                            campaign.owner ? 'you' : campaign.ownerName
                         }`}</Typography>
                     </div>
-                    <div className="bottomSpaced">
+                    {characters.length === 0 ? (
+                        <Typography variant="body1">This campaign does not have any characters yet.</Typography>
+                    ) : (
                         <Paper>
-                            <Tabs
-                                value={this.state.tab}
-                                onChange={this.handleTabChange}
-                                indicatorColor="primary"
-                                textColor="primary"
-                                centered
-                            >
-                                {this.getTabs().map((tab) => (
-                                    <Tab key={tab.name} label={tab.name} />
-                                ))}
-                            </Tabs>
+                            <List>{characters.map(this.renderCharacter)}</List>
                         </Paper>
-                    </div>
-                    {this.getTabs()[this.state.tab].component()}
+                    )}
                 </div>
             );
         }
@@ -244,7 +194,8 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
 
 const mapStateToProps = (state: RootState) => ({
     campaign: state.campaign.campaign,
-    loading: state.campaign.campaignLoading
+    characters: state.campaign.characters,
+    loading: state.campaign.campaignLoading || state.campaign.charactersLoading
 });
 
 export const CampaignDetailScreen = connect(mapStateToProps, {

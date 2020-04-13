@@ -14,6 +14,17 @@ function* fetchCampaigns() {
     yield put(campaignActions.actions.setCampaignsLoading(false));
 }
 
+function* fetchCampaign(action: campaignActions.specificTypes['fetchCampaign']) {
+    yield put(campaignActions.actions.setCampaignLoading(true));
+    try {
+        const result: Campaign = yield call(campaign.get, action.payload);
+        yield put(campaignActions.actions.setCampaign(result));
+    } catch (e) {
+        console.error('Unable to fetch campaigns. Please try again later.');
+    }
+    yield put(campaignActions.actions.setCampaignLoading(false));
+}
+
 function* joinCampaign(action: campaignActions.specificTypes['joinCampaign']) {
     try {
         yield campaign.join(action.payload);
@@ -44,6 +55,7 @@ function* newCampaign(action: campaignActions.specificTypes['newCampaign']) {
 
 export default function* watcher() {
     yield takeEvery(campaignActions.names.fetchCampaigns, fetchCampaigns);
+    yield takeEvery(campaignActions.names.fetchCampaign, fetchCampaign);
     yield takeEvery(campaignActions.names.joinCampaign, joinCampaign);
     yield takeEvery(campaignActions.names.newCampaign, newCampaign);
     // yield takeEvery(campaignActions.names.deleteCampaign, deleteCampaign);

@@ -8,6 +8,11 @@ export async function getAll(): Promise<Array<Campaign>> {
     return (await axiosInstance.get(url)).data;
 }
 
+export async function get(id: string): Promise<Campaign> {
+    const url = buildPath(`${api.CAMPAIGN.PATH}/${id}`);
+    return (await axiosInstance.get(url)).data;
+}
+
 export async function create(campaignPrototype: CampaignPrototype): Promise<void> {
     const url = buildPath(`${api.CAMPAIGN.PATH}`);
     await axiosInstance.post(url, campaignPrototype);
