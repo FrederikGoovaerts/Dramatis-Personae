@@ -13,7 +13,7 @@ import java.util.*
 
 data class CreateCampaignDto(val name: String)
 
-data class CampaignView(val name: String, val id: UUID, val owner: Boolean)
+data class CampaignView(val name: String, val id: UUID, val owner: Boolean, val ownerName: String)
 data class CampaignMemberView(val name: String, val owner: Boolean)
 
 @RestController
@@ -22,7 +22,17 @@ class CampaignController(private val service: CampaignService) {
 
     @GetMapping
     fun getCampaigns(auth: GoogleAuthentication) =
-            service.getCampaignsForUser(auth.principal).map { CampaignView(it.name, it.id!!, it.isOwnedBy(auth.principal)) }
+            service.getCampaignsForUser(auth.principal).map { CampaignView(it.name, it.id!!, it.isOwnedBy(auth.principal), it.owner.fullName) }
+
+    @GetMapping("/{id}")
+    fun getCampaign(auth: GoogleAuthentication, @PathVariable id: UUID): ResponseEntity<CampaignView> {
+        val campaign = this.service.getCampaign(auth.principal, id)
+        return if (campaign === null) {
+            ResponseEntity(HttpStatus.FORBIDDEN)
+        } else {
+            ResponseEntity(CampaignView(campaign.name, campaign.id!!, campaign.isOwnedBy(auth.principal), campaign.owner.fullName), HttpStatus.OK)
+        }
+    }
 
     @PostMapping
     fun postCampaign(auth: GoogleAuthentication, @RequestBody campaign: CreateCampaignDto): ResponseEntity<Unit> {
@@ -87,6 +97,14 @@ class CampaignController(private val service: CampaignService) {
 class CampaignService(private val repository: CampaignRepository) {
 
     fun getCampaignsForUser(user: User): List<Campaign> = repository.findAll().filter { it.isAccessibleBy(user) }
+
+    fun getCampaign(user: User, id: UUID): Campaign? {
+        val campaignQuery = repository.findById(id)
+        if (!campaignQuery.isPresent || !campaignQuery.get().isAccessibleBy(user)) {
+            return null
+        }
+        return campaignQuery.orElse(null)
+    }
 
     fun createCampaign(user: User, name: String): Campaign {
         val newCampaign = Campaign(name, user, mutableListOf(user), mutableListOf())
