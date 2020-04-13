@@ -27,13 +27,13 @@ class LocalDevFixtures(private val userRepository: UserRepository,
                        private val campaignRepository: CampaignRepository) : CommandLineRunner {
 
     override fun run(vararg args: String?) {
-        val user1 = User("1", "Name1", "Email1")
-        val user2 = User("2", "Name2", "Email2")
+        val user1 = User("1", "Jack Name1", "Email1")
+        val user2 = User("2", "Joe Name2", "Email2")
         this.userRepository.save(user1)
         this.userRepository.save(user2)
-        val campaign1 = Campaign("Camp1", user1, mutableListOf(user1, user2), mutableListOf())
+        val campaign1 = Campaign("Camp short", user1, mutableListOf(user1, user2), mutableListOf())
         val campaign2 = Campaign("Camp2", user2, mutableListOf(user2), mutableListOf())
-        val campaign3 = Campaign("Camp3", user2, mutableListOf(user1, user2), mutableListOf())
+        val campaign3 = Campaign("A campaign with a rather long name", user2, mutableListOf(user1, user2), mutableListOf())
         val char1 = Character("Char1", "A visible char in an owned campaign", true, campaign1, mutableListOf())
         val char2 = Character("Char2", "An invisible char in an owned campaign", false, campaign1, mutableListOf())
         val char3 = Character("Char3", "A visible char in a non-owned campaign", true, campaign3, mutableListOf())
