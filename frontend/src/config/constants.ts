@@ -1,7 +1,3 @@
-export const hosting = {
-    BASE_URL: process.env.BASE_URL ?? ''
-};
-
 export const oauth = {
     AUTH_NOT_REQUIRED: process.env.AUTH_NOT_REQUIRED === 'true' ? true : false,
     CLIENT_ID: process.env.OAUTH_CLIENT_ID ?? '',
