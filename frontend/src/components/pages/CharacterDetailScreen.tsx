@@ -8,7 +8,6 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Switch from '@material-ui/core/Switch';
 import Tab from '@material-ui/core/Tab';
-import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { ChangeEvent } from 'react';
 import * as React from 'react';
@@ -106,7 +105,6 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         if (!this.props.character) {
             return undefined;
         }
-        const character = this.props.character;
         return (
             <div>
                 <div>
