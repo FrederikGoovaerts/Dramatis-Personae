@@ -1,3 +1,6 @@
+const CI_ENV = process.env.GITHUB_ACTION === undefined;
+const WARN_AND_CI_ERROR = CI_ENV ? 1 : 2;
+
 module.exports = {
     parser: '@typescript-eslint/parser',
     plugins: ['@typescript-eslint', 'prettier', 'import', 'react'],
@@ -23,6 +26,7 @@ module.exports = {
     rules: {
         'prettier/prettier': 'error',
         '@typescript-eslint/no-explicit-any': 'error',
+        '@typescript-eslint/no-unused-vars': WARN_AND_CI_ERROR,
         '@typescript-eslint/explicit-member-accessibility': 0,
         '@typescript-eslint/explicit-function-return-type': 0
     }
