@@ -5,7 +5,8 @@ const config = {
     entry: './src/index.tsx',
     output: {
         filename: 'bundle.[hash].js',
-        path: `${__dirname}/build`
+        path: `${__dirname}/build`,
+        publicPath: '/'
     },
 
     devtool: 'source-map',
