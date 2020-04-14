@@ -52,11 +52,19 @@ class NewCharacterFormRaw extends React.Component<AllProps, State> {
     render() {
         return (
             <div className={this.props.className}>
-                <TextField label="Name" value={this.state.name} onChange={this.handleChangeName} margin="dense" />
+                <TextField
+                    label="Name"
+                    helperText="The name of the new character."
+                    value={this.state.name}
+                    onChange={this.handleChangeName}
+                    margin="dense"
+                />
                 <TextField
                     multiline
+                    rows={3}
                     variant="outlined"
                     label="Description"
+                    helperText="This should contain basic information other characters clearly see or know about the character."
                     value={this.state.description}
                     onChange={this.handleChangeDescription}
                     margin="normal"
