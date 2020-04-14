@@ -54,6 +54,7 @@ class NewCharacterFormRaw extends React.Component<AllProps, State> {
             <div className={this.props.className}>
                 <TextField
                     label="Name"
+                    required
                     helperText="The name of the new character."
                     value={this.state.name}
                     onChange={this.handleChangeName}
@@ -69,7 +70,7 @@ class NewCharacterFormRaw extends React.Component<AllProps, State> {
                     onChange={this.handleChangeDescription}
                     margin="normal"
                 />
-                <Button variant="contained" color="primary" onClick={this.handleSubmit}>
+                <Button variant="contained" color="primary" onClick={this.handleSubmit} disabled={!this.state.name}>
                     Create
                 </Button>
             </div>
