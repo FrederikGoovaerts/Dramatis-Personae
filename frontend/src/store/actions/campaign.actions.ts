@@ -1,4 +1,4 @@
-import { Campaign, ListCharacter } from '../../types';
+import { Campaign, ListCharacter, CharacterPrototype } from '../../types';
 import { ActionTypeMapping, ActionUnion, createAction } from './base';
 
 export enum names {
@@ -9,6 +9,7 @@ export enum names {
     setCampaignLoading = 'SET_CAMPAIGN_LOADING',
     setCampaign = 'SET_CAMPAIGN',
     fetchCharacters = 'FETCH_CHARACTERS',
+    createCharacter = 'CREATE_CHARACTER',
     setCharactersLoading = 'SET_CHARACTERS_LOADING',
     setCharacters = 'SET_CHARACTERS',
     newCampaign = 'NEW_CAMPAIGN',
@@ -24,6 +25,8 @@ export const actions = {
     setCampaignLoading: (p: boolean) => createAction(names.setCampaignLoading, p),
     setCampaign: (p: Campaign) => createAction(names.setCampaign, p),
     fetchCharacters: (campaignId: string) => createAction(names.fetchCharacters, campaignId),
+    createCharacter: (p: { campaignId: string; character: CharacterPrototype }) =>
+        createAction(names.createCharacter, p),
     setCharactersLoading: (p: boolean) => createAction(names.setCharactersLoading, p),
     setCharacters: (p: ListCharacter[]) => createAction(names.setCharacters, p),
     newCampaign: (p: string) => createAction(names.newCampaign, p),

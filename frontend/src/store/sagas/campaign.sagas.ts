@@ -36,6 +36,15 @@ function* fetchCharacters(action: campaignActions.specificTypes['fetchCharacters
     yield put(campaignActions.actions.setCharactersLoading(false));
 }
 
+function* createCharacter(action: campaignActions.specificTypes['createCharacter']) {
+    try {
+        yield campaign.createCharacter(action.payload.campaignId, action.payload.character);
+        yield put(campaignActions.actions.fetchCharacters(action.payload.campaignId));
+    } catch (e) {
+        console.error('Unable to create character. Please try again later.');
+    }
+}
+
 function* joinCampaign(action: campaignActions.specificTypes['joinCampaign']) {
     try {
         yield campaign.join(action.payload);
@@ -68,6 +77,7 @@ export default function* watcher() {
     yield takeEvery(campaignActions.names.fetchCampaigns, fetchCampaigns);
     yield takeEvery(campaignActions.names.fetchCampaign, fetchCampaign);
     yield takeEvery(campaignActions.names.fetchCharacters, fetchCharacters);
+    yield takeEvery(campaignActions.names.createCharacter, createCharacter);
     yield takeEvery(campaignActions.names.joinCampaign, joinCampaign);
     yield takeEvery(campaignActions.names.newCampaign, newCampaign);
     // yield takeEvery(campaignActions.names.deleteCampaign, deleteCampaign);
