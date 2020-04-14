@@ -3,17 +3,16 @@ import { Character } from '../../types';
 import { campaignActions, characterActions } from '../actions';
 import * as character from '../../api/character.api';
 
-// function* fetchCharacter(action: characterActions.specificTypes['fetchCharacter']) {
-//     yield put(characterActions.actions.setCharacterLoading(true));
-//     try {
-//         const result = yield character.get(action.payload);
-//         const c: Character = result.data;
-//         yield put(characterActions.actions.setCharacter(c));
-//     } catch (e) {
-//         console.error('Unable to fetch campaign. Please try again later.');
-//     }
-//     yield put(characterActions.actions.setCharacterLoading(false));
-// }
+function* fetchCharacter(action: characterActions.specificTypes['fetchCharacter']) {
+    yield put(characterActions.actions.setCharacterLoading(true));
+    try {
+        const result = yield character.get(action.payload);
+        yield put(characterActions.actions.setCharacter(result));
+    } catch (e) {
+        console.error('Unable to fetch character. Please try again later.');
+    }
+    yield put(characterActions.actions.setCharacterLoading(false));
+}
 
 // function* newCharacter(action: characterActions.specificTypes['newCharacter']) {
 //     try {
@@ -62,7 +61,7 @@ import * as character from '../../api/character.api';
 // }
 
 export default function* watcher() {
-    // yield takeEvery(characterActions.names.fetchCharacter, fetchCharacter);
+    yield takeEvery(characterActions.names.fetchCharacter, fetchCharacter);
     // yield takeEvery(characterActions.names.newCharacter, newCharacter);
     // yield takeEvery(characterActions.names.updateCharacter, updateCharacter);
     // yield takeEvery(characterActions.names.deleteCharacter, deleteCharacter);
