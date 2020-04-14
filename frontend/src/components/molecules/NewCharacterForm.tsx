@@ -4,7 +4,7 @@ import { ChangeEvent } from 'react';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { characterActions } from '../../store/actions';
+import { campaignActions } from '../../store/actions';
 import { CharacterPrototype } from '../../types';
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
 }
 
 interface MapProps {
-    newCharacter: (prototype: CharacterPrototype) => void;
+    createCharacter: (params: { campaignId: string; character: CharacterPrototype }) => void;
 }
 
 type AllProps = Props & MapProps;
@@ -39,9 +39,12 @@ class NewCharacterFormRaw extends React.Component<AllProps, State> {
     };
 
     handleSubmit = () => {
-        this.props.newCharacter({
-            name: this.state.name,
-            description: this.state.description
+        this.props.createCharacter({
+            campaignId: this.props.campaignId,
+            character: {
+                name: this.state.name,
+                description: this.state.description
+            }
         });
         this.setState({ name: '', description: '' });
         if (this.props.onSubmitComplete) {
@@ -78,6 +81,6 @@ class NewCharacterFormRaw extends React.Component<AllProps, State> {
     }
 }
 
-export const NewCharacterForm = connect(null, { newCharacter: characterActions.actions.newCharacter })(
+export const NewCharacterForm = connect(null, { createCharacter: campaignActions.actions.createCharacter })(
     NewCharacterFormRaw
 );
