@@ -1,5 +1,5 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { Campaign, CampaignPrototype } from '../../types';
+import { Campaign, CampaignPrototype, ListCharacter } from '../../types';
 import { campaignActions } from '../actions';
 import * as campaign from '../../api/campaign.api';
 
@@ -23,6 +23,17 @@ function* fetchCampaign(action: campaignActions.specificTypes['fetchCampaign']) 
         console.error('Unable to fetch campaigns. Please try again later.');
     }
     yield put(campaignActions.actions.setCampaignLoading(false));
+}
+
+function* fetchCharacters(action: campaignActions.specificTypes['fetchCharacters']) {
+    yield put(campaignActions.actions.setCharactersLoading(true));
+    try {
+        const result: ListCharacter[] = yield call(campaign.getCharacters, action.payload);
+        yield put(campaignActions.actions.setCharacters(result));
+    } catch (e) {
+        console.error('Unable to fetch characters. Please try again later.');
+    }
+    yield put(campaignActions.actions.setCharactersLoading(false));
 }
 
 function* joinCampaign(action: campaignActions.specificTypes['joinCampaign']) {
@@ -56,6 +67,7 @@ function* newCampaign(action: campaignActions.specificTypes['newCampaign']) {
 export default function* watcher() {
     yield takeEvery(campaignActions.names.fetchCampaigns, fetchCampaigns);
     yield takeEvery(campaignActions.names.fetchCampaign, fetchCampaign);
+    yield takeEvery(campaignActions.names.fetchCharacters, fetchCharacters);
     yield takeEvery(campaignActions.names.joinCampaign, joinCampaign);
     yield takeEvery(campaignActions.names.newCampaign, newCampaign);
     // yield takeEvery(campaignActions.names.deleteCampaign, deleteCampaign);

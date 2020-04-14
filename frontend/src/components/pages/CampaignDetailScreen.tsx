@@ -40,6 +40,7 @@ interface MapProps {
     characters: ListCharacter[];
     loading: boolean;
     fetchCampaign: (id: string) => void;
+    fetchCharacters: (campaignId: string) => void;
     deleteCampaign: (id: string) => void;
 }
 
@@ -59,36 +60,37 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
 
     componentDidMount(): void {
         this.props.fetchCampaign(this.props.match.params.id);
+        this.props.fetchCharacters(this.props.match.params.id);
     }
 
-    renderMemberList = () => {
-        if (!this.props.campaign) {
-            return undefined;
-        }
-        const campaign = this.props.campaign;
-        return (
-            <div className="centering">
-                <div>
-                    <Paper className="bottomSpaced">
-                        <List>
-                            one
-                            {/* {campaign.members.map((name: string) => (
-                                <ListItem key={name}>
-                                    <ListItemText primary={name} />
-                                </ListItem>
-                            ))} */}
-                        </List>
-                    </Paper>
-                    {campaign.owner && <Typography variant="caption">Invite code: {campaign.id}</Typography>}
-                </div>
-            </div>
-        );
-    };
+    // renderMemberList = () => {
+    //     if (!this.props.campaign) {
+    //         return undefined;
+    //     }
+    //     const campaign = this.props.campaign;
+    //     return (
+    //         <div className="centering">
+    //             <div>
+    //                 <Paper className="bottomSpaced">
+    //                     <List>
+    //                         one
+    //                         {/* {campaign.members.map((name: string) => (
+    //                             <ListItem key={name}>
+    //                                 <ListItemText primary={name} />
+    //                             </ListItem>
+    //                         ))} */}
+    //                     </List>
+    //                 </Paper>
+    //                 {campaign.owner && <Typography variant="caption">Invite code: {campaign.id}</Typography>}
+    //             </div>
+    //         </div>
+    //     );
+    // };
 
     renderCharacter = (character: ListCharacter) => (
         <ListItemLink to={`${this.props.match.url}${routes.character}${character.id}`}>
             <ListItemText primary={character.name} />
-            {this.props.campaign && this.props.campaign.owner && (
+            {this.props.campaign?.owner && (
                 <Icon color={character.visible ? 'primary' : 'disabled'}>
                     <Visibility />
                 </Icon>
@@ -96,59 +98,55 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
         </ListItemLink>
     );
 
-    goToList = (): void => {
-        this.setState({ tab: 0 });
-    };
+    // renderCreateCharacter = () => {
+    //     if (!this.props.campaign) {
+    //         return undefined;
+    //     }
+    //     const campaign = this.props.campaign;
+    //     return (
+    //         <div className="centering">
+    //             <NewCharacterForm
+    //                 campaignId={campaign.id}
+    //                 onSubmitComplete={this.goToList}
+    //                 className="flexColumn CampaignDetailScreen__createContainer"
+    //             />
+    //         </div>
+    //     );
+    // };
 
-    renderCreateCharacter = () => {
-        if (!this.props.campaign) {
-            return undefined;
-        }
-        const campaign = this.props.campaign;
-        return (
-            <div className="centering">
-                <NewCharacterForm
-                    campaignId={campaign.id}
-                    onSubmitComplete={this.goToList}
-                    className="flexColumn CampaignDetailScreen__createContainer"
-                />
-            </div>
-        );
-    };
+    // handleCheckDelete = (event: ChangeEvent<HTMLInputElement>) => {
+    //     this.setState({ deleteCheck: event.target.checked });
+    // };
 
-    handleCheckDelete = (event: ChangeEvent<HTMLInputElement>) => {
-        this.setState({ deleteCheck: event.target.checked });
-    };
+    // onDelete = () => {
+    //     if (!this.props.campaign) {
+    //         return undefined;
+    //     }
+    //     const campaign = this.props.campaign;
+    //     this.props.deleteCampaign(campaign.id);
+    //     this.setState({ deleted: true });
+    // };
 
-    onDelete = () => {
-        if (!this.props.campaign) {
-            return undefined;
-        }
-        const campaign = this.props.campaign;
-        this.props.deleteCampaign(campaign.id);
-        this.setState({ deleted: true });
-    };
-
-    renderManageCampaign = () => {
-        return (
-            <div className="centering">
-                <div className="flexColumn">
-                    <FormControlLabel
-                        control={<Checkbox checked={this.state.deleteCheck} onChange={this.handleCheckDelete} />}
-                        label="I want to delete this campaign"
-                    />
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        disabled={!this.state.deleteCheck}
-                        onClick={this.onDelete}
-                    >
-                        Delete permanently
-                    </Button>
-                </div>
-            </div>
-        );
-    };
+    // renderManageCampaign = () => {
+    //     return (
+    //         <div className="centering">
+    //             <div className="flexColumn">
+    //                 <FormControlLabel
+    //                     control={<Checkbox checked={this.state.deleteCheck} onChange={this.handleCheckDelete} />}
+    //                     label="I want to delete this campaign"
+    //                 />
+    //                 <Button
+    //                     variant="contained"
+    //                     color="secondary"
+    //                     disabled={!this.state.deleteCheck}
+    //                     onClick={this.onDelete}
+    //                 >
+    //                     Delete permanently
+    //                 </Button>
+    //             </div>
+    //         </div>
+    //     );
+    // };
 
     render() {
         if (this.state.deleted) {
@@ -200,5 +198,6 @@ const mapStateToProps = (state: RootState) => ({
 
 export const CampaignDetailScreen = connect(mapStateToProps, {
     fetchCampaign: campaignActions.actions.fetchCampaign,
+    fetchCharacters: campaignActions.actions.fetchCharacters,
     deleteCampaign: campaignActions.actions.deleteCampaign
 })(CampaignDetailRaw);
