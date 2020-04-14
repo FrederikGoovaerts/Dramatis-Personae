@@ -16,7 +16,7 @@ import { ChangeEvent } from 'react';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { match, Redirect } from 'react-router';
-import Visibility from '@material-ui/icons/Visibility';
+import { Add, Visibility } from '@material-ui/icons';
 
 import { routes } from '../../config/constants';
 import { campaignActions } from '../../store/actions';
@@ -26,6 +26,7 @@ import { ListItemLink } from '../atoms/ListItemLink';
 import { CampaignCharacterBreadcrumb } from '../molecules/CampaignCharacterBreadcrumbs';
 import { Header } from '../molecules/Header';
 import { NewCharacterForm } from '../molecules/NewCharacterForm';
+import { Fab, Modal } from '@material-ui/core';
 
 export interface MatchParams {
     id: string;
@@ -47,7 +48,7 @@ interface MapProps {
 type AllProps = Props & MapProps;
 
 interface State {
-    tab: number;
+    createOpen: boolean;
     deleteCheck: boolean;
     deleted: boolean;
 }
@@ -55,13 +56,21 @@ interface State {
 class CampaignDetailRaw extends React.Component<AllProps, State> {
     constructor(props: AllProps) {
         super(props);
-        this.state = { tab: 0, deleteCheck: false, deleted: false };
+        this.state = { createOpen: false, deleteCheck: false, deleted: false };
     }
 
     componentDidMount(): void {
         this.props.fetchCampaign(this.props.match.params.id);
         this.props.fetchCharacters(this.props.match.params.id);
     }
+
+    openCreate = (): void => {
+        this.setState({ createOpen: true });
+    };
+
+    closeCreate = (): void => {
+        this.setState({ createOpen: false });
+    };
 
     // renderMemberList = () => {
     //     if (!this.props.campaign) {
@@ -88,31 +97,24 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
     // };
 
     renderCharacter = (character: ListCharacter) => (
-        <ListItemLink to={`${this.props.match.url}${routes.character}${character.id}`}>
+        <ListItemLink to={`${this.props.match.url}${routes.character}${character.id}`} key={character.id}>
             <ListItemText primary={character.name} />
-            {this.props.campaign?.owner && (
-                <Icon color={character.visible ? 'primary' : 'disabled'}>
-                    <Visibility />
-                </Icon>
-            )}
+            {this.props.campaign?.owner && <Visibility color={character.visible ? 'primary' : 'disabled'} />}
         </ListItemLink>
     );
 
-    // renderCreateCharacter = () => {
-    //     if (!this.props.campaign) {
-    //         return undefined;
-    //     }
-    //     const campaign = this.props.campaign;
-    //     return (
-    //         <div className="centering">
-    //             <NewCharacterForm
-    //                 campaignId={campaign.id}
-    //                 onSubmitComplete={this.goToList}
-    //                 className="flexColumn CampaignDetailScreen__createContainer"
-    //             />
-    //         </div>
-    //     );
-    // };
+    renderCreateCharacter = () => {
+        if (!this.props.campaign) {
+            return <div />;
+        }
+        const campaign = this.props.campaign;
+        return (
+            <Paper className="CampaignDetail__createPaper">
+                <Typography variant="h5">New character</Typography>
+                <NewCharacterForm campaignId={campaign.id} className="CampaignDetail__createContainer" />
+            </Paper>
+        );
+    };
 
     // handleCheckDelete = (event: ChangeEvent<HTMLInputElement>) => {
     //     this.setState({ deleteCheck: event.target.checked });
@@ -178,11 +180,18 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                             <List>{characters.map(this.renderCharacter)}</List>
                         </Paper>
                     )}
+                    <Fab className="CampaignDetail__createFab" color="primary" onClick={this.openCreate}>
+                        <Add />
+                    </Fab>
+
+                    <Modal open={this.state.createOpen} onClose={this.closeCreate}>
+                        <div className="modal">{this.renderCreateCharacter()}</div>
+                    </Modal>
                 </div>
             );
         }
         return (
-            <div className={'campaignDetail__container'}>
+            <div className={'CampaignDetail__container'}>
                 <Header />
                 {contents}
             </div>
