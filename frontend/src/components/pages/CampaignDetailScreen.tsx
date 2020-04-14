@@ -111,7 +111,11 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
         return (
             <Paper className="CampaignDetail__createPaper">
                 <Typography variant="h5">New character</Typography>
-                <NewCharacterForm campaignId={campaign.id} className="CampaignDetail__createContainer" />
+                <NewCharacterForm
+                    campaignId={campaign.id}
+                    className="CampaignDetail__createContainer"
+                    onSubmitComplete={this.closeCreate}
+                />
             </Paper>
         );
     };
