@@ -1,10 +1,6 @@
 package dev.frederik.dramatispersonae
 
-import dev.frederik.dramatispersonae.model.Campaign
-import dev.frederik.dramatispersonae.model.CampaignRepository
-import dev.frederik.dramatispersonae.model.Character
-import dev.frederik.dramatispersonae.model.User
-import dev.frederik.dramatispersonae.model.UserRepository
+import dev.frederik.dramatispersonae.model.*
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -38,6 +34,8 @@ class LocalDevFixtures(private val userRepository: UserRepository,
         val char2 = Character("Char2", "An invisible char in an owned campaign", false, campaign1, mutableListOf())
         val char3 = Character("Char3", "A visible char in a non-owned campaign", true, campaign3, mutableListOf())
         val char4 = Character("Char4", "An invisible char in a non-owned campaign", false, campaign3, mutableListOf())
+        val note1 = Note("Test note", user1, char1)
+        char1.notes.add(note1)
         campaign1.characters.add(char1)
         campaign1.characters.add(char2)
         campaign3.characters.add(char3)

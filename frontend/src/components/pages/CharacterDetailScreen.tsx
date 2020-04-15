@@ -22,8 +22,8 @@ import {
     Character,
     CharacterDeletePayload,
     CreateNotePayload,
-    TabContent,
-    VisibilityUpdatePayload
+    VisibilityUpdatePayload,
+    Note
 } from '../../types';
 import { SpacedDivider } from '../atoms/SpacedDivider';
 import { CampaignCharacterBreadcrumb } from '../molecules/CampaignCharacterBreadcrumbs';
@@ -42,10 +42,11 @@ interface Props {
 interface MapProps {
     character: Character | null;
     campaign: Campaign | null;
+    notes: Note[];
     loading: boolean;
     fetchCharacter: (id: string) => void;
+    fetchNotes: (id: string) => void;
     fetchCampaign: (id: string) => void;
-    setNote: (payload: CreateNotePayload) => void;
     setVisible: (payload: VisibilityUpdatePayload) => void;
     deleteCharacter: (payload: CharacterDeletePayload) => void;
 }
@@ -73,6 +74,7 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
     componentDidMount(): void {
         this.props.fetchCharacter(this.props.match.params.characterId);
         this.props.fetchCampaign(this.props.match.params.campaignId);
+        this.props.fetchNotes(this.props.match.params.characterId);
     }
 
     handleToggleVisible = (event: ChangeEvent<HTMLInputElement>) => {
@@ -94,29 +96,12 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         this.setState({ note: event.target.value });
     };
 
-    handleSubmit = () => {
-        if (this.props.character && this.state.note !== undefined) {
-            this.props.setNote({ characterId: this.props.character.id, note: this.state.note });
-            this.setState({ note: undefined });
-        }
-    };
-
     renderNotes = () => {
-        if (!this.props.character) {
-            return undefined;
-        }
         return (
             <div>
-                <div>
-                    <Button
-                        disabled={this.state.note === undefined}
-                        variant="contained"
-                        color="primary"
-                        onClick={this.handleSubmit}
-                    >
-                        Save notes
-                    </Button>
-                </div>
+                {this.props.notes.map((n) => (
+                    <Typography>{n.contents}</Typography>
+                ))}
             </div>
         );
     };
@@ -179,31 +164,6 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         );
     };
 
-    tabs: TabContent[] = [
-        {
-            name: 'Character information',
-            component: this.renderDescription
-        },
-        {
-            name: 'Personal notes',
-            component: this.renderNotes
-        }
-    ];
-
-    ownerTabs: TabContent[] = [
-        {
-            name: 'Manage Character',
-            component: this.renderManageCharacter
-        }
-    ];
-
-    getTabs = (): TabContent[] =>
-        this.props.campaign && this.props.campaign.owner ? [...this.tabs, ...this.ownerTabs] : this.tabs;
-
-    handleTabChange = (event: ChangeEvent, value: number) => {
-        this.setState({ tab: value });
-    };
-
     render() {
         if (this.state.deleted) {
             return (
@@ -223,22 +183,7 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
                     <CampaignCharacterBreadcrumb campaign={campaign} character={character} />
                     <Typography variant="h4">{character.name}</Typography>
                     {this.props.campaign.owner && this.renderVisibilityToggle(this.props.character)}
-                    <div className="bottomSpaced">
-                        <Paper>
-                            <Tabs
-                                value={this.state.tab}
-                                onChange={this.handleTabChange}
-                                indicatorColor="primary"
-                                textColor="primary"
-                                centered
-                            >
-                                {this.getTabs().map((tab) => (
-                                    <Tab key={tab.name} label={tab.name} />
-                                ))}
-                            </Tabs>
-                        </Paper>
-                    </div>
-                    {this.getTabs()[this.state.tab].component()}
+                    {this.renderNotes()}
                 </div>
             );
         }
@@ -254,13 +199,14 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
 const mapStateToProps = (state: RootState) => ({
     character: state.character.character,
     campaign: state.campaign.campaign,
-    loading: state.character.loading && state.campaign.loading
+    notes: state.character.notes,
+    loading: state.character.loading && state.campaign.loading && state.character.notesLoading
 });
 
 export const CharacterDetailScreen = connect(mapStateToProps, {
     fetchCharacter: characterActions.actions.fetchCharacter,
-    setNote: characterActions.actions.setNote,
     fetchCampaign: campaignActions.actions.fetchCampaign,
+    fetchNotes: characterActions.actions.fetchNotes,
     setVisible: characterActions.actions.setVisible,
     deleteCharacter: characterActions.actions.deleteCharacter
 })(CharacterDetailRaw);

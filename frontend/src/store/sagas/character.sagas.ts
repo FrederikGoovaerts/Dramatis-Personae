@@ -14,6 +14,18 @@ function* fetchCharacter(action: characterActions.specificTypes['fetchCharacter'
     yield put(characterActions.actions.setCharacterLoading(false));
 }
 
+function* fetchNotes(action: characterActions.specificTypes['fetchNotes']) {
+    yield put(characterActions.actions.setNotesLoading(true));
+    try {
+        const result = yield character.getNotes(action.payload);
+        console.log(result);
+        yield put(characterActions.actions.setNotes(result));
+    } catch (e) {
+        console.error('Unable to fetch notes. Please try again later.');
+    }
+    yield put(characterActions.actions.setNotesLoading(false));
+}
+
 // function* newCharacter(action: characterActions.specificTypes['newCharacter']) {
 //     try {
 //         yield character.create(action.payload);
@@ -62,6 +74,7 @@ function* fetchCharacter(action: characterActions.specificTypes['fetchCharacter'
 
 export default function* watcher() {
     yield takeEvery(characterActions.names.fetchCharacter, fetchCharacter);
+    yield takeEvery(characterActions.names.fetchNotes, fetchNotes);
     // yield takeEvery(characterActions.names.newCharacter, newCharacter);
     // yield takeEvery(characterActions.names.updateCharacter, updateCharacter);
     // yield takeEvery(characterActions.names.deleteCharacter, deleteCharacter);

@@ -25,7 +25,7 @@ export async function deletePermanently(id: string): Promise<void> {
 
 export async function getNotes(id: string): Promise<Array<Note>> {
     const url = buildPath(`${api.CHARACTER.PATH}/${id}${api.CHARACTER.SUBPATH_NOTE}`);
-    return await axiosInstance.get(url);
+    return (await axiosInstance.get(url)).data;
 }
 
 export async function createNote(payload: CreateNotePayload): Promise<void> {
