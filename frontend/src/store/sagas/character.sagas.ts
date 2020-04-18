@@ -63,14 +63,14 @@ function* fetchNotes(action: characterActions.specificTypes['fetchNotes']) {
 //     }
 // }
 
-// function* setVisibility(action: characterActions.specificTypes['setVisible']) {
-//     try {
-//         yield character.setVisible(action.payload);
-//         yield put(characterActions.actions.fetchCharacter(String(action.payload.characterId)));
-//     } catch (e) {
-//         console.error('Unable to update note. Please try again later.');
-//     }
-// }
+function* setVisibility(action: characterActions.specificTypes['setVisible']) {
+    try {
+        yield character.setVisible(action.payload);
+        yield put(characterActions.actions.fetchCharacter(String(action.payload.characterId)));
+    } catch (e) {
+        console.error('Unable to update note. Please try again later.');
+    }
+}
 
 export default function* watcher() {
     yield takeEvery(characterActions.names.fetchCharacter, fetchCharacter);
@@ -79,5 +79,5 @@ export default function* watcher() {
     // yield takeEvery(characterActions.names.updateCharacter, updateCharacter);
     // yield takeEvery(characterActions.names.deleteCharacter, deleteCharacter);
     // yield takeEvery(characterActions.names.setNote, setNote);
-    // yield takeEvery(characterActions.names.setVisibility, setVisibility);
+    yield takeEvery(characterActions.names.setVisibility, setVisibility);
 }
