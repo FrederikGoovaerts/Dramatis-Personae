@@ -3,7 +3,7 @@ import { api } from '../config/constants';
 import { buildPath } from './base.api';
 
 export async function update(id: string, contents: string): Promise<void> {
-    const url = buildPath(`${api.CHARACTER.PATH}/${id}`);
+    const url = buildPath(`${api.NOTE.PATH}/${id}`);
     await axiosInstance.put(url, { contents });
 }
 
