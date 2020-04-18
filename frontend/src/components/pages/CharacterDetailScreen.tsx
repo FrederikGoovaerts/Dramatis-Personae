@@ -2,12 +2,10 @@ import './CharacterDetailScreen.scss';
 
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import Tabs from '@material-ui/core/Tabs';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Switch from '@material-ui/core/Switch';
-import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import { ChangeEvent } from 'react';
 import * as React from 'react';
@@ -17,18 +15,13 @@ import { routes } from '../../config/constants';
 
 import { campaignActions, characterActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
-import {
-    Campaign,
-    Character,
-    CharacterDeletePayload,
-    CreateNotePayload,
-    VisibilityUpdatePayload,
-    Note
-} from '../../types';
+import { Campaign, Character, CharacterDeletePayload, VisibilityUpdatePayload, Note } from '../../types';
 import { SpacedDivider } from '../atoms/SpacedDivider';
 import { CampaignCharacterBreadcrumb } from '../molecules/CampaignCharacterBreadcrumbs';
 import { Header } from '../molecules/Header';
 import { UpdateCharacterForm } from '../molecules/UpdateCharacterForm';
+import { ListItem, ListItemText, ListItemSecondaryAction, IconButton, List, Divider } from '@material-ui/core';
+import { Edit, Add } from '@material-ui/icons';
 
 export interface MatchParams {
     campaignId: string;
@@ -96,13 +89,38 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         this.setState({ note: event.target.value });
     };
 
+    renderNote = (note: Note) => {
+        return (
+            <div key={note.id} className="CharacterDetail__note">
+                <ListItem>
+                    <ListItemText
+                        primary={note.contents}
+                        primaryTypographyProps={{ align: 'justify', className: 'CharacterDetail__noteContents' }}
+                    />
+                    <ListItemSecondaryAction>
+                        <IconButton edge="end" aria-label="delete" onClick={console.log}>
+                            <Edit />
+                        </IconButton>
+                    </ListItemSecondaryAction>
+                </ListItem>
+                <Divider />
+            </div>
+        );
+    };
     renderNotes = () => {
         return (
-            <div>
-                {this.props.notes.map((n) => (
-                    <Typography>{n.contents}</Typography>
-                ))}
-            </div>
+            <Paper>
+                <List>
+                    {this.props.notes.map(this.renderNote)}
+                    <div key={'addButton'} className="CharacterDetail__note">
+                        <ListItem className="CharacterDetail__addButtonItem">
+                            <IconButton color="primary" edge="end" aria-label="delete" onClick={console.log}>
+                                <Add />
+                            </IconButton>
+                        </ListItem>
+                    </div>
+                </List>
+            </Paper>
         );
     };
 
@@ -112,8 +130,9 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         }
         const character = this.props.character;
         return (
-            <div className="centering">
-                <Typography>{character.description}</Typography>
+            <div className="CharacterDetail__descriptionContainer">
+                <Typography className="CharacterDetail__descriptionTitle">About this character:</Typography>
+                <Typography className="CharacterDetail__descriptionContents">{character.description}</Typography>
             </div>
         );
     };
@@ -166,11 +185,7 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
 
     render() {
         if (this.state.deleted) {
-            return (
-                <div>
-                    <Redirect to={`${routes.campaign}${this.props.match.params.campaignId}`} />
-                </div>
-            );
+            return <Redirect to={`${routes.campaign}${this.props.match.params.campaignId}`} />;
         }
 
         let contents: React.ReactNode;
@@ -181,14 +196,17 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
             contents = (
                 <div>
                     <CampaignCharacterBreadcrumb campaign={campaign} character={character} />
-                    <Typography variant="h4">{character.name}</Typography>
+                    <Typography variant="h4" gutterBottom>
+                        {character.name}
+                    </Typography>
                     {this.props.campaign.owner && this.renderVisibilityToggle(this.props.character)}
+                    {this.renderDescription()}
                     {this.renderNotes()}
                 </div>
             );
         }
         return (
-            <div className="campaignDetail__container">
+            <div className="CharacterDetail__container">
                 <Header />
                 {contents}
             </div>

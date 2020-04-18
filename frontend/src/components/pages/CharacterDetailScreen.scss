@@ -1,5 +1,32 @@
 .CharacterDetailScreen__visibilityContainer {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.CharacterDetail__note {
+    padding-right: 1em;
+    padding-left: 1em;
+
+    .CharacterDetail__noteContents {
+        margin-right: 1em !important;
+    }
+}
+
+.CharacterDetail__descriptionContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 2em;
+
+    .CharacterDetail__descriptionTitle {
+        padding-right: 1em;
+    }
+    .CharacterDetail__descriptionContents {
+        font-style: italic;
+    }
+}
+
+.CharacterDetail__addButtonItem {
+    justify-content: end !important;
 }
