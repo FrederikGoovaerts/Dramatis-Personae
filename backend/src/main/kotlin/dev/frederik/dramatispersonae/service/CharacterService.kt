@@ -126,7 +126,7 @@ class CharacterService(private val repository: CharacterRepository) {
             return null
         }
         val character = characterQuery.get()
-        return character.notes.filter { it.author === user }
+        return character.notes.filter { it.author == user }
     }
 
     fun createNote(user: User, id: UUID, contents: String): Boolean {
