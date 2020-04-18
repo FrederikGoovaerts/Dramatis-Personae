@@ -81,7 +81,7 @@ class CharacterService(private val repository: CharacterRepository) {
 
     fun getCharacter(user: User, id: UUID): Character? {
         val characterQuery = this.repository.findById(id)
-        return if (!characterQuery.isPresent || !characterQuery.get().campaign.isOwnedBy(user)) {
+        return if (!characterQuery.isPresent || !characterQuery.get().campaign.isAccessibleBy(user)) {
             null
         } else {
             characterQuery.get()
