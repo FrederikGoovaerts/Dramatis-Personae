@@ -20,7 +20,7 @@ import { SpacedDivider } from '../atoms/SpacedDivider';
 import { CampaignCharacterBreadcrumb } from '../molecules/CampaignCharacterBreadcrumbs';
 import { Header } from '../molecules/Header';
 import { UpdateCharacterForm } from '../molecules/UpdateCharacterForm';
-import { ListItem, ListItemText, ListItemSecondaryAction, IconButton, List, Divider } from '@material-ui/core';
+import { ListItem, ListItemText, ListItemSecondaryAction, IconButton, List, Divider, Modal } from '@material-ui/core';
 import { Edit, Add } from '@material-ui/icons';
 
 export interface MatchParams {
@@ -45,8 +45,8 @@ interface MapProps {
 }
 
 interface State {
-    note: string | undefined;
-    tab: number;
+    createOpen: boolean;
+    editId: string | undefined;
     deleteCheck: boolean;
     deleted: boolean;
 }
@@ -57,8 +57,8 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
     constructor(props: AllProps) {
         super(props);
         this.state = {
-            note: undefined,
-            tab: 0,
+            createOpen: false,
+            editId: undefined,
             deleteCheck: false,
             deleted: false
         };
@@ -85,45 +85,6 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         );
     }
 
-    handleChangeNote = (event: ChangeEvent<HTMLInputElement>) => {
-        this.setState({ note: event.target.value });
-    };
-
-    renderNote = (note: Note) => {
-        return (
-            <div key={note.id} className="CharacterDetail__note">
-                <ListItem>
-                    <ListItemText
-                        primary={note.contents}
-                        primaryTypographyProps={{ align: 'justify', className: 'CharacterDetail__noteContents' }}
-                    />
-                    <ListItemSecondaryAction>
-                        <IconButton edge="end" aria-label="delete" onClick={console.log}>
-                            <Edit />
-                        </IconButton>
-                    </ListItemSecondaryAction>
-                </ListItem>
-                <Divider />
-            </div>
-        );
-    };
-    renderNotes = () => {
-        return (
-            <Paper>
-                <List>
-                    {this.props.notes.map(this.renderNote)}
-                    <div key={'addButton'} className="CharacterDetail__note">
-                        <ListItem className="CharacterDetail__addButtonItem">
-                            <IconButton color="primary" edge="end" aria-label="delete" onClick={console.log}>
-                                <Add />
-                            </IconButton>
-                        </ListItem>
-                    </div>
-                </List>
-            </Paper>
-        );
-    };
-
     renderDescription = () => {
         if (!this.props.character) {
             return undefined;
@@ -134,6 +95,56 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
                 <Typography className="CharacterDetail__descriptionTitle">About this character:</Typography>
                 <Typography className="CharacterDetail__descriptionContents">{character.description}</Typography>
             </div>
+        );
+    };
+
+    renderCreateNote = () => <div></div>;
+
+    closeCreateNote = () => {
+        this.setState({ createOpen: false });
+    };
+
+    renderEditNote = () => <div></div>;
+
+    closeEditNote = () => {
+        this.setState({ editId: undefined });
+    };
+
+    renderNote = (note: Note) => {
+        const openEdit = () => this.setState({ editId: note.id });
+        return (
+            <div key={note.id} className="CharacterDetail__note">
+                <ListItem>
+                    <ListItemText
+                        primary={note.contents}
+                        primaryTypographyProps={{ align: 'justify', className: 'CharacterDetail__noteContents' }}
+                    />
+                    <ListItemSecondaryAction>
+                        <IconButton edge="end" onClick={openEdit}>
+                            <Edit />
+                        </IconButton>
+                    </ListItemSecondaryAction>
+                </ListItem>
+                <Divider />
+            </div>
+        );
+    };
+
+    renderNotes = () => {
+        const openCreate = () => this.setState({ createOpen: true });
+        return (
+            <Paper>
+                <List>
+                    {this.props.notes.map(this.renderNote)}
+                    <div key={'addButton'} className="CharacterDetail__note">
+                        <ListItem className="CharacterDetail__addButtonItem">
+                            <IconButton edge="end" color="primary" onClick={openCreate}>
+                                <Add />
+                            </IconButton>
+                        </ListItem>
+                    </div>
+                </List>
+            </Paper>
         );
     };
 
@@ -202,6 +213,12 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
                     {this.props.campaign.owner && this.renderVisibilityToggle(this.props.character)}
                     {this.renderDescription()}
                     {this.renderNotes()}
+                    <Modal open={this.state.createOpen} onClose={this.closeCreateNote}>
+                        <div className="modal">{this.renderCreateNote()}</div>
+                    </Modal>
+                    <Modal open={this.state.editId !== undefined} onClose={this.closeEditNote}>
+                        <div className="modal">{this.renderEditNote()}</div>
+                    </Modal>
                 </div>
             );
         }
