@@ -23,6 +23,7 @@ import { UpdateCharacterForm } from '../molecules/UpdateCharacterForm';
 import { ListItem, ListItemText, ListItemSecondaryAction, IconButton, List, Divider, Modal } from '@material-ui/core';
 import { Edit, Add } from '@material-ui/icons';
 import { NewNoteForm } from '../molecules/NewNoteForm';
+import { EditNoteForm } from '../molecules/EditNoteForm';
 
 export interface MatchParams {
     campaignId: string;
@@ -47,7 +48,7 @@ interface MapProps {
 
 interface State {
     createOpen: boolean;
-    editId: string | undefined;
+    editNote: Note | undefined;
     deleteCheck: boolean;
     deleted: boolean;
 }
@@ -59,7 +60,7 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         super(props);
         this.state = {
             createOpen: false,
-            editId: undefined,
+            editNote: undefined,
             deleteCheck: false,
             deleted: false
         };
@@ -105,11 +106,11 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         }
         const character = this.props.character;
         return (
-            <Paper className="CharacterDetail__createPaper">
+            <Paper className="CharacterDetail__modalPaper">
                 <Typography variant="h5">New note</Typography>
                 <NewNoteForm
                     characterId={character.id}
-                    className="CharacterDetail__createContainer"
+                    className="CharacterDetail__modalContainer"
                     onSubmitComplete={this.closeCreateNote}
                 />
             </Paper>
@@ -120,14 +121,31 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         this.setState({ createOpen: false });
     };
 
-    renderEditNote = () => <div></div>;
+    renderEditNote = () => {
+        if (!this.props.character || !this.state.editNote) {
+            return <div />;
+        }
+        const character = this.props.character;
+        return (
+            <Paper className="CharacterDetail__modalPaper">
+                <Typography variant="h5">Update note</Typography>
+                <EditNoteForm
+                    characterId={character.id}
+                    noteId={this.state.editNote.id}
+                    noteContents={this.state.editNote.contents}
+                    className="CharacterDetail__modalContainer"
+                    onSubmitComplete={this.closeEditNote}
+                />
+            </Paper>
+        );
+    };
 
     closeEditNote = () => {
-        this.setState({ editId: undefined });
+        this.setState({ editNote: undefined });
     };
 
     renderNote = (note: Note) => {
-        const openEdit = () => this.setState({ editId: note.id });
+        const openEdit = () => this.setState({ editNote: note });
         return (
             <div key={note.id} className="CharacterDetail__note">
                 <ListItem>
@@ -232,7 +250,7 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
                     <Modal open={this.state.createOpen} onClose={this.closeCreateNote}>
                         <div className="modal">{this.renderCreateNote()}</div>
                     </Modal>
-                    <Modal open={this.state.editId !== undefined} onClose={this.closeEditNote}>
+                    <Modal open={this.state.editNote !== undefined} onClose={this.closeEditNote}>
                         <div className="modal">{this.renderEditNote()}</div>
                     </Modal>
                 </div>

@@ -13,8 +13,14 @@
     }
 }
 
-.CharacterDetail__createPaper {
+.CharacterDetail__modalPaper {
     padding: 1em;
+}
+
+.CharacterDetail__modalContainer {
+    display: flex;
+    flex-direction: column;
+    width: 20em;
 }
 
 .CharacterDetail__descriptionContainer {
