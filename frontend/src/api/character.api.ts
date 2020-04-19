@@ -30,5 +30,5 @@ export async function getNotes(id: string): Promise<Array<Note>> {
 
 export async function createNote(payload: CreateNotePayload): Promise<void> {
     const url = buildPath(`${api.CHARACTER.PATH}/${payload.characterId}${api.CHARACTER.SUBPATH_NOTE}`);
-    await axiosInstance.post(url, { contents: payload.note });
+    await axiosInstance.post(url, { contents: payload.contents });
 }

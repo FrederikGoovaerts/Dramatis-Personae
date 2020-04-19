@@ -5,5 +5,11 @@ export interface Note {
 
 export interface CreateNotePayload {
     characterId: string;
-    note: string;
+    contents: string;
+}
+
+export interface EditNotePayload {
+    characterId: string;
+    noteId: string;
+    contents: string;
 }
