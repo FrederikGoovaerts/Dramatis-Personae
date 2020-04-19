@@ -37,7 +37,7 @@ class NoteService(private val repository: NoteRepository) {
 
     fun updateNote(user: User, id: UUID, contents: String): Boolean {
         val noteQuery = repository.findById(id)
-        if (!noteQuery.isPresent || noteQuery.get().author !== user) {
+        if (!noteQuery.isPresent || noteQuery.get().author != user) {
             return false
         }
         val note = noteQuery.get()
@@ -48,7 +48,7 @@ class NoteService(private val repository: NoteRepository) {
 
     fun deleteNote(user: User, id: UUID): Boolean {
         val noteQuery = repository.findById(id)
-        if (!noteQuery.isPresent || noteQuery.get().author !== user) {
+        if (!noteQuery.isPresent || noteQuery.get().author != user) {
             return false
         }
         repository.delete(noteQuery.get())
