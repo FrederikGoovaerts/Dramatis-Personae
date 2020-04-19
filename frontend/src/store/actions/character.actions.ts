@@ -17,6 +17,7 @@ export enum names {
     setNotes = 'SET_NOTES',
     updateCharacter = 'UPDATE_CHARACTER',
     deleteCharacter = 'DELETE_CHARACTER',
+    createNote = 'CREATE_NOTE',
     setVisibility = 'SET_CHARACTER_VISIBILITY'
 }
 
@@ -29,6 +30,7 @@ export const actions = {
     setNotes: (p: Note[]) => createAction(names.setNotes, p),
     updateCharacter: (p: CharacterUpdatePayload) => createAction(names.updateCharacter, p),
     deleteCharacter: (p: CharacterDeletePayload) => createAction(names.deleteCharacter, p),
+    createNote: (p: CreateNotePayload) => createAction(names.createNote, p),
     setVisible: (p: VisibilityUpdatePayload) => createAction(names.setVisibility, p)
 };
 
