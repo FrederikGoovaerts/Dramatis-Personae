@@ -54,7 +54,6 @@ class EditNoteFormRaw extends React.Component<AllProps, State> {
                     rows={5}
                     variant="outlined"
                     label="Note"
-                    helperText="A note on the character, containing your thoughts on, experiences with, or suspicions about the character."
                     value={this.state.note}
                     onChange={this.handleChange}
                     margin="normal"
