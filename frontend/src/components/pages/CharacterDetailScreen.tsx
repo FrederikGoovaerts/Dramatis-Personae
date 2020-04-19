@@ -22,6 +22,7 @@ import { Header } from '../molecules/Header';
 import { UpdateCharacterForm } from '../molecules/UpdateCharacterForm';
 import { ListItem, ListItemText, ListItemSecondaryAction, IconButton, List, Divider, Modal } from '@material-ui/core';
 import { Edit, Add } from '@material-ui/icons';
+import { NewNoteForm } from '../molecules/NewNoteForm';
 
 export interface MatchParams {
     campaignId: string;
@@ -98,7 +99,22 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         );
     };
 
-    renderCreateNote = () => <div></div>;
+    renderCreateNote = () => {
+        if (!this.props.character) {
+            return <div />;
+        }
+        const character = this.props.character;
+        return (
+            <Paper className="CharacterDetail__createPaper">
+                <Typography variant="h5">New note</Typography>
+                <NewNoteForm
+                    characterId={character.id}
+                    className="CharacterDetail__createContainer"
+                    onSubmitComplete={this.closeCreateNote}
+                />
+            </Paper>
+        );
+    };
 
     closeCreateNote = () => {
         this.setState({ createOpen: false });
