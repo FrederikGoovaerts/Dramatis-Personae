@@ -106,14 +106,11 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         }
         const character = this.props.character;
         return (
-            <Paper className="CharacterDetail__modalPaper">
-                <Typography variant="h5">New note</Typography>
-                <NewNoteForm
-                    characterId={character.id}
-                    className="CharacterDetail__modalContainer"
-                    onSubmitComplete={this.closeCreateNote}
-                />
-            </Paper>
+            <NewNoteForm
+                characterId={character.id}
+                className="CharacterDetail__modalContainer"
+                onSubmitComplete={this.closeCreateNote}
+            />
         );
     };
 
