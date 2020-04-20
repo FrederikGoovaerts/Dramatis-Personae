@@ -125,18 +125,13 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         if (!this.props.character || !this.state.editNote) {
             return <div />;
         }
-        const character = this.props.character;
         return (
-            <Paper className="CharacterDetail__modalPaper">
-                <Typography variant="h5">Update note</Typography>
-                <EditNoteForm
-                    characterId={character.id}
-                    noteId={this.state.editNote.id}
-                    noteContents={this.state.editNote.contents}
-                    className="CharacterDetail__modalContainer"
-                    onSubmitComplete={this.closeEditNote}
-                />
-            </Paper>
+            <EditNoteForm
+                characterId={this.props.character.id}
+                noteId={this.state.editNote.id}
+                noteContents={this.state.editNote.contents}
+                onSubmitComplete={this.closeEditNote}
+            />
         );
     };
 

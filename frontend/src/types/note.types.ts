@@ -13,3 +13,8 @@ export interface EditNotePayload {
     noteId: string;
     contents: string;
 }
+
+export interface DeleteNotePayload {
+    characterId: string;
+    noteId: string;
+}
