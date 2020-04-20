@@ -5,6 +5,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { characterActions } from '../../store/actions';
+import { Paper, Typography } from '@material-ui/core';
 
 interface Props {
     characterId: string;
@@ -45,21 +46,24 @@ class NewNoteFormRaw extends React.Component<AllProps, State> {
 
     render() {
         return (
-            <div className={this.props.className}>
-                <TextField
-                    multiline
-                    rows={5}
-                    variant="outlined"
-                    label="Note"
-                    helperText="A note on the character, containing your thoughts on, experiences with, or suspicions about the character."
-                    value={this.state.note}
-                    onChange={this.handleChange}
-                    margin="normal"
-                />
-                <Button variant="contained" color="primary" onClick={this.handleSubmit} disabled={!this.state.note}>
-                    Create
-                </Button>
-            </div>
+            <Paper className="modalPaper">
+                <div className="modalContainer">
+                    <Typography variant="h5">New note</Typography>
+                    <TextField
+                        multiline
+                        rows={5}
+                        variant="outlined"
+                        label="Note"
+                        helperText="A note on the character, containing your thoughts on, experiences with, or suspicions about the character."
+                        value={this.state.note}
+                        onChange={this.handleChange}
+                        margin="normal"
+                    />
+                    <Button variant="contained" color="primary" onClick={this.handleSubmit} disabled={!this.state.note}>
+                        Create
+                    </Button>
+                </div>
+            </Paper>
         );
     }
 }
