@@ -1,11 +1,4 @@
-import {
-    Character,
-    CharacterDeletePayload,
-    CharacterUpdatePayload,
-    CreateNotePayload,
-    VisibilityUpdatePayload,
-    Note
-} from '../../types';
+import { Character, CharacterEditPayload, CreateNotePayload, VisibilityUpdatePayload, Note } from '../../types';
 import { ActionTypeMapping, ActionUnion, createAction } from './base';
 
 export enum names {
@@ -15,7 +8,7 @@ export enum names {
     fetchNotes = 'FETCH_NOTES',
     setNotesLoading = 'SET_NOTES_LOADING',
     setNotes = 'SET_NOTES',
-    updateCharacter = 'UPDATE_CHARACTER',
+    editCharacter = 'EDIT_CHARACTER',
     deleteCharacter = 'DELETE_CHARACTER',
     createNote = 'CREATE_NOTE',
     setVisibility = 'SET_CHARACTER_VISIBILITY'
@@ -28,8 +21,8 @@ export const actions = {
     fetchNotes: (id: string) => createAction(names.fetchNotes, id),
     setNotesLoading: (p: boolean) => createAction(names.setNotesLoading, p),
     setNotes: (p: Note[]) => createAction(names.setNotes, p),
-    updateCharacter: (p: CharacterUpdatePayload) => createAction(names.updateCharacter, p),
-    deleteCharacter: (p: CharacterDeletePayload) => createAction(names.deleteCharacter, p),
+    editCharacter: (p: CharacterEditPayload) => createAction(names.editCharacter, p),
+    deleteCharacter: (p: string) => createAction(names.deleteCharacter, p),
     createNote: (p: CreateNotePayload) => createAction(names.createNote, p),
     setVisible: (p: VisibilityUpdatePayload) => createAction(names.setVisibility, p)
 };
