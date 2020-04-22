@@ -16,14 +16,10 @@ export interface CharacterPrototype {
     description: string;
 }
 
-export interface CharacterUpdatePayload {
+export interface CharacterEditPayload {
     characterId: string;
-    update: CharacterPrototype;
-}
-
-export interface CharacterDeletePayload {
-    campaignId: string;
-    characterId: string;
+    name: string;
+    description: string;
 }
 
 export interface VisibilityUpdatePayload {

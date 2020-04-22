@@ -1,9 +1,6 @@
 import './CharacterDetailScreen.scss';
 
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
@@ -11,16 +8,25 @@ import { ChangeEvent } from 'react';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { match, Redirect } from 'react-router';
-import { routes } from '../../config/constants';
 
+import { routes } from '../../config/constants';
+import { EditCharacterForm } from '../molecules/EditCharacterForm';
 import { campaignActions, characterActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
-import { Campaign, Character, CharacterDeletePayload, VisibilityUpdatePayload, Note } from '../../types';
-import { SpacedDivider } from '../atoms/SpacedDivider';
+import { Campaign, Character, VisibilityUpdatePayload, Note } from '../../types';
 import { CampaignCharacterBreadcrumb } from '../molecules/CampaignCharacterBreadcrumbs';
 import { Header } from '../molecules/Header';
-import { UpdateCharacterForm } from '../molecules/UpdateCharacterForm';
-import { ListItem, ListItemText, ListItemSecondaryAction, IconButton, List, Divider, Modal } from '@material-ui/core';
+import {
+    ListItem,
+    ListItemText,
+    ListItemSecondaryAction,
+    IconButton,
+    List,
+    Divider,
+    Modal,
+    Box,
+    FormControlLabel
+} from '@material-ui/core';
 import { Edit, Add } from '@material-ui/icons';
 import { NewNoteForm } from '../molecules/NewNoteForm';
 import { EditNoteForm } from '../molecules/EditNoteForm';
@@ -43,12 +49,12 @@ interface MapProps {
     fetchNotes: (id: string) => void;
     fetchCampaign: (id: string) => void;
     setVisible: (payload: VisibilityUpdatePayload) => void;
-    deleteCharacter: (payload: CharacterDeletePayload) => void;
 }
 
 interface State {
     createOpen: boolean;
     editNote: Note | undefined;
+    editCharacterOpen: boolean;
     deleteCheck: boolean;
     deleted: boolean;
 }
@@ -61,6 +67,7 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         this.state = {
             createOpen: false,
             editNote: undefined,
+            editCharacterOpen: false,
             deleteCheck: false,
             deleted: false
         };
@@ -76,28 +83,6 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         if (this.props.character) {
             this.props.setVisible({ characterId: this.props.character.id, visible: event.target.checked });
         }
-    };
-
-    renderVisibilityToggle(character: Character) {
-        return (
-            <div className="CharacterDetailScreen__visibilityContainer">
-                <Typography>Visible to players:</Typography>
-                <Switch color="primary" onChange={this.handleToggleVisible} checked={character.visible} />
-            </div>
-        );
-    }
-
-    renderDescription = () => {
-        if (!this.props.character) {
-            return undefined;
-        }
-        const character = this.props.character;
-        return (
-            <div className="CharacterDetail__descriptionContainer">
-                <Typography className="CharacterDetail__descriptionTitle">About this character:</Typography>
-                <Typography className="CharacterDetail__descriptionContents">{character.description}</Typography>
-            </div>
-        );
     };
 
     renderCreateNote = () => {
@@ -116,6 +101,10 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
 
     closeCreateNote = () => {
         this.setState({ createOpen: false });
+    };
+
+    closeEditCharacter = () => {
+        this.setState({ editCharacterOpen: false });
     };
 
     renderEditNote = () => {
@@ -174,49 +163,18 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         );
     };
 
-    handleCheckDelete = (event: ChangeEvent<HTMLInputElement>) => {
-        this.setState({ deleteCheck: event.target.checked });
-    };
-
-    onDelete = () => {
-        if (!this.props.character || !this.props.campaign) {
-            return undefined;
-        }
-        const character = this.props.character;
-        const campaign = this.props.campaign;
-        this.props.deleteCharacter({ characterId: character.id, campaignId: campaign.id });
-        this.setState({ deleted: true });
-    };
-
-    renderManageCharacter = () => {
+    renderEditCharacter = () => {
         if (!this.props.character) {
             return undefined;
         }
         const character = this.props.character;
         return (
-            <div className="centering">
-                <div className="flexColumn">
-                    <UpdateCharacterForm
-                        characterId={character.id}
-                        initialName={character.name}
-                        initialDescription={character.description}
-                        className="flexColumn CampaignDetailScreen__createContainer"
-                    />
-                    <SpacedDivider />
-                    <FormControlLabel
-                        control={<Checkbox checked={this.state.deleteCheck} onChange={this.handleCheckDelete} />}
-                        label="I want to delete this character"
-                    />
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        disabled={!this.state.deleteCheck}
-                        onClick={this.onDelete}
-                    >
-                        Delete permanently
-                    </Button>
-                </div>
-            </div>
+            <EditCharacterForm
+                characterId={character.id}
+                initialName={character.name}
+                initialDescription={character.description}
+                onSubmitComplete={this.closeEditCharacter}
+            />
         );
     };
 
@@ -233,14 +191,43 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
             contents = (
                 <div>
                     <CampaignCharacterBreadcrumb campaign={campaign} character={character} />
-                    <Typography variant="h4" gutterBottom>
-                        {character.name}
-                    </Typography>
-                    {this.props.campaign.owner && this.renderVisibilityToggle(this.props.character)}
-                    {this.renderDescription()}
+                    <Box className="CharacterDetail__header">
+                        <Typography gutterBottom variant="h4">
+                            {character.name}
+                        </Typography>
+                        <Typography gutterBottom className="CharacterDetail__descriptionContents">
+                            {character.description}
+                        </Typography>
+
+                        {this.props.campaign.owner && (
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        color="primary"
+                                        onChange={this.handleToggleVisible}
+                                        checked={character.visible}
+                                    />
+                                }
+                                label="Visible to players"
+                            />
+                        )}
+                        {this.props.campaign.owner && (
+                            <FormControlLabel
+                                control={
+                                    <IconButton onClick={() => this.setState({ editCharacterOpen: true })}>
+                                        <Edit />
+                                    </IconButton>
+                                }
+                                label="Edit character"
+                            />
+                        )}
+                    </Box>
                     {this.renderNotes()}
                     <Modal open={this.state.createOpen} onClose={this.closeCreateNote}>
                         <div className="modal">{this.renderCreateNote()}</div>
+                    </Modal>
+                    <Modal open={this.state.editCharacterOpen} onClose={this.closeEditCharacter}>
+                        <div className="modal">{this.renderEditCharacter()}</div>
                     </Modal>
                     <Modal open={this.state.editNote !== undefined} onClose={this.closeEditNote}>
                         <div className="modal">{this.renderEditNote()}</div>

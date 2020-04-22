@@ -13,18 +13,12 @@
     }
 }
 
-.CharacterDetail__descriptionContainer {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+.CharacterDetail__header {
     margin-bottom: 2em;
+}
 
-    .CharacterDetail__descriptionTitle {
-        padding-right: 1em;
-    }
-    .CharacterDetail__descriptionContents {
-        font-style: italic;
-    }
+.CharacterDetail__descriptionContents {
+    font-style: italic;
 }
 
 .CharacterDetail__addButtonItem {
