@@ -1,6 +1,6 @@
 import { axiosInstance } from '../config/axios';
 import { api } from '../config/constants';
-import { CharacterPrototype, CreateNotePayload, Character, Note, VisibilityUpdatePayload } from '../types';
+import { CreateNotePayload, Character, Note, VisibilityUpdatePayload, CharacterEditPayload } from '../types';
 import { buildPath } from './base.api';
 
 export async function get(id: string): Promise<Character> {
@@ -8,7 +8,7 @@ export async function get(id: string): Promise<Character> {
     return (await axiosInstance.get(url)).data;
 }
 
-export async function update(id: string, update: CharacterPrototype): Promise<void> {
+export async function update(id: string, update: CharacterEditPayload): Promise<void> {
     const url = buildPath(`${api.CHARACTER.PATH}/${id}`);
     await axiosInstance.put(url, update);
 }
