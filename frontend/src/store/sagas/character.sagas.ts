@@ -1,5 +1,5 @@
 import { put, takeEvery } from 'redux-saga/effects';
-import { characterActions, campaignActions } from '../actions';
+import { characterActions } from '../actions';
 import * as character from '../../api/character.api';
 
 function* fetchCharacter(action: characterActions.specificTypes['fetchCharacter']) {
