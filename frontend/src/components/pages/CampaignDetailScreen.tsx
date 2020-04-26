@@ -1,18 +1,10 @@
 import './CampaignDetailScreen.scss';
 
-import Checkbox from '@material-ui/core/Checkbox';
-import Button from '@material-ui/core/Button';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import ListItem from '@material-ui/core/ListItem';
-import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Icon from '@material-ui/core/Icon';
 import List from '@material-ui/core/List';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
-import Tabs from '@material-ui/core/Tabs';
-import { ChangeEvent } from 'react';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { match, Redirect } from 'react-router';
@@ -21,7 +13,7 @@ import { Add, Visibility } from '@material-ui/icons';
 import { routes } from '../../config/constants';
 import { campaignActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
-import { ListCharacter, TabContent, Campaign } from '../../types';
+import { ListCharacter, Campaign } from '../../types';
 import { ListItemLink } from '../atoms/ListItemLink';
 import { CampaignCharacterBreadcrumb } from '../molecules/CampaignCharacterBreadcrumbs';
 import { Header } from '../molecules/Header';
