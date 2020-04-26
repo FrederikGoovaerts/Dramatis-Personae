@@ -168,12 +168,14 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
             return undefined;
         }
         const character = this.props.character;
+        const onDelete = () => this.setState({ deleted: true });
         return (
             <EditCharacterForm
                 characterId={character.id}
                 initialName={character.name}
                 initialDescription={character.description}
                 onSubmitComplete={this.closeEditCharacter}
+                onDelete={onDelete}
             />
         );
     };

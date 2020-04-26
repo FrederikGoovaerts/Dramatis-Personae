@@ -13,6 +13,7 @@ interface Props {
     initialName: string;
     initialDescription: string;
     onSubmitComplete?: () => void;
+    onDelete?: () => void;
 }
 
 interface MapProps {
@@ -47,12 +48,15 @@ class EditCharacterFormRaw extends React.Component<AllProps, State> {
             name: this.state.name,
             description: this.state.description
         });
+        if (this.props.onSubmitComplete) {
+            this.props.onSubmitComplete();
+        }
     };
 
     handleDelete = () => {
         this.props.deleteCharacter(this.props.characterId);
-        if (this.props.onSubmitComplete) {
-            this.props.onSubmitComplete();
+        if (this.props.onDelete) {
+            setTimeout(this.props.onDelete, 500);
         }
     };
 
