@@ -24,3 +24,6 @@ spring:
   profiles: dev
   flyway:
     enabled: false
+  googleAuth:
+    clientId: dummy
+    clientSecret: dummy
