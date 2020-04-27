@@ -1,0 +1,26 @@
+.CharacterDetailScreen__visibilityContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.CharacterDetail__note {
+    padding-right: 1em;
+    padding-left: 1em;
+
+    .CharacterDetail__noteContents {
+        margin-right: 1em !important;
+    }
+}
+
+.CharacterDetail__header {
+    margin-bottom: 2em;
+}
+
+.CharacterDetail__descriptionContents {
+    font-style: italic;
+}
+
+.CharacterDetail__addButtonItem {
+    justify-content: end !important;
+}

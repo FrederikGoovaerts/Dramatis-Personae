@@ -1,0 +1,55 @@
+.App__pageOuterContainer {
+    margin-top: 6em;
+    display: flex;
+    justify-content: center;
+}
+
+.App__pageInnerContainer {
+    width: 90vw;
+}
+
+.bottomSpaced {
+    margin-bottom: 2em;
+}
+
+.centering {
+    display: flex;
+    justify-content: center;
+}
+
+.flexColumn {
+    display: flex;
+    flex-direction: column;
+}
+
+.unstyled {
+    text-decoration: none;
+    color: inherit;
+}
+
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.modalPaper {
+    padding: 1em;
+}
+
+.modalContainer {
+    display: flex;
+    flex-direction: column;
+    width: 25em;
+}
+
+.modalHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+a {
+    text-decoration: none;
+}

@@ -10,7 +10,7 @@ import java.util.*
 
 data class CreateCharacterDto(val name: String, val description: String)
 
-data class CharacterListView(val name: String, val id: UUID)
+data class CharacterListView(val name: String, val visible: Boolean, val id: UUID)
 data class CharacterDetailView(val name: String, val description: String, val visible: Boolean, val id: UUID)
 
 @RestController
@@ -38,6 +38,14 @@ class CharacterController(private val service: CharacterService) {
                         @PathVariable id: UUID,
                         @RequestBody character: CreateCharacterDto): ResponseEntity<Unit> {
         val success = this.service.updateCharacter(auth.principal, id, character.name, character.description)
+        return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
+    }
+
+    @PutMapping("/{id}/visible")
+    fun updateCharacterVisibility(auth: GoogleAuthentication,
+                                  @PathVariable id: UUID,
+                                  @RequestBody visible: Boolean): ResponseEntity<Unit> {
+        val success = this.service.updateCharacterVisibility(auth.principal, id, visible)
         return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
     }
 
@@ -73,7 +81,7 @@ class CharacterService(private val repository: CharacterRepository) {
 
     fun getCharacter(user: User, id: UUID): Character? {
         val characterQuery = this.repository.findById(id)
-        return if (!characterQuery.isPresent || !characterQuery.get().campaign.isOwnedBy(user)) {
+        return if (!characterQuery.isPresent || !characterQuery.get().campaign.isAccessibleBy(user)) {
             null
         } else {
             characterQuery.get()
@@ -88,6 +96,17 @@ class CharacterService(private val repository: CharacterRepository) {
         val character = characterQuery.get()
         character.name = name
         character.description = description
+        this.repository.save(character)
+        return true
+    }
+
+    fun updateCharacterVisibility(user: User, id: UUID, visible: Boolean): Boolean {
+        val characterQuery = repository.findById(id)
+        if (!characterQuery.isPresent || !characterQuery.get().campaign.isOwnedBy(user)) {
+            return false
+        }
+        val character = characterQuery.get()
+        character.isVisible = visible
         this.repository.save(character)
         return true
     }
@@ -107,7 +126,7 @@ class CharacterService(private val repository: CharacterRepository) {
             return null
         }
         val character = characterQuery.get()
-        return character.notes.filter { it.author === user }
+        return character.notes.filter { it.author == user }
     }
 
     fun createNote(user: User, id: UUID, contents: String): Boolean {

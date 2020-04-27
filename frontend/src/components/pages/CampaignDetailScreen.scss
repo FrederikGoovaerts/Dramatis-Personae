@@ -1,0 +1,15 @@
+.CampaignDetail__createContainer {
+    display: flex;
+    flex-direction: column;
+    width: 20em;
+}
+
+.CampaignDetail__createPaper {
+    padding: 1em;
+}
+
+.CampaignDetail__createFab {
+    position: absolute !important;
+    bottom: 1em;
+    right: 1em;
+}

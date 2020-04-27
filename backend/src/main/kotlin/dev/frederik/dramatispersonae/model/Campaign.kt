@@ -15,4 +15,6 @@ data class Campaign(var name: String,
     fun isOwnedBy(user: User) = owner == user
 }
 
-interface CampaignRepository: CrudRepository<Campaign, UUID>
+interface CampaignRepository: CrudRepository<Campaign, UUID> {
+    fun findByInviteCode(code: UUID): Optional<Campaign>
+}

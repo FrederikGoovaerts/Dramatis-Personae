@@ -13,7 +13,7 @@ import java.util.*
 
 data class CreateCampaignDto(val name: String)
 
-data class CampaignView(val name: String, val id: UUID, val owner: Boolean)
+data class CampaignView(val name: String, val id: UUID, val owner: Boolean, val ownerName: String)
 data class CampaignMemberView(val name: String, val owner: Boolean)
 
 @RestController
@@ -22,7 +22,17 @@ class CampaignController(private val service: CampaignService) {
 
     @GetMapping
     fun getCampaigns(auth: GoogleAuthentication) =
-            service.getCampaignsForUser(auth.principal).map { CampaignView(it.name, it.id!!, it.isOwnedBy(auth.principal)) }
+            service.getCampaignsForUser(auth.principal).map { CampaignView(it.name, it.id!!, it.isOwnedBy(auth.principal), it.owner.fullName) }
+
+    @GetMapping("/{id}")
+    fun getCampaign(auth: GoogleAuthentication, @PathVariable id: UUID): ResponseEntity<CampaignView> {
+        val campaign = this.service.getCampaign(auth.principal, id)
+        return if (campaign === null) {
+            ResponseEntity(HttpStatus.FORBIDDEN)
+        } else {
+            ResponseEntity(CampaignView(campaign.name, campaign.id!!, campaign.isOwnedBy(auth.principal), campaign.owner.fullName), HttpStatus.OK)
+        }
+    }
 
     @PostMapping
     fun postCampaign(auth: GoogleAuthentication, @RequestBody campaign: CreateCampaignDto): ResponseEntity<Unit> {
@@ -51,7 +61,7 @@ class CampaignController(private val service: CampaignService) {
         return if (list === null) {
             ResponseEntity(HttpStatus.FORBIDDEN)
         } else {
-            ResponseEntity(list.map { CharacterListView(it.name, it.id!!) }, HttpStatus.OK)
+            ResponseEntity(list.map { CharacterListView(it.name, it.isVisible, it.id!!) }, HttpStatus.OK)
         }
     }
 
@@ -74,12 +84,27 @@ class CampaignController(private val service: CampaignService) {
         }
     }
 
+    @PutMapping("/join/{code}")
+    fun joinCampaign(auth: GoogleAuthentication,
+                     @PathVariable code: UUID): ResponseEntity<Unit> {
+        val success = this.service.joinCampaign(auth.principal, code)
+        return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
+    }
+
 }
 
 @Component
 class CampaignService(private val repository: CampaignRepository) {
 
     fun getCampaignsForUser(user: User): List<Campaign> = repository.findAll().filter { it.isAccessibleBy(user) }
+
+    fun getCampaign(user: User, id: UUID): Campaign? {
+        val campaignQuery = repository.findById(id)
+        if (!campaignQuery.isPresent || !campaignQuery.get().isAccessibleBy(user)) {
+            return null
+        }
+        return campaignQuery.orElse(null)
+    }
 
     fun createCampaign(user: User, name: String): Campaign {
         val newCampaign = Campaign(name, user, mutableListOf(user), mutableListOf())
@@ -93,6 +118,17 @@ class CampaignService(private val repository: CampaignRepository) {
         }
         val campaign = campaignQuery.get()
         campaign.name = name
+        this.repository.save(campaign)
+        return true
+    }
+
+    fun joinCampaign(user: User, code: UUID): Boolean {
+        val campaignQuery = repository.findByInviteCode(code)
+        if (!campaignQuery.isPresent || campaignQuery.get().members.contains(user)) {
+            return false
+        }
+        val campaign = campaignQuery.get()
+        campaign.members.add(user)
         this.repository.save(campaign)
         return true
     }

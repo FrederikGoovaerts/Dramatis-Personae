@@ -5,7 +5,7 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-data class Note(var contents: String,
+data class Note(@Column(name="contents", columnDefinition = "TEXT") var contents: String,
                 @OneToOne var author: User,
                 @ManyToOne var character: Character,
                 @Id @GeneratedValue var id: UUID? = null)

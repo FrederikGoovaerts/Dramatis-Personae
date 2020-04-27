@@ -1,0 +1,32 @@
+import { combineReducers } from 'redux';
+import { Campaign, ListCharacter } from '../../types';
+import { applicationActions, campaignActions } from '../actions';
+import { createReducer } from './base';
+
+export interface CampaignState {
+    loading: boolean;
+    campaigns: Campaign[];
+    campaignLoading: boolean;
+    campaign: Campaign | null;
+    charactersLoading: boolean;
+    characters: ListCharacter[];
+}
+
+const campaignReducers = combineReducers<CampaignState>({
+    loading: createReducer(false, campaignActions.names.setCampaignsLoading, applicationActions.names.clearStore),
+    campaigns: createReducer([], campaignActions.names.setCampaigns, applicationActions.names.clearStore),
+    campaignLoading: createReducer(
+        false,
+        campaignActions.names.setCampaignLoading,
+        applicationActions.names.clearStore
+    ),
+    campaign: createReducer(null, campaignActions.names.setCampaign, applicationActions.names.clearStore),
+    charactersLoading: createReducer(
+        false,
+        campaignActions.names.setCharactersLoading,
+        applicationActions.names.clearStore
+    ),
+    characters: createReducer([], campaignActions.names.setCharacters, applicationActions.names.clearStore)
+});
+
+export default campaignReducers;
