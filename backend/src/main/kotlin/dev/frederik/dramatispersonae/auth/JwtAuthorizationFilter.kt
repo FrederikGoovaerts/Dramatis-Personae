@@ -43,7 +43,7 @@ class JwtAuthorizationFilter(authenticationManager: AuthenticationManager,
                     val userId: String = idToken.payload.subject
                     var user: User? = userRepository.findByGoogleId(userId)
                     if (user == null) {
-                        var newUser = User(userId, idToken.payload.email, idToken.payload.get("name") as String)
+                        var newUser = User(userId, idToken.payload["name"] as String, idToken.payload.email)
                         newUser = userRepository.save(newUser)
                         user = newUser
                     }
