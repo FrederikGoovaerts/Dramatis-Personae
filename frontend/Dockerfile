@@ -11,5 +11,6 @@ FROM nginx:1.18-alpine
 
 ADD ./frontend/docker_entrypoint.sh /docker_entrypoint.sh
 COPY --from=builder /app/build /usr/share/nginx/html
+COPY ./frontend/nginx.template /etc/nginx/conf.d/default.conf
 
 CMD ["sh", "/docker_entrypoint.sh"]

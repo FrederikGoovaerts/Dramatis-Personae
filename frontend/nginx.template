@@ -1,0 +1,11 @@
+server {
+    listen 80;
+    listen [::]:80;
+    server_name _;
+    server_name_in_redirect off;
+
+    location / {
+        alias   /usr/share/nginx/html/;
+        try_files $uri /index.html;
+    }
+}
