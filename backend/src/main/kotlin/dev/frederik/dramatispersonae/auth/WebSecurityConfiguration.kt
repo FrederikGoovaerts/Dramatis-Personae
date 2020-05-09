@@ -24,7 +24,7 @@ class WebSecurity(private val userRepository: UserRepository,
                   private val authenticationConfig: AuthenticationConfig) : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity) {
-        http.cors().and().authorizeRequests()
+        http.cors().and().csrf().disable().authorizeRequests()
             .antMatchers(HttpMethod.OPTIONS).permitAll()
             .antMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
             .anyRequest().authenticated()
