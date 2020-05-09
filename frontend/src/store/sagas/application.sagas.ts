@@ -46,7 +46,7 @@ function* initializeApplication() {
     if (window.location.search) {
         const search = parse(window.location.search);
         if (search.code && typeof search.code === 'string') {
-            const tokens: TokenResponse = (yield exchangeCode(search.code)).data;
+            const tokens: TokenResponse = yield exchangeCode(search.code);
             if (tokens.idToken && tokens.refreshToken) {
                 localStorage.setItem(storage.idToken, tokens.idToken);
                 localStorage.setItem(storage.refreshToken, tokens.refreshToken);
@@ -64,7 +64,7 @@ function* initializeApplication() {
             } else {
                 const refreshToken = localStorage.getItem(storage.refreshToken);
                 if (refreshToken) {
-                    const tokens: TokenResponse = (yield refresh(refreshToken)).data;
+                    const tokens: TokenResponse = yield refresh(refreshToken);
                     if (tokens.idToken && tokens.refreshToken) {
                         localStorage.setItem(storage.idToken, tokens.idToken);
                         localStorage.setItem(storage.refreshToken, tokens.refreshToken);
