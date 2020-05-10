@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { match, Redirect } from 'react-router';
-import { Fab, Modal, FormControlLabel, IconButton } from '@material-ui/core';
+import { Fab, Modal, FormControlLabel, IconButton, Box } from '@material-ui/core';
 import { Add, Visibility, Edit } from '@material-ui/icons';
 
 import { routes } from '../../config/constants';
@@ -121,27 +121,32 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                 <div>
                     <CampaignCharacterBreadcrumb campaign={campaign} />
                     <Typography variant={'h4'}>{campaign.name}</Typography>
-                    <div>
-                        <Typography variant={'subtitle1'}>{`Run by ${
-                            campaign.owner ? 'you' : campaign.ownerName
-                        }`}</Typography>
-                    </div>
-                    {this.props.campaign.owner && (
-                        <FormControlLabel
-                            control={
-                                <IconButton onClick={() => this.setState({ editCampaignOpen: true })}>
-                                    <Edit />
-                                </IconButton>
-                            }
-                            label="Edit campaign"
-                        />
-                    )}
+                    <Typography variant={'subtitle1'}>{`Run by ${
+                        campaign.owner ? 'you' : campaign.ownerName
+                    }`}</Typography>
+                    <Box marginTop="1em" marginBottom="1em">
+                        {this.props.campaign.owner && (
+                            <FormControlLabel
+                                control={
+                                    <IconButton onClick={() => this.setState({ editCampaignOpen: true })}>
+                                        <Edit />
+                                    </IconButton>
+                                }
+                                label="Edit campaign"
+                            />
+                        )}
+                    </Box>
                     {characters.length === 0 ? (
                         <Typography variant="body1">This campaign does not have any characters yet.</Typography>
                     ) : (
                         <Paper>
                             <List>{characters.map(this.renderCharacter)}</List>
                         </Paper>
+                    )}
+                    {this.props.campaign.inviteCode && (
+                        <Box marginTop="1em">
+                            <Typography variant="caption">Invite code: {this.props.campaign.inviteCode}</Typography>
+                        </Box>
                     )}
                     <Fab className="CampaignDetail__createFab" color="primary" onClick={this.openCreate}>
                         <Add />
