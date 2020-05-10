@@ -85,19 +85,13 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         }
     };
 
-    renderCreateNote = () => {
-        if (!this.props.character) {
-            return <div />;
-        }
-        const character = this.props.character;
-        return (
-            <NewNoteForm
-                characterId={character.id}
-                className="CharacterDetail__modalContainer"
-                onSubmitComplete={this.closeCreateNote}
-            />
-        );
-    };
+    renderCreateNote = () => (
+        <NewNoteForm
+            characterId={this.props.match.params.characterId}
+            className="CharacterDetail__modalContainer"
+            onSubmitComplete={this.closeCreateNote}
+        />
+    );
 
     closeCreateNote = () => {
         this.setState({ createOpen: false });
