@@ -64,14 +64,14 @@ function* newCampaign(action: campaignActions.specificTypes['newCampaign']) {
     }
 }
 
-// function* deleteCampaign(action: campaignActions.specificTypes['deleteCampaign']) {
-//     try {
-//         yield campaign.deletePermanently(action.payload);
-//         yield put(campaignActions.actions.fetchCampaigns());
-//     } catch (e) {
-//         console.error('Unable to delete campaign. Please try again later.');
-//     }
-// }
+function* deleteCampaign(action: campaignActions.specificTypes['deleteCampaign']) {
+    try {
+        yield campaign.deletePermanently(action.payload);
+        yield put(campaignActions.actions.fetchCampaigns());
+    } catch (e) {
+        console.error('Unable to delete campaign. Please try again later.');
+    }
+}
 
 export default function* watcher() {
     yield takeEvery(campaignActions.names.fetchCampaigns, fetchCampaigns);
@@ -80,5 +80,5 @@ export default function* watcher() {
     yield takeEvery(campaignActions.names.createCharacter, createCharacter);
     yield takeEvery(campaignActions.names.joinCampaign, joinCampaign);
     yield takeEvery(campaignActions.names.newCampaign, newCampaign);
-    // yield takeEvery(campaignActions.names.deleteCampaign, deleteCampaign);
+    yield takeEvery(campaignActions.names.deleteCampaign, deleteCampaign);
 }
