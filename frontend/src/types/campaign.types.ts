@@ -13,3 +13,8 @@ export interface CampaignMember {
     name: string;
     owner: boolean;
 }
+
+export interface CampaignEditPayload {
+    id: string;
+    name: string;
+}

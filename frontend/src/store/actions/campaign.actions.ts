@@ -1,4 +1,4 @@
-import { Campaign, ListCharacter, CharacterPrototype } from '../../types';
+import { Campaign, ListCharacter, CharacterPrototype, CampaignEditPayload } from '../../types';
 import { ActionTypeMapping, ActionUnion, createAction } from './base';
 
 export enum names {
@@ -14,6 +14,7 @@ export enum names {
     setCharacters = 'SET_CHARACTERS',
     newCampaign = 'NEW_CAMPAIGN',
     joinCampaign = 'JOIN_CAMPAIGN',
+    editCampaign = 'EDIT_CAMPAIGN',
     deleteCampaign = 'DELETE_CAMPAIGN'
 }
 
@@ -31,6 +32,7 @@ export const actions = {
     setCharacters: (p: ListCharacter[]) => createAction(names.setCharacters, p),
     newCampaign: (p: string) => createAction(names.newCampaign, p),
     joinCampaign: (p: string) => createAction(names.joinCampaign, p),
+    editCampaign: (p: CampaignEditPayload) => createAction(names.editCampaign, p),
     deleteCampaign: (p: string) => createAction(names.deleteCampaign, p)
 };
 
