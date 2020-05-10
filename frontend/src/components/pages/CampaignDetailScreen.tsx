@@ -8,7 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { match, Redirect } from 'react-router';
-import { Add, Visibility } from '@material-ui/icons';
+import { Fab, Modal, FormControlLabel, IconButton } from '@material-ui/core';
+import { Add, Visibility, Edit } from '@material-ui/icons';
 
 import { routes } from '../../config/constants';
 import { campaignActions } from '../../store/actions';
@@ -18,7 +19,7 @@ import { ListItemLink } from '../atoms/ListItemLink';
 import { CampaignCharacterBreadcrumb } from '../molecules/CampaignCharacterBreadcrumbs';
 import { Header } from '../molecules/Header';
 import { NewCharacterForm } from '../molecules/NewCharacterForm';
-import { Fab, Modal } from '@material-ui/core';
+import { EditCampaignForm } from '../molecules/EditCampaignForm';
 
 export interface MatchParams {
     id: string;
@@ -41,6 +42,7 @@ type AllProps = Props & MapProps;
 
 interface State {
     createOpen: boolean;
+    editCampaignOpen: boolean;
     deleteCheck: boolean;
     deleted: boolean;
 }
@@ -48,7 +50,7 @@ interface State {
 class CampaignDetailRaw extends React.Component<AllProps, State> {
     constructor(props: AllProps) {
         super(props);
-        this.state = { createOpen: false, deleteCheck: false, deleted: false };
+        this.state = { createOpen: false, editCampaignOpen: false, deleteCheck: false, deleted: false };
     }
 
     componentDidMount(): void {
@@ -64,29 +66,9 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
         this.setState({ createOpen: false });
     };
 
-    // renderMemberList = () => {
-    //     if (!this.props.campaign) {
-    //         return undefined;
-    //     }
-    //     const campaign = this.props.campaign;
-    //     return (
-    //         <div className="centering">
-    //             <div>
-    //                 <Paper className="bottomSpaced">
-    //                     <List>
-    //                         one
-    //                         {/* {campaign.members.map((name: string) => (
-    //                             <ListItem key={name}>
-    //                                 <ListItemText primary={name} />
-    //                             </ListItem>
-    //                         ))} */}
-    //                     </List>
-    //                 </Paper>
-    //                 {campaign.owner && <Typography variant="caption">Invite code: {campaign.id}</Typography>}
-    //             </div>
-    //         </div>
-    //     );
-    // };
+    closeEditCampaign = (): void => {
+        this.setState({ editCampaignOpen: false });
+    };
 
     renderCharacter = (character: ListCharacter) => (
         <ListItemLink to={`${this.props.match.url}${routes.character}${character.id}`} key={character.id}>
@@ -95,56 +77,31 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
         </ListItemLink>
     );
 
-    renderCreateCharacter = () => {
+    renderCreateCharacter = () => (
+        <Paper className="CampaignDetail__createPaper">
+            <Typography variant="h5">New character</Typography>
+            <NewCharacterForm
+                campaignId={this.props.match.params.id}
+                className="CampaignDetail__createContainer"
+                onSubmitComplete={this.closeCreate}
+            />
+        </Paper>
+    );
+
+    renderEditCampaign = () => {
         if (!this.props.campaign) {
             return <div />;
         }
-        const campaign = this.props.campaign;
+        const onDelete = () => this.setState({ deleted: true });
         return (
-            <Paper className="CampaignDetail__createPaper">
-                <Typography variant="h5">New character</Typography>
-                <NewCharacterForm
-                    campaignId={campaign.id}
-                    className="CampaignDetail__createContainer"
-                    onSubmitComplete={this.closeCreate}
-                />
-            </Paper>
+            <EditCampaignForm
+                id={this.props.match.params.id}
+                name={this.props.campaign?.name}
+                onSubmitComplete={this.closeEditCampaign}
+                onDelete={onDelete}
+            />
         );
     };
-
-    // handleCheckDelete = (event: ChangeEvent<HTMLInputElement>) => {
-    //     this.setState({ deleteCheck: event.target.checked });
-    // };
-
-    // onDelete = () => {
-    //     if (!this.props.campaign) {
-    //         return undefined;
-    //     }
-    //     const campaign = this.props.campaign;
-    //     this.props.deleteCampaign(campaign.id);
-    //     this.setState({ deleted: true });
-    // };
-
-    // renderManageCampaign = () => {
-    //     return (
-    //         <div className="centering">
-    //             <div className="flexColumn">
-    //                 <FormControlLabel
-    //                     control={<Checkbox checked={this.state.deleteCheck} onChange={this.handleCheckDelete} />}
-    //                     label="I want to delete this campaign"
-    //                 />
-    //                 <Button
-    //                     variant="contained"
-    //                     color="secondary"
-    //                     disabled={!this.state.deleteCheck}
-    //                     onClick={this.onDelete}
-    //                 >
-    //                     Delete permanently
-    //                 </Button>
-    //             </div>
-    //         </div>
-    //     );
-    // };
 
     render() {
         if (this.state.deleted) {
@@ -164,11 +121,21 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                 <div>
                     <CampaignCharacterBreadcrumb campaign={campaign} />
                     <Typography variant={'h4'}>{campaign.name}</Typography>
-                    <div className="bottomSpaced">
+                    <div>
                         <Typography variant={'subtitle1'}>{`Run by ${
                             campaign.owner ? 'you' : campaign.ownerName
                         }`}</Typography>
                     </div>
+                    {this.props.campaign.owner && (
+                        <FormControlLabel
+                            control={
+                                <IconButton onClick={() => this.setState({ editCampaignOpen: true })}>
+                                    <Edit />
+                                </IconButton>
+                            }
+                            label="Edit campaign"
+                        />
+                    )}
                     {characters.length === 0 ? (
                         <Typography variant="body1">This campaign does not have any characters yet.</Typography>
                     ) : (
@@ -182,6 +149,9 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
 
                     <Modal open={this.state.createOpen} onClose={this.closeCreate}>
                         <div className="modal">{this.renderCreateCharacter()}</div>
+                    </Modal>
+                    <Modal open={this.state.editCampaignOpen} onClose={this.closeEditCampaign}>
+                        <div className="modal">{this.renderEditCampaign()}</div>
                     </Modal>
                 </div>
             );
