@@ -27,10 +27,6 @@ interface MapProps {
 
 type AllProps = Props & MapProps;
 
-interface State {
-    tab: number;
-}
-
 const campaignToListItemLink = (campaign: Campaign) => (
     <Link to={`/campaign/${campaign.id}`} key={campaign.id} className="CampaignList__campaignLink">
         <Paper className="CampaignList__campaignPaper">
@@ -42,7 +38,7 @@ const campaignToListItemLink = (campaign: Campaign) => (
     </Link>
 );
 
-class CampaignListRaw extends React.Component<AllProps, State> {
+class CampaignListRaw extends React.Component<AllProps> {
     constructor(props: AllProps) {
         super(props);
         this.state = { tab: 0 };
