@@ -3,6 +3,7 @@ export interface Campaign {
     name: string;
     owner: boolean;
     ownerName: string;
+    inviteCode?: string;
 }
 
 export interface CampaignPrototype {
