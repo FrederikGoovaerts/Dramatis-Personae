@@ -92,11 +92,13 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
         if (!this.props.campaign) {
             return <div />;
         }
+        const onDelete = () => this.setState({ deleted: true });
         return (
             <EditCampaignForm
                 id={this.props.match.params.id}
                 name={this.props.campaign?.name}
                 onSubmitComplete={this.closeEditCampaign}
+                onDelete={onDelete}
             />
         );
     };

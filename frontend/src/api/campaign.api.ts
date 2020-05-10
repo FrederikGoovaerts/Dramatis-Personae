@@ -23,7 +23,7 @@ export async function update(id: string, campaignPrototype: CampaignPrototype): 
     await axiosInstance.put(url, campaignPrototype);
 }
 
-export async function deletePermanently(campaignId: number): Promise<void> {
+export async function deletePermanently(campaignId: string): Promise<void> {
     const url = buildPath(`${api.CAMPAIGN.PATH}/${campaignId}`);
     await axiosInstance.delete(url);
 }
