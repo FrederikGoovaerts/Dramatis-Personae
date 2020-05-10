@@ -13,7 +13,7 @@ import java.util.*
 
 data class CreateCampaignDto(val name: String)
 
-data class CampaignView(val name: String, val id: UUID, val owner: Boolean, val ownerName: String)
+data class CampaignView(val name: String, val id: UUID, val owner: Boolean, val ownerName: String, val inviteCode: UUID?)
 data class CampaignMemberView(val name: String, val owner: Boolean)
 
 @RestController
@@ -22,7 +22,15 @@ class CampaignController(private val service: CampaignService) {
 
     @GetMapping
     fun getCampaigns(auth: GoogleAuthentication) =
-            service.getCampaignsForUser(auth.principal).map { CampaignView(it.name, it.id!!, it.isOwnedBy(auth.principal), it.owner.fullName) }
+            service.getCampaignsForUser(auth.principal).map {
+                CampaignView(
+                    it.name,
+                    it.id!!,
+                    it.isOwnedBy(auth.principal),
+                    it.owner.fullName,
+                    if (it.isOwnedBy(auth.principal)) it.inviteCode else null
+                )
+            }
 
     @GetMapping("/{id}")
     fun getCampaign(auth: GoogleAuthentication, @PathVariable id: UUID): ResponseEntity<CampaignView> {
@@ -30,7 +38,13 @@ class CampaignController(private val service: CampaignService) {
         return if (campaign === null) {
             ResponseEntity(HttpStatus.FORBIDDEN)
         } else {
-            ResponseEntity(CampaignView(campaign.name, campaign.id!!, campaign.isOwnedBy(auth.principal), campaign.owner.fullName), HttpStatus.OK)
+            ResponseEntity(CampaignView(
+                campaign.name,
+                campaign.id!!,
+                campaign.isOwnedBy(auth.principal),
+                campaign.owner.fullName,
+                if (campaign.isOwnedBy(auth.principal)) campaign.inviteCode else null
+            ), HttpStatus.OK)
         }
     }
 
