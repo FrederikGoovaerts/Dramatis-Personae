@@ -20,6 +20,7 @@ export const api = {
         PATH: '/campaign',
         SUBPATH_CHARACTER: '/character',
         SUBPATH_JOIN: '/join',
+        SUBPATH_LEAVE: '/leave',
         SUBPATH_MEMBERS: '/members'
     },
     CHARACTER: {

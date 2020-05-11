@@ -47,3 +47,8 @@ export async function join(code: string): Promise<void> {
     const url = buildPath(`${api.CAMPAIGN.PATH}${api.CAMPAIGN.SUBPATH_JOIN}/${code}`);
     await axiosInstance.post(url);
 }
+
+export async function leave(id: string): Promise<void> {
+    const url = buildPath(`${api.CAMPAIGN.PATH}${api.CAMPAIGN.SUBPATH_LEAVE}/${id}`);
+    await axiosInstance.post(url);
+}
