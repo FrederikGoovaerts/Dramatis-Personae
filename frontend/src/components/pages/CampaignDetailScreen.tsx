@@ -148,9 +148,11 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                             <Typography variant="caption">Invite code: {this.props.campaign.inviteCode}</Typography>
                         </Box>
                     )}
-                    <Fab className="CampaignDetail__createFab" color="primary" onClick={this.openCreate}>
-                        <Add />
-                    </Fab>
+                    {this.props.campaign.owner && (
+                        <Fab className="CampaignDetail__createFab" color="primary" onClick={this.openCreate}>
+                            <Add />
+                        </Fab>
+                    )}
 
                     <Modal open={this.state.createOpen} onClose={this.closeCreate}>
                         <div className="modal">{this.renderCreateCharacter()}</div>

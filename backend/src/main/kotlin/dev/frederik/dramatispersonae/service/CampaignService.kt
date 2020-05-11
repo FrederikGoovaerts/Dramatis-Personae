@@ -98,7 +98,7 @@ class CampaignController(private val service: CampaignService) {
         }
     }
 
-    @PutMapping("/join/{code}")
+    @PostMapping("/join/{code}")
     fun joinCampaign(auth: GoogleAuthentication,
                      @PathVariable code: UUID): ResponseEntity<Unit> {
         val success = this.service.joinCampaign(auth.principal, code)
