@@ -98,6 +98,13 @@ class CampaignController(private val service: CampaignService) {
         }
     }
 
+    @PostMapping("/leave/{id}")
+    fun leaveCampaign(auth: GoogleAuthentication,
+                      @PathVariable id: UUID): ResponseEntity<Unit> {
+        val success = this.service.leaveCampaign(auth.principal, id)
+        return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
+    }
+
     @PostMapping("/join/{code}")
     fun joinCampaign(auth: GoogleAuthentication,
                      @PathVariable code: UUID): ResponseEntity<Unit> {
@@ -143,6 +150,19 @@ class CampaignService(private val repository: CampaignRepository) {
         }
         val campaign = campaignQuery.get()
         campaign.members.add(user)
+        this.repository.save(campaign)
+        return true
+    }
+
+    fun leaveCampaign(user: User, id: UUID): Boolean {
+        val campaignQuery = repository.findById(id)
+        if (!campaignQuery.isPresent
+                || !campaignQuery.get().members.contains(user)
+                || campaignQuery.get().isOwnedBy(user)) {
+            return false
+        }
+        val campaign = campaignQuery.get()
+        campaign.members.remove(user)
         this.repository.save(campaign)
         return true
     }
