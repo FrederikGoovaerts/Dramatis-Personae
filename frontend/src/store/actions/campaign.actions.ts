@@ -14,6 +14,7 @@ export enum names {
     setCharacters = 'SET_CHARACTERS',
     newCampaign = 'NEW_CAMPAIGN',
     joinCampaign = 'JOIN_CAMPAIGN',
+    leaveCampaign = 'LEAVE_CAMPAIGN',
     editCampaign = 'EDIT_CAMPAIGN',
     deleteCampaign = 'DELETE_CAMPAIGN'
 }
@@ -32,6 +33,7 @@ export const actions = {
     setCharacters: (p: ListCharacter[]) => createAction(names.setCharacters, p),
     newCampaign: (p: string) => createAction(names.newCampaign, p),
     joinCampaign: (p: string) => createAction(names.joinCampaign, p),
+    leaveCampaign: (p: string) => createAction(names.leaveCampaign, p),
     editCampaign: (p: CampaignEditPayload) => createAction(names.editCampaign, p),
     deleteCampaign: (p: string) => createAction(names.deleteCampaign, p)
 };

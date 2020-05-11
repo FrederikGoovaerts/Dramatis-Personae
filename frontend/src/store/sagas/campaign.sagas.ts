@@ -54,6 +54,15 @@ function* joinCampaign(action: campaignActions.specificTypes['joinCampaign']) {
     }
 }
 
+function* leaveCampaign(action: campaignActions.specificTypes['leaveCampaign']) {
+    try {
+        yield campaign.leave(action.payload);
+        yield put(campaignActions.actions.fetchCampaigns());
+    } catch (e) {
+        console.error('Unable to leave campaign. Please try again later or check if the code is correct.');
+    }
+}
+
 function* newCampaign(action: campaignActions.specificTypes['newCampaign']) {
     try {
         const prototype: CampaignPrototype = { name: action.payload };
@@ -88,6 +97,7 @@ export default function* watcher() {
     yield takeEvery(campaignActions.names.fetchCharacters, fetchCharacters);
     yield takeEvery(campaignActions.names.createCharacter, createCharacter);
     yield takeEvery(campaignActions.names.joinCampaign, joinCampaign);
+    yield takeEvery(campaignActions.names.leaveCampaign, leaveCampaign);
     yield takeEvery(campaignActions.names.newCampaign, newCampaign);
     yield takeEvery(campaignActions.names.editCampaign, editCampaign);
     yield takeEvery(campaignActions.names.deleteCampaign, deleteCampaign);
