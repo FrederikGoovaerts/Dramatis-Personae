@@ -59,7 +59,16 @@ function* leaveCampaign(action: campaignActions.specificTypes['leaveCampaign']) 
         yield campaign.leave(action.payload);
         yield put(campaignActions.actions.fetchCampaigns());
     } catch (e) {
-        console.error('Unable to leave campaign. Please try again later or check if the code is correct.');
+        console.error('Unable to leave campaign. Please try again later.');
+    }
+}
+
+function* kickFromCampaign(action: campaignActions.specificTypes['kickFromCampaign']) {
+    try {
+        yield campaign.kick(action.payload.campaignId, action.payload.userId);
+        // yield put(campaignActions.actions.fetchCampaigns());
+    } catch (e) {
+        console.error('Unable to kick user from campaign. Please try again later.');
     }
 }
 
@@ -98,6 +107,7 @@ export default function* watcher() {
     yield takeEvery(campaignActions.names.createCharacter, createCharacter);
     yield takeEvery(campaignActions.names.joinCampaign, joinCampaign);
     yield takeEvery(campaignActions.names.leaveCampaign, leaveCampaign);
+    yield takeEvery(campaignActions.names.kickFromCampaign, kickFromCampaign);
     yield takeEvery(campaignActions.names.newCampaign, newCampaign);
     yield takeEvery(campaignActions.names.editCampaign, editCampaign);
     yield takeEvery(campaignActions.names.deleteCampaign, deleteCampaign);
