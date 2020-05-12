@@ -1,5 +1,5 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { Campaign, CampaignPrototype, ListCharacter } from '../../types';
+import { Campaign, CampaignPrototype, ListCharacter, CampaignMember } from '../../types';
 import { campaignActions } from '../actions';
 import * as campaign from '../../api/campaign.api';
 
@@ -36,6 +36,17 @@ function* fetchCharacters(action: campaignActions.specificTypes['fetchCharacters
     yield put(campaignActions.actions.setCharactersLoading(false));
 }
 
+function* fetchMembers(action: campaignActions.specificTypes['fetchMembers']) {
+    yield put(campaignActions.actions.setMembersLoading(true));
+    try {
+        const result: CampaignMember[] = yield call(campaign.getMembers, action.payload);
+        yield put(campaignActions.actions.setMembers(result));
+    } catch (e) {
+        console.error('Unable to fetch members. Please try again later.');
+    }
+    yield put(campaignActions.actions.setMembersLoading(false));
+}
+
 function* createCharacter(action: campaignActions.specificTypes['createCharacter']) {
     try {
         yield campaign.createCharacter(action.payload.campaignId, action.payload.character);
@@ -66,7 +77,7 @@ function* leaveCampaign(action: campaignActions.specificTypes['leaveCampaign']) 
 function* kickFromCampaign(action: campaignActions.specificTypes['kickFromCampaign']) {
     try {
         yield campaign.kick(action.payload.campaignId, action.payload.userId);
-        // yield put(campaignActions.actions.fetchCampaigns());
+        yield put(campaignActions.actions.fetchMembers(action.payload.campaignId));
     } catch (e) {
         console.error('Unable to kick user from campaign. Please try again later.');
     }
@@ -104,6 +115,7 @@ export default function* watcher() {
     yield takeEvery(campaignActions.names.fetchCampaigns, fetchCampaigns);
     yield takeEvery(campaignActions.names.fetchCampaign, fetchCampaign);
     yield takeEvery(campaignActions.names.fetchCharacters, fetchCharacters);
+    yield takeEvery(campaignActions.names.fetchMembers, fetchMembers);
     yield takeEvery(campaignActions.names.createCharacter, createCharacter);
     yield takeEvery(campaignActions.names.joinCampaign, joinCampaign);
     yield takeEvery(campaignActions.names.leaveCampaign, leaveCampaign);
