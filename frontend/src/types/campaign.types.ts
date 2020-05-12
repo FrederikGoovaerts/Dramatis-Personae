@@ -12,6 +12,7 @@ export interface CampaignPrototype {
 
 export interface CampaignMember {
     name: string;
+    id: string;
     owner: boolean;
 }
 

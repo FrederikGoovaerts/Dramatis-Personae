@@ -14,7 +14,7 @@ import java.util.*
 data class CreateCampaignDto(val name: String)
 
 data class CampaignView(val name: String, val id: UUID, val owner: Boolean, val ownerName: String, val inviteCode: UUID?)
-data class CampaignMemberView(val name: String, val owner: Boolean)
+data class CampaignMemberView(val name: String, val id: UUID, val owner: Boolean)
 
 @RestController
 @RequestMapping("/api/campaign")
@@ -94,8 +94,19 @@ class CampaignController(private val service: CampaignService) {
         return if (map === null) {
             ResponseEntity(HttpStatus.FORBIDDEN)
         } else {
-            ResponseEntity(map.map { CampaignMemberView(it.key.fullName, it.value) }.toList(), HttpStatus.OK)
+            ResponseEntity(map
+                    .filter{ it.key.id != null}
+                    .map { CampaignMemberView(it.key.fullName, it.key.id!!, it.value) }
+                    .toList(), HttpStatus.OK)
         }
+    }
+
+    @PostMapping("/{campaignId}/kick/{userId}")
+    fun kickFromCampaign(auth: GoogleAuthentication,
+                         @PathVariable campaignId: UUID,
+                         @PathVariable userId: UUID): ResponseEntity<Unit> {
+        val success = this.service.kickFromCampaign(auth.principal, campaignId, userId)
+        return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
     }
 
     @PostMapping("/leave/{id}")
@@ -163,6 +174,20 @@ class CampaignService(private val repository: CampaignRepository) {
         }
         val campaign = campaignQuery.get()
         campaign.members.remove(user)
+        this.repository.save(campaign)
+        return true
+    }
+
+    fun kickFromCampaign(user: User, campaignId: UUID, userId: UUID): Boolean {
+        val campaignQuery = repository.findById(campaignId)
+        if (!campaignQuery.isPresent
+                || campaignQuery.get().members.find { it.id == userId } == null
+                || campaignQuery.get().owner.id == userId
+                || !campaignQuery.get().isOwnedBy(user)) {
+            return false
+        }
+        val campaign = campaignQuery.get()
+        campaign.members.removeIf { it.id == userId }
         this.repository.save(campaign)
         return true
     }
