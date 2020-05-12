@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { Campaign, ListCharacter } from '../../types';
+import { Campaign, ListCharacter, CampaignMember } from '../../types';
 import { applicationActions, campaignActions } from '../actions';
 import { createReducer } from './base';
 
@@ -10,6 +10,8 @@ export interface CampaignState {
     campaign: Campaign | null;
     charactersLoading: boolean;
     characters: ListCharacter[];
+    members: CampaignMember[];
+    membersLoading: boolean;
 }
 
 const campaignReducers = combineReducers<CampaignState>({
@@ -26,7 +28,9 @@ const campaignReducers = combineReducers<CampaignState>({
         campaignActions.names.setCharactersLoading,
         applicationActions.names.clearStore
     ),
-    characters: createReducer([], campaignActions.names.setCharacters, applicationActions.names.clearStore)
+    characters: createReducer([], campaignActions.names.setCharacters, applicationActions.names.clearStore),
+    members: createReducer([], campaignActions.names.setMembers, applicationActions.names.clearStore),
+    membersLoading: createReducer(false, campaignActions.names.setMembersLoading, applicationActions.names.clearStore)
 });
 
 export default campaignReducers;
