@@ -52,3 +52,8 @@ export async function leave(id: string): Promise<void> {
     const url = buildPath(`${api.CAMPAIGN.PATH}${api.CAMPAIGN.SUBPATH_LEAVE}/${id}`);
     await axiosInstance.post(url);
 }
+
+export async function kick(campaignId: string, userId: string): Promise<void> {
+    const url = buildPath(`${api.CAMPAIGN.PATH}/${campaignId}${api.CAMPAIGN.SUBPATH_KICK}/${userId}`);
+    await axiosInstance.post(url);
+}
