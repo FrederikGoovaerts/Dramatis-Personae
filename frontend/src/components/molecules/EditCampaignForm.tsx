@@ -3,10 +3,13 @@ import TextField from '@material-ui/core/TextField';
 import { ChangeEvent } from 'react';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { Paper, Typography, Box, IconButton } from '@material-ui/core';
 
 import { campaignActions } from '../../store/actions';
-import { Paper, Typography } from '@material-ui/core';
 import { DeleteButton } from '../atoms/DeleteButton';
+import { RootState } from '../../store/reducers';
+import { CampaignMember } from '../../types';
+import { HighlightOff } from '@material-ui/icons';
 
 interface Props {
     id: string;
@@ -16,8 +19,10 @@ interface Props {
 }
 
 interface MapProps {
+    members: CampaignMember[];
     editCampaign: (payload: { id: string; name: string }) => void;
     deleteCampaign: (params: string) => void;
+    kickFromCampaign: (params: { campaignId: string; userId: string }) => void;
 }
 
 type AllProps = Props & MapProps;
@@ -53,6 +58,22 @@ class EditCampaignFormRaw extends React.Component<AllProps, State> {
         }
     };
 
+    handleKick = (member: CampaignMember) => {
+        this.props.kickFromCampaign({ campaignId: this.props.id, userId: member.id });
+    };
+
+    renderMember = (member: CampaignMember) => {
+        const kick = () => this.handleKick(member);
+        return (
+            <Box key={member.id} flexDirection="row" display="flex" alignItems="center">
+                <IconButton onClick={kick} disabled={member.owner}>
+                    <HighlightOff />
+                </IconButton>
+                <Typography>{member.name}</Typography>
+            </Box>
+        );
+    };
+
     render() {
         return (
             <Paper className="modalPaper">
@@ -65,13 +86,22 @@ class EditCampaignFormRaw extends React.Component<AllProps, State> {
                     <Button variant="contained" color="primary" onClick={this.handleSubmit} disabled={!this.state.name}>
                         Update
                     </Button>
+                    <Box marginTop="1em">
+                        <Typography variant="h6">Campaign members</Typography>
+                        {this.props.members.map(this.renderMember)}
+                    </Box>
                 </div>
             </Paper>
         );
     }
 }
 
-export const EditCampaignForm = connect(null, {
+const mapStateToProps = (state: RootState) => ({
+    members: state.campaign.members
+});
+
+export const EditCampaignForm = connect(mapStateToProps, {
     editCampaign: campaignActions.actions.editCampaign,
-    deleteCampaign: campaignActions.actions.deleteCampaign
+    deleteCampaign: campaignActions.actions.deleteCampaign,
+    kickFromCampaign: campaignActions.actions.kickFromCampaign
 })(EditCampaignFormRaw);
