@@ -34,8 +34,9 @@ interface MapProps {
     campaign: Campaign | null;
     characters: ListCharacter[];
     loading: boolean;
-    fetchCampaign: (id: string) => void;
+    fetchCampaign: (campaignId: string) => void;
     fetchCharacters: (campaignId: string) => void;
+    fetchMembers: (campaignId: string) => void;
     deleteCampaign: (id: string) => void;
     leaveCampaign: (id: string) => void;
 }
@@ -58,6 +59,7 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
     componentDidMount(): void {
         this.props.fetchCampaign(this.props.match.params.id);
         this.props.fetchCharacters(this.props.match.params.id);
+        this.props.fetchMembers(this.props.match.params.id);
     }
 
     openCreate = (): void => {
@@ -193,12 +195,13 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
 const mapStateToProps = (state: RootState) => ({
     campaign: state.campaign.campaign,
     characters: state.campaign.characters,
-    loading: state.campaign.campaignLoading || state.campaign.charactersLoading
+    loading: state.campaign.campaignLoading || state.campaign.charactersLoading || state.campaign.membersLoading
 });
 
 export const CampaignDetailScreen = connect(mapStateToProps, {
     fetchCampaign: campaignActions.actions.fetchCampaign,
     fetchCharacters: campaignActions.actions.fetchCharacters,
+    fetchMembers: campaignActions.actions.fetchMembers,
     deleteCampaign: campaignActions.actions.deleteCampaign,
     leaveCampaign: campaignActions.actions.leaveCampaign
 })(CampaignDetailRaw);
