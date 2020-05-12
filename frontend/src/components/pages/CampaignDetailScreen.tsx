@@ -20,6 +20,7 @@ import { CampaignCharacterBreadcrumb } from '../molecules/CampaignCharacterBread
 import { Header } from '../molecules/Header';
 import { NewCharacterForm } from '../molecules/NewCharacterForm';
 import { EditCampaignForm } from '../molecules/EditCampaignForm';
+import { ConfirmableButton } from '../atoms/DeleteButton';
 
 export interface MatchParams {
     id: string;
@@ -33,9 +34,11 @@ interface MapProps {
     campaign: Campaign | null;
     characters: ListCharacter[];
     loading: boolean;
-    fetchCampaign: (id: string) => void;
+    fetchCampaign: (campaignId: string) => void;
     fetchCharacters: (campaignId: string) => void;
+    fetchMembers: (campaignId: string) => void;
     deleteCampaign: (id: string) => void;
+    leaveCampaign: (id: string) => void;
 }
 
 type AllProps = Props & MapProps;
@@ -44,18 +47,19 @@ interface State {
     createOpen: boolean;
     editCampaignOpen: boolean;
     deleteCheck: boolean;
-    deleted: boolean;
+    inaccessible: boolean;
 }
 
 class CampaignDetailRaw extends React.Component<AllProps, State> {
     constructor(props: AllProps) {
         super(props);
-        this.state = { createOpen: false, editCampaignOpen: false, deleteCheck: false, deleted: false };
+        this.state = { createOpen: false, editCampaignOpen: false, deleteCheck: false, inaccessible: false };
     }
 
     componentDidMount(): void {
         this.props.fetchCampaign(this.props.match.params.id);
         this.props.fetchCharacters(this.props.match.params.id);
+        this.props.fetchMembers(this.props.match.params.id);
     }
 
     openCreate = (): void => {
@@ -69,6 +73,15 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
     closeEditCampaign = (): void => {
         this.setState({ editCampaignOpen: false });
     };
+
+    leaveCampaign = (): void => {
+        if (this.props.campaign) {
+            this.props.leaveCampaign(this.props.campaign.id);
+            this.makeInaccessible();
+        }
+    };
+
+    makeInaccessible = (): void => this.setState({ inaccessible: true });
 
     renderCharacter = (character: ListCharacter) => (
         <ListItemLink to={`${this.props.match.url}${routes.character}${character.id}`} key={character.id}>
@@ -92,19 +105,18 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
         if (!this.props.campaign) {
             return <div />;
         }
-        const onDelete = () => this.setState({ deleted: true });
         return (
             <EditCampaignForm
                 id={this.props.match.params.id}
                 name={this.props.campaign?.name}
                 onSubmitComplete={this.closeEditCampaign}
-                onDelete={onDelete}
+                onDelete={this.makeInaccessible}
             />
         );
     };
 
     render() {
-        if (this.state.deleted) {
+        if (this.state.inaccessible) {
             return (
                 <div>
                     <Redirect to={routes.root} />
@@ -148,10 +160,18 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                             <Typography variant="caption">Invite code: {this.props.campaign.inviteCode}</Typography>
                         </Box>
                     )}
-                    {this.props.campaign.owner && (
+                    {this.props.campaign.owner ? (
                         <Fab className="CampaignDetail__createFab" color="primary" onClick={this.openCreate}>
                             <Add />
                         </Fab>
+                    ) : (
+                        <Box marginTop="1em">
+                            <ConfirmableButton
+                                onConfirm={this.leaveCampaign}
+                                defaultText="Leave campaign"
+                                confirmedText="Leaving..."
+                            />
+                        </Box>
                     )}
 
                     <Modal open={this.state.createOpen} onClose={this.closeCreate}>
@@ -175,11 +195,13 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
 const mapStateToProps = (state: RootState) => ({
     campaign: state.campaign.campaign,
     characters: state.campaign.characters,
-    loading: state.campaign.campaignLoading || state.campaign.charactersLoading
+    loading: state.campaign.campaignLoading || state.campaign.charactersLoading || state.campaign.membersLoading
 });
 
 export const CampaignDetailScreen = connect(mapStateToProps, {
     fetchCampaign: campaignActions.actions.fetchCampaign,
     fetchCharacters: campaignActions.actions.fetchCharacters,
-    deleteCampaign: campaignActions.actions.deleteCampaign
+    fetchMembers: campaignActions.actions.fetchMembers,
+    deleteCampaign: campaignActions.actions.deleteCampaign,
+    leaveCampaign: campaignActions.actions.leaveCampaign
 })(CampaignDetailRaw);

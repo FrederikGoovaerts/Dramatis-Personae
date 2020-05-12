@@ -1,4 +1,4 @@
-import { Campaign, ListCharacter, CharacterPrototype, CampaignEditPayload } from '../../types';
+import { Campaign, ListCharacter, CharacterPrototype, CampaignEditPayload, CampaignMember } from '../../types';
 import { ActionTypeMapping, ActionUnion, createAction } from './base';
 
 export enum names {
@@ -12,8 +12,13 @@ export enum names {
     createCharacter = 'CREATE_CHARACTER',
     setCharactersLoading = 'SET_CHARACTERS_LOADING',
     setCharacters = 'SET_CHARACTERS',
+    setMembersLoading = 'SET_MEMBERS_LOADING',
+    fetchMembers = 'FETCH_MEMBERS',
+    setMembers = 'SET_MEMBERS',
     newCampaign = 'NEW_CAMPAIGN',
     joinCampaign = 'JOIN_CAMPAIGN',
+    kickFromCampaign = 'KICK_FROM_CAMPAIGN',
+    leaveCampaign = 'LEAVE_CAMPAIGN',
     editCampaign = 'EDIT_CAMPAIGN',
     deleteCampaign = 'DELETE_CAMPAIGN'
 }
@@ -30,8 +35,13 @@ export const actions = {
         createAction(names.createCharacter, p),
     setCharactersLoading: (p: boolean) => createAction(names.setCharactersLoading, p),
     setCharacters: (p: ListCharacter[]) => createAction(names.setCharacters, p),
+    fetchMembers: (campaignId: string) => createAction(names.fetchMembers, campaignId),
+    setMembersLoading: (p: boolean) => createAction(names.setMembersLoading, p),
+    setMembers: (p: CampaignMember[]) => createAction(names.setMembers, p),
     newCampaign: (p: string) => createAction(names.newCampaign, p),
     joinCampaign: (p: string) => createAction(names.joinCampaign, p),
+    leaveCampaign: (p: string) => createAction(names.leaveCampaign, p),
+    kickFromCampaign: (p: { campaignId: string; userId: string }) => createAction(names.kickFromCampaign, p),
     editCampaign: (p: CampaignEditPayload) => createAction(names.editCampaign, p),
     deleteCampaign: (p: string) => createAction(names.deleteCampaign, p)
 };
