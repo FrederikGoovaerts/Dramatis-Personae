@@ -40,7 +40,7 @@ export async function createCharacter(id: string, characterPrototype: CharacterP
 
 export async function getMembers(id: string): Promise<Array<CampaignMember>> {
     const url = buildPath(`${api.CAMPAIGN.PATH}/${id}${api.CAMPAIGN.SUBPATH_MEMBERS}`);
-    return await axiosInstance.get(url);
+    return (await axiosInstance.get(url)).data;
 }
 
 export async function join(code: string): Promise<void> {
