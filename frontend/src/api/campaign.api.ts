@@ -53,6 +53,11 @@ export async function leave(id: string): Promise<void> {
     await axiosInstance.post(url);
 }
 
+export async function rotateInviteCode(id: string): Promise<void> {
+    const url = buildPath(`${api.CAMPAIGN.PATH}/${id}${api.CAMPAIGN.SUBPATH_ROTATE_INVITE_CODE}`);
+    await axiosInstance.post(url);
+}
+
 export async function kick(campaignId: string, userId: string): Promise<void> {
     const url = buildPath(`${api.CAMPAIGN.PATH}/${campaignId}${api.CAMPAIGN.SUBPATH_KICK}/${userId}`);
     await axiosInstance.post(url);
