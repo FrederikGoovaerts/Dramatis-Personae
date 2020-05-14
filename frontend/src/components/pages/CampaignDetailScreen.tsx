@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { match, Redirect } from 'react-router';
-import { Fab, Modal, FormControlLabel, IconButton, Box } from '@material-ui/core';
+import { Fab, Modal, FormControlLabel, IconButton, Box, Button } from '@material-ui/core';
 import { Add, Visibility, Edit } from '@material-ui/icons';
 
 import { routes } from '../../config/constants';
@@ -39,6 +39,7 @@ interface MapProps {
     fetchMembers: (campaignId: string) => void;
     deleteCampaign: (id: string) => void;
     leaveCampaign: (id: string) => void;
+    rotateInviteCode: (id: string) => void;
 }
 
 type AllProps = Props & MapProps;
@@ -78,6 +79,12 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
         if (this.props.campaign) {
             this.props.leaveCampaign(this.props.campaign.id);
             this.makeInaccessible();
+        }
+    };
+
+    rotateInviteCode = (): void => {
+        if (this.props.campaign) {
+            this.props.rotateInviteCode(this.props.campaign.id);
         }
     };
 
@@ -158,6 +165,11 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                     {this.props.campaign.inviteCode && (
                         <Box marginTop="1em">
                             <Typography variant="caption">Invite code: {this.props.campaign.inviteCode}</Typography>
+                            <Box marginTop="0.5em">
+                                <Button onClick={this.rotateInviteCode} variant="outlined" size="small">
+                                    Reset Invite Code
+                                </Button>
+                            </Box>
                         </Box>
                     )}
                     {this.props.campaign.owner ? (
@@ -203,5 +215,6 @@ export const CampaignDetailScreen = connect(mapStateToProps, {
     fetchCharacters: campaignActions.actions.fetchCharacters,
     fetchMembers: campaignActions.actions.fetchMembers,
     deleteCampaign: campaignActions.actions.deleteCampaign,
-    leaveCampaign: campaignActions.actions.leaveCampaign
+    leaveCampaign: campaignActions.actions.leaveCampaign,
+    rotateInviteCode: campaignActions.actions.rotateInviteCode
 })(CampaignDetailRaw);

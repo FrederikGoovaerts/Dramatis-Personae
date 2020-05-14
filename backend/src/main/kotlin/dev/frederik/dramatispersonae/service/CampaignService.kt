@@ -123,6 +123,13 @@ class CampaignController(private val service: CampaignService) {
         return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
     }
 
+    @PostMapping("/{id}/rotatecode")
+    fun rotateInviteCode(auth: GoogleAuthentication,
+                         @PathVariable id: UUID): ResponseEntity<Unit> {
+        val success = this.service.rotateInviteCode(auth.principal, id)
+        return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
+    }
+
 }
 
 @Component
@@ -161,6 +168,17 @@ class CampaignService(private val repository: CampaignRepository) {
         }
         val campaign = campaignQuery.get()
         campaign.members.add(user)
+        this.repository.save(campaign)
+        return true
+    }
+
+    fun rotateInviteCode(user: User, id: UUID): Boolean {
+        val campaignQuery = repository.findById(id)
+        if (!campaignQuery.isPresent || !campaignQuery.get().isOwnedBy(user)) {
+            return false
+        }
+        val campaign = campaignQuery.get()
+        campaign.inviteCode = UUID.randomUUID();
         this.repository.save(campaign)
         return true
     }
