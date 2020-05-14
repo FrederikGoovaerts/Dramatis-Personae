@@ -21,6 +21,7 @@ export const api = {
         SUBPATH_CHARACTER: '/character',
         SUBPATH_JOIN: '/join',
         SUBPATH_LEAVE: '/leave',
+        SUBPATH_ROTATE_INVITE_CODE: '/rotatecode',
         SUBPATH_KICK: '/kick',
         SUBPATH_MEMBERS: '/members'
     },
