@@ -21,6 +21,28 @@ spring:
 ---
 
 spring:
+  profiles: sandbox
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        dialect: org.hibernate.dialect.PostgreSQL95Dialect
+        hbm2ddl:
+          import_files_sql_extractor: org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor
+    hibernate:
+      ddl-auto: create-drop
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
+    show-sql: true
+    generate-ddl: true
+  flyway:
+    enabled: false
+
+---
+
+spring:
   profiles: dev
   flyway:
     enabled: false
