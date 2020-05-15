@@ -75,7 +75,7 @@ class CampaignController(private val service: CampaignService) {
         return if (list === null) {
             ResponseEntity(HttpStatus.FORBIDDEN)
         } else {
-            ResponseEntity(list.map { CharacterListView(it.name, it.isVisible, it.id!!) }, HttpStatus.OK)
+            ResponseEntity(list.map { CharacterListView(it.name, it.isVisible, it.addedOn, it.id!!) }, HttpStatus.OK)
         }
     }
 
