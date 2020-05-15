@@ -1,8 +1,11 @@
+import { Moment } from 'moment';
+
 export interface Character {
     id: string;
     name: string;
     description: string;
     visible: boolean;
+    addedOn: Moment;
 }
 
 export interface ListCharacter {
