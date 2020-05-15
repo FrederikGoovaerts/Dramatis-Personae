@@ -1,22 +1,31 @@
-# Backend
+# Dramatis Personae API backend
 
-The backend is written in Kotlin and uses the Spring Boot framework.
+The backend is written in Kotlin and uses the Spring Boot framework. It uses a PostgreSQL database for persistent storage.
 
-Running the application can be done in two modes, dev and production mode, complimented by Spring Profiles with those respective names.
+The application is available as automatically built Docker images on [Docker Hub](https://hub.docker.com/r/frederikgoovaerts/dramatis-personae-backend). The application can be run by spinning up one of these images, or by downloading the source code and using Gradle with the command `./gradlew bootRun`. Alternatively, run `./gradlew bootJar` to create a runnable `.jar` file. In each case, the necessary environment variables must be provided to the application, as detailed below.
 
-## `dev` mode
+## Environment variables
 
-When specifying the active Spring profile as `'dev'`, the application starts in dev mode. The application does not perform any authentication, starts with an in-memory database (H2) and is provided with some example data for development testing.
+### The Spring profile
 
-## `production` mode
+Running the application can be done in two modes, `dev` and `production` mode, complimented by Spring Profiles with those respective names. The environment variable to set the active profile is `spring_profiles_active`, with those values, `dev` and `production` as possible values.
 
-When specifying the active Spring profile as `'production'`, the application starts in production mode. The application uses Google OpenID tokens for authentication (configured with a project in GCP for OAuth management) and starts up expecting a PostgreSQL configuration. The application will perform the necessary table creation and migration on startup. Some configuration has to be passed to the application for succesful startup. An example where the configuration is passed as environment variables (an alternative being e.g. `application.yml`):
+In `dev` mode, the application does not perform any authentication, starts with an in-memory database (H2) and is provided with some example data for testing during development. The OAuth and Database environment variables are not necessary in this case.
 
-```
-spring_profiles_active=production
-spring_googleAuth_clientId=*GCP project OAuth client ID*
-spring_googleAuth_clientSecret=*GCP project OAuth client secret*
-spring_datasource_url=*jdbc connection URL to PostgreSQL database*
-spring_datasource_username=*PostgreSQL database username*
-spring_datasource_password=*PostgreSQL database password*
-```
+In `production` mode, the application uses Google OpenID tokens for authentication and connects to a running PosgreSQL database for storage.
+
+### Google OAuth Client details
+
+The application uses Google OpenID tokens for authentication. It is necessary to create a [Google Cloud Platform](https://console.cloud.google.com) project to create an OAuth client and get a Client ID and Client Secret.
+
+These last two should be assigned to the `spring_googleAuth_clientId` and `spring_googleAuth_clientSecret` environment variables respectively.
+
+### PostgreSQL connection details
+
+Connection to the database is configured through the following variables, for which the names should be self-explanatory:
+
+* `spring_datasource_url`
+* `spring_datasource_username`
+* `spring_datasource_password`
+
+ The application will perform the necessary table creation and migration on startup.
