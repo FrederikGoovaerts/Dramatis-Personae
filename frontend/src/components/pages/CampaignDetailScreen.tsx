@@ -207,7 +207,7 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
 const mapStateToProps = (state: RootState) => ({
     campaign: state.campaign.campaign,
     characters: state.campaign.characters,
-    loading: state.campaign.campaignLoading || state.campaign.charactersLoading || state.campaign.membersLoading
+    loading: state.campaign.campaignLoading || state.campaign.charactersLoading
 });
 
 export const CampaignDetailScreen = connect(mapStateToProps, {
