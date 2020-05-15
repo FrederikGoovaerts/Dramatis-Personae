@@ -2,10 +2,33 @@ import { axiosInstance } from '../config/axios';
 import { api } from '../config/constants';
 import { CreateNotePayload, Character, Note, VisibilityUpdatePayload, CharacterEditPayload } from '../types';
 import { buildPath } from './base.api';
+import moment from 'moment';
+
+interface RawCharacter {
+    id: string;
+    name: string;
+    description: string;
+    visible: boolean;
+    addedOn: string;
+}
+
+interface RawNote {
+    id: string;
+    contents: string;
+    addedOn: string;
+    editedOn: string;
+}
 
 export async function get(id: string): Promise<Character> {
     const url = buildPath(`${api.CHARACTER.PATH}/${id}`);
-    return (await axiosInstance.get(url)).data;
+    const data: RawCharacter = (await axiosInstance.get(url)).data;
+    return {
+        id: data.id,
+        name: data.name,
+        description: data.description,
+        visible: data.visible,
+        addedOn: moment(data.addedOn)
+    };
 }
 
 export async function update(id: string, update: CharacterEditPayload): Promise<void> {
@@ -25,7 +48,13 @@ export async function deletePermanently(id: string): Promise<void> {
 
 export async function getNotes(id: string): Promise<Array<Note>> {
     const url = buildPath(`${api.CHARACTER.PATH}/${id}${api.CHARACTER.SUBPATH_NOTE}`);
-    return (await axiosInstance.get(url)).data;
+    const data: Array<RawNote> = (await axiosInstance.get(url)).data;
+    return data.map((rawNote) => ({
+        id: rawNote.id,
+        contents: rawNote.contents,
+        editedOn: moment(rawNote.editedOn),
+        addedOn: moment(rawNote.addedOn)
+    }));
 }
 
 export async function createNote(payload: CreateNotePayload): Promise<void> {
