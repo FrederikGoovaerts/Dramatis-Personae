@@ -3,7 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import { ChangeEvent } from 'react';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Paper, Typography, Box, IconButton } from '@material-ui/core';
+import { Paper, Typography, Box, IconButton, CircularProgress } from '@material-ui/core';
 
 import { campaignActions } from '../../store/actions';
 import { DeleteButton } from '../atoms/DeleteButton';
@@ -20,6 +20,7 @@ interface Props {
 
 interface MapProps {
     members: CampaignMember[];
+    membersLoading: boolean;
     editCampaign: (payload: { id: string; name: string }) => void;
     deleteCampaign: (params: string) => void;
     kickFromCampaign: (params: { campaignId: string; userId: string }) => void;
@@ -88,7 +89,13 @@ class EditCampaignFormRaw extends React.Component<AllProps, State> {
                     </Button>
                     <Box marginTop="1em">
                         <Typography variant="h6">Campaign members</Typography>
-                        {this.props.members.map(this.renderMember)}
+                        {this.props.membersLoading ? (
+                            <Box display="flex" justifyContent="center">
+                                <CircularProgress />
+                            </Box>
+                        ) : (
+                            this.props.members.map(this.renderMember)
+                        )}
                     </Box>
                 </div>
             </Paper>
@@ -97,7 +104,8 @@ class EditCampaignFormRaw extends React.Component<AllProps, State> {
 }
 
 const mapStateToProps = (state: RootState) => ({
-    members: state.campaign.members
+    members: state.campaign.members,
+    membersLoading: state.campaign.membersLoading
 });
 
 export const EditCampaignForm = connect(mapStateToProps, {
