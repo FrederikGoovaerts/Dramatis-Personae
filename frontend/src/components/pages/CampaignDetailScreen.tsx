@@ -92,7 +92,7 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
 
     renderCharacter = (character: ListCharacter) => (
         <ListItemLink to={`${this.props.match.url}${routes.character}${character.id}`} key={character.id}>
-            <ListItemText primary={character.name} />
+            <ListItemText primary={character.name} secondary={`Added ${character.addedOn.fromNow()}`} />
             {this.props.campaign?.owner && <Visibility color={character.visible ? 'primary' : 'disabled'} />}
         </ListItemLink>
     );

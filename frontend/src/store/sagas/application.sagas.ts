@@ -1,5 +1,5 @@
 import { decode } from 'jsonwebtoken';
-import * as moment from 'moment';
+import moment from 'moment';
 import { parse } from 'query-string';
 import { put, takeEvery } from 'redux-saga/effects';
 import { removeAxiosAuthToken, setAxiosAuthToken } from '../../config/axios';
