@@ -23,10 +23,7 @@ export async function get(id: string): Promise<Character> {
     const url = buildPath(`${api.CHARACTER.PATH}/${id}`);
     const data: RawCharacter = (await axiosInstance.get(url)).data;
     return {
-        id: data.id,
-        name: data.name,
-        description: data.description,
-        visible: data.visible,
+        ...data,
         addedOn: moment(data.addedOn)
     };
 }
@@ -50,8 +47,7 @@ export async function getNotes(id: string): Promise<Array<Note>> {
     const url = buildPath(`${api.CHARACTER.PATH}/${id}${api.CHARACTER.SUBPATH_NOTE}`);
     const data: Array<RawNote> = (await axiosInstance.get(url)).data;
     return data.map((rawNote) => ({
-        id: rawNote.id,
-        contents: rawNote.contents,
+        ...rawNote,
         editedOn: moment(rawNote.editedOn),
         addedOn: moment(rawNote.addedOn)
     }));
