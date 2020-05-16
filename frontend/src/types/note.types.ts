@@ -1,6 +1,10 @@
+import { Moment } from 'moment';
+
 export interface Note {
     id: string;
     contents: string;
+    addedOn: Moment;
+    editedOn: Moment;
 }
 
 export interface CreateNotePayload {

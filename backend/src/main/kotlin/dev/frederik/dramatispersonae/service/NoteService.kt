@@ -10,7 +10,7 @@ import java.util.*
 
 data class CreateNoteDto(val contents: String)
 
-data class NoteView(val contents: String, val id: UUID)
+data class NoteView(val contents: String, val addedOn: Date, val editedOn: Date, val id: UUID)
 
 @RestController
 @RequestMapping("/api/note")
@@ -42,6 +42,7 @@ class NoteService(private val repository: NoteRepository) {
         }
         val note = noteQuery.get()
         note.contents = contents
+        note.editedOn = Date()
         this.repository.save(note)
         return true
     }
