@@ -127,6 +127,7 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
                     <ListItemText
                         primary={note.contents}
                         primaryTypographyProps={{ align: 'justify', className: 'CharacterDetail__noteContents' }}
+                        secondary={`Created ${note.addedOn.fromNow()}, last edited ${note.editedOn.fromNow()}`}
                     />
                     <ListItemSecondaryAction>
                         <IconButton edge="end" onClick={openEdit}>

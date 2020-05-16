@@ -65,6 +65,15 @@ function* joinCampaign(action: campaignActions.specificTypes['joinCampaign']) {
     }
 }
 
+function* rotateInviteCode(action: campaignActions.specificTypes['rotateInviteCode']) {
+    try {
+        yield campaign.rotateInviteCode(action.payload);
+        yield put(campaignActions.actions.fetchCampaign(action.payload));
+    } catch (e) {
+        console.error('Unable to rotate invite code. Please try again later.');
+    }
+}
+
 function* leaveCampaign(action: campaignActions.specificTypes['leaveCampaign']) {
     try {
         yield campaign.leave(action.payload);
@@ -118,6 +127,7 @@ export default function* watcher() {
     yield takeEvery(campaignActions.names.fetchMembers, fetchMembers);
     yield takeEvery(campaignActions.names.createCharacter, createCharacter);
     yield takeEvery(campaignActions.names.joinCampaign, joinCampaign);
+    yield takeEvery(campaignActions.names.rotateInviteCode, rotateInviteCode);
     yield takeEvery(campaignActions.names.leaveCampaign, leaveCampaign);
     yield takeEvery(campaignActions.names.kickFromCampaign, kickFromCampaign);
     yield takeEvery(campaignActions.names.newCampaign, newCampaign);
