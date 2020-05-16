@@ -2,6 +2,14 @@ import { axiosInstance } from '../config/axios';
 import { api } from '../config/constants';
 import { CampaignPrototype, CharacterPrototype, Campaign, ListCharacter, CampaignMember } from '../types';
 import { buildPath } from './base.api';
+import moment from 'moment';
+
+interface RawListCharacter {
+    name: string;
+    visible: boolean;
+    addedOn: string;
+    id: string;
+}
 
 export async function getAll(): Promise<Array<Campaign>> {
     const url = buildPath(`${api.CAMPAIGN.PATH}`);
@@ -28,9 +36,13 @@ export async function deletePermanently(campaignId: string): Promise<void> {
     await axiosInstance.delete(url);
 }
 
-export async function getCharacters(id: string): Promise<ListCharacter> {
+export async function getCharacters(id: string): Promise<Array<ListCharacter>> {
     const url = buildPath(`${api.CAMPAIGN.PATH}/${id}${api.CAMPAIGN.SUBPATH_CHARACTER}`);
-    return (await axiosInstance.get(url)).data;
+    const data: Array<RawListCharacter> = (await axiosInstance.get(url)).data;
+    return data.map((char) => ({
+        ...char,
+        addedOn: moment(char.addedOn)
+    }));
 }
 
 export async function createCharacter(id: string, characterPrototype: CharacterPrototype): Promise<void> {
@@ -50,6 +62,11 @@ export async function join(code: string): Promise<void> {
 
 export async function leave(id: string): Promise<void> {
     const url = buildPath(`${api.CAMPAIGN.PATH}${api.CAMPAIGN.SUBPATH_LEAVE}/${id}`);
+    await axiosInstance.post(url);
+}
+
+export async function rotateInviteCode(id: string): Promise<void> {
+    const url = buildPath(`${api.CAMPAIGN.PATH}/${id}${api.CAMPAIGN.SUBPATH_ROTATE_INVITE_CODE}`);
     await axiosInstance.post(url);
 }
 

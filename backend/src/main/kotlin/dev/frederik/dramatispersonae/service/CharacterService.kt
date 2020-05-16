@@ -10,8 +10,12 @@ import java.util.*
 
 data class CreateCharacterDto(val name: String, val description: String)
 
-data class CharacterListView(val name: String, val visible: Boolean, val id: UUID)
-data class CharacterDetailView(val name: String, val description: String, val visible: Boolean, val id: UUID)
+data class CharacterListView(val name: String, val visible: Boolean, val addedOn: Date, val id: UUID)
+data class CharacterDetailView(val name: String,
+                               val description: String,
+                               val visible: Boolean,
+                               val addedOn: Date,
+                               val id: UUID)
 
 @RestController
 @RequestMapping("/api/character")
@@ -27,6 +31,7 @@ class CharacterController(private val service: CharacterService) {
                     CharacterDetailView(character.name,
                                         character.description,
                                         character.isVisible,
+                                        character.addedOn,
                                         character.id!!),
                     HttpStatus.OK
             )
@@ -62,7 +67,7 @@ class CharacterController(private val service: CharacterService) {
         if (list === null) {
             return ResponseEntity(HttpStatus.FORBIDDEN)
         } else {
-            return ResponseEntity(list.map { NoteView(it.contents, it.id!!) }, HttpStatus.OK)
+            return ResponseEntity(list.map { NoteView(it.contents, it.addedOn, it.editedOn, it.id!!) }, HttpStatus.OK)
         }
     }
 
