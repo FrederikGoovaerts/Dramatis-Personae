@@ -11,6 +11,7 @@ export interface Character {
 export interface ListCharacter {
     id: string;
     name: string;
+    addedOn: Moment;
     visible: boolean;
 }
 
