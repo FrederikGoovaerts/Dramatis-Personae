@@ -20,8 +20,10 @@ class WebMvcConfig : WebMvcConfigurer {
 
 @EnableWebSecurity
 @Profile("!dev")
-class WebSecurity(private val userRepository: UserRepository,
-                  private val authenticationConfig: AuthenticationConfig) : WebSecurityConfigurerAdapter() {
+class WebSecurity(
+    private val userRepository: UserRepository,
+    private val authenticationConfig: AuthenticationConfig
+) : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity) {
         http.cors().and().csrf().disable().authorizeRequests()
@@ -30,7 +32,6 @@ class WebSecurity(private val userRepository: UserRepository,
             .anyRequest().authenticated()
             .and().addFilter(JwtAuthorizationFilter(authenticationManager(), authenticationConfig, userRepository))
     }
-
 }
 
 /**
@@ -39,12 +40,13 @@ class WebSecurity(private val userRepository: UserRepository,
  */
 @EnableWebSecurity
 @Profile("dev")
-class DummyWebSecurity(private val userRepository: UserRepository,
-                       private val authenticationConfig: AuthenticationConfig) : WebSecurityConfigurerAdapter() {
+class DummyWebSecurity(
+    private val userRepository: UserRepository,
+    private val authenticationConfig: AuthenticationConfig
+) : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity) {
         http.cors().and().csrf().disable().authorizeRequests().anyRequest().permitAll()
                 .and().addFilter(DummyJwtAuthorizationFilter(authenticationManager(), userRepository))
     }
-
 }
