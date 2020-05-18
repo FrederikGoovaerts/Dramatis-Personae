@@ -140,7 +140,7 @@ class CharacterService(private val repository: CharacterRepository) {
             return false
         }
         val character = characterQuery.get()
-        val newNote = Note(contents, user, character)
+        val newNote = Note(contents, user, character, NoteVisibility.valueOf("PRIVATE"))
         character.notes.add(newNote)
         this.repository.save(character)
         return true
