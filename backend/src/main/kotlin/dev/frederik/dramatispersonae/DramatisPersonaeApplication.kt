@@ -19,8 +19,10 @@ fun main(args: Array<String>) {
  */
 @Component
 @Profile("dev")
-class LocalDevFixtures(private val userRepository: UserRepository,
-                       private val campaignRepository: CampaignRepository) : CommandLineRunner {
+class LocalDevFixtures(
+    private val userRepository: UserRepository,
+    private val campaignRepository: CampaignRepository
+) : CommandLineRunner {
 
     override fun run(vararg args: String?) {
         val user1 = User("1", "Jack Name1", "Email1")
@@ -58,5 +60,4 @@ class LocalDevFixtures(private val userRepository: UserRepository,
         this.campaignRepository.save(campaign2)
         this.campaignRepository.save(campaign3)
     }
-
 }

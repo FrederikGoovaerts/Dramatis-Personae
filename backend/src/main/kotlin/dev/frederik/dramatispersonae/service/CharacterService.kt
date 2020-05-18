@@ -2,20 +2,22 @@ package dev.frederik.dramatispersonae.service
 
 import dev.frederik.dramatispersonae.auth.GoogleAuthentication
 import dev.frederik.dramatispersonae.model.*
+import java.util.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
-import java.util.*
 
 data class CreateCharacterDto(val name: String, val description: String)
 
 data class CharacterListView(val name: String, val visible: Boolean, val addedOn: Date, val id: UUID)
-data class CharacterDetailView(val name: String,
-                               val description: String,
-                               val visible: Boolean,
-                               val addedOn: Date,
-                               val id: UUID)
+data class CharacterDetailView(
+    val name: String,
+    val description: String,
+    val visible: Boolean,
+    val addedOn: Date,
+    val id: UUID
+)
 
 @RestController
 @RequestMapping("/api/character")
@@ -39,17 +41,21 @@ class CharacterController(private val service: CharacterService) {
     }
 
     @PutMapping("/{id}")
-    fun updateCharacter(auth: GoogleAuthentication,
-                        @PathVariable id: UUID,
-                        @RequestBody character: CreateCharacterDto): ResponseEntity<Unit> {
+    fun updateCharacter(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID,
+        @RequestBody character: CreateCharacterDto
+    ): ResponseEntity<Unit> {
         val success = this.service.updateCharacter(auth.principal, id, character.name, character.description)
         return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
     }
 
     @PutMapping("/{id}/visible")
-    fun updateCharacterVisibility(auth: GoogleAuthentication,
-                                  @PathVariable id: UUID,
-                                  @RequestBody visible: Boolean): ResponseEntity<Unit> {
+    fun updateCharacterVisibility(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID,
+        @RequestBody visible: Boolean
+    ): ResponseEntity<Unit> {
         val success = this.service.updateCharacterVisibility(auth.principal, id, visible)
         return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
     }
@@ -61,8 +67,10 @@ class CharacterController(private val service: CharacterService) {
     }
 
     @GetMapping("/{id}/note")
-    fun getCharacterNoteList(auth: GoogleAuthentication,
-                             @PathVariable id: UUID): ResponseEntity<List<NoteView>> {
+    fun getCharacterNoteList(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID
+    ): ResponseEntity<List<NoteView>> {
         val list = this.service.getCharacterNotes(auth.principal, id)
         if (list === null) {
             return ResponseEntity(HttpStatus.FORBIDDEN)
@@ -72,13 +80,14 @@ class CharacterController(private val service: CharacterService) {
     }
 
     @PostMapping("/{id}/note")
-    fun createCharacterNote(auth: GoogleAuthentication,
-                            @PathVariable id: UUID,
-                            @RequestBody dto: CreateNoteDto): ResponseEntity<Unit> {
+    fun createCharacterNote(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID,
+        @RequestBody dto: CreateNoteDto
+    ): ResponseEntity<Unit> {
         val success = this.service.createNote(auth.principal, id, dto.contents)
         return ResponseEntity(if (success) HttpStatus.CREATED else HttpStatus.FORBIDDEN)
     }
-
 }
 
 @Component
