@@ -22,7 +22,7 @@ class NoteController(private val service: NoteService) {
         @PathVariable id: UUID,
         @RequestBody note: CreateNoteDto
     ): ResponseEntity<Unit> {
-        val success = this.service.updateNote(auth.principal, id, note.contents)
+        val success = this.service.updateNote(auth.principal, id, note.contents, note.visibility)
         return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
     }
 
@@ -36,14 +36,16 @@ class NoteController(private val service: NoteService) {
 @Component
 class NoteService(private val repository: NoteRepository) {
 
-    fun updateNote(user: User, id: UUID, contents: String): Boolean {
+    fun updateNote(user: User, id: UUID, contents: String, rawVisibility: String): Boolean {
         val noteQuery = repository.findById(id)
         if (!noteQuery.isPresent || noteQuery.get().author != user) {
             return false
         }
+        val visibility = try { NoteVisibility.valueOf(rawVisibility) } catch (e: IllegalArgumentException) { return false }
         val note = noteQuery.get()
         note.contents = contents
         note.editedOn = Date()
+        note.visibility = visibility
         this.repository.save(note)
         return true
     }
