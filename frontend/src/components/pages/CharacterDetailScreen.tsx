@@ -47,6 +47,7 @@ interface MapProps {
     loading: boolean;
     fetchCharacter: (id: string) => void;
     fetchNotes: (id: string) => void;
+    fetchSharedNotes: (id: string) => void;
     fetchCampaign: (id: string) => void;
     setVisible: (payload: VisibilityUpdatePayload) => void;
 }
@@ -77,6 +78,7 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         this.props.fetchCharacter(this.props.match.params.characterId);
         this.props.fetchCampaign(this.props.match.params.campaignId);
         this.props.fetchNotes(this.props.match.params.characterId);
+        this.props.fetchSharedNotes(this.props.match.params.characterId);
     }
 
     handleToggleVisible = (event: ChangeEvent<HTMLInputElement>) => {
@@ -252,6 +254,7 @@ export const CharacterDetailScreen = connect(mapStateToProps, {
     fetchCharacter: characterActions.actions.fetchCharacter,
     fetchCampaign: campaignActions.actions.fetchCampaign,
     fetchNotes: characterActions.actions.fetchNotes,
+    fetchSharedNotes: characterActions.actions.fetchSharedNotes,
     setVisible: characterActions.actions.setVisible,
     deleteCharacter: characterActions.actions.deleteCharacter
 })(CharacterDetailRaw);
