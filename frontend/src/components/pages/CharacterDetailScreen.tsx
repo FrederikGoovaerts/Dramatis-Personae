@@ -111,8 +111,7 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         return (
             <EditNoteForm
                 characterId={this.props.character.id}
-                noteId={this.state.editNote.id}
-                noteContents={this.state.editNote.contents}
+                note={this.state.editNote}
                 onSubmitComplete={this.closeEditNote}
             />
         );

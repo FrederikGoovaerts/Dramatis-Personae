@@ -5,7 +5,7 @@ import { EditNotePayload } from '../types';
 
 export async function edit(payload: EditNotePayload): Promise<void> {
     const url = buildPath(`${api.NOTE.PATH}/${payload.noteId}`);
-    await axiosInstance.put(url, { contents: payload.contents });
+    await axiosInstance.put(url, { contents: payload.contents, visibility: payload.visibility });
 }
 
 export async function deletePermanently(id: string): Promise<void> {
