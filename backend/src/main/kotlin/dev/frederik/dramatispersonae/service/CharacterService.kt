@@ -72,10 +72,27 @@ class CharacterController(private val service: CharacterService) {
         @PathVariable id: UUID
     ): ResponseEntity<List<NoteView>> {
         val list = this.service.getCharacterNotes(auth.principal, id)
-        if (list === null) {
-            return ResponseEntity(HttpStatus.FORBIDDEN)
+        return if (list === null) {
+            ResponseEntity(HttpStatus.FORBIDDEN)
         } else {
-            return ResponseEntity(list.map { NoteView(it.contents, it.addedOn, it.editedOn, it.id!!) }, HttpStatus.OK)
+            ResponseEntity(list.map {
+                NoteView(it.contents, it.visibility, it.addedOn, it.editedOn, it.id!!)
+            }, HttpStatus.OK)
+        }
+    }
+
+    @GetMapping("/{id}/sharednotes")
+    fun getCharacterSharedNotes(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID
+    ): ResponseEntity<List<NoteView>> {
+        val list = this.service.getCharacterSharedNotes(auth.principal, id)
+        return if (list === null) {
+            ResponseEntity(HttpStatus.FORBIDDEN)
+        } else {
+            ResponseEntity(list.map {
+                NoteView(it.contents, it.visibility, it.addedOn, it.editedOn, it.id!!)
+            }, HttpStatus.OK)
         }
     }
 
@@ -134,13 +151,29 @@ class CharacterService(private val repository: CharacterRepository) {
         return true
     }
 
-    fun getCharacterNotes(user: User, id: UUID): List<Note>? {
-        val characterQuery = repository.findById(id)
+    fun getCharacterNotes(user: User, characterId: UUID): List<Note>? {
+        val characterQuery = repository.findById(characterId)
         if (!characterQuery.isPresent || !(characterQuery.get().campaign.members.contains(user))) {
             return null
         }
         val character = characterQuery.get()
         return character.notes.filter { it.author == user }
+    }
+
+    fun getCharacterSharedNotes(user: User, characterId: UUID): List<Note>? {
+        val characterQuery = repository.findById(characterId)
+        if (!characterQuery.isPresent || !(characterQuery.get().campaign.members.contains(user))) {
+            return null
+        }
+        val character = characterQuery.get()
+        return if (character.campaign.isOwnedBy(user)) {
+            character.notes.filter {
+                it.author != user &&
+                        (it.visibility === NoteVisibility.DM_SHARED || it.visibility === NoteVisibility.PUBLIC)
+            }
+        } else {
+            character.notes.filter { it.author != user && it.visibility === NoteVisibility.PUBLIC }
+        }
     }
 
     fun createNote(user: User, id: UUID, contents: String, rawVisibility: String): Boolean {

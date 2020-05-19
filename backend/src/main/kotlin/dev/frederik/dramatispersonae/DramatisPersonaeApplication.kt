@@ -49,9 +49,15 @@ class LocalDevFixtures(
                 " dui elementum finibus. Aliquam eget vehicula leo, non ultricies nisl. Interdum et malesuada fames a" +
                 "c ante ipsum primis in faucibus. Duis consequat diam odio, a cursus libero lobortis a. Proin ultrici" +
                 "es et lorem non ultrices. ", user1, char1, NoteVisibility.PUBLIC)
+        val note4 = Note("Test note private of user 2", user2, char1, NoteVisibility.PRIVATE)
+        val note5 = Note("Test note dm-shared of user 2", user2, char1, NoteVisibility.DM_SHARED)
+        val note6 = Note("Test note public of user 2", user2, char1, NoteVisibility.PUBLIC)
         char1.notes.add(note1)
         char1.notes.add(note2)
         char1.notes.add(note3)
+        char1.notes.add(note4)
+        char1.notes.add(note5)
+        char1.notes.add(note6)
         campaign1.characters.add(char1)
         campaign1.characters.add(char2)
         campaign3.characters.add(char3)

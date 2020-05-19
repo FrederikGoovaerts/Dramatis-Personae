@@ -14,8 +14,8 @@ data class Note(
     @OneToOne var author: User,
     @ManyToOne var character: Character,
     @Enumerated(EnumType.STRING) var visibility: NoteVisibility,
-    @Column(name = "added_on", columnDefinition = "TIMESTAMP WITH TIME ZONE") var addedOn: Date = Date(),
-    @Column(name = "edited_on", columnDefinition = "TIMESTAMP WITH TIME ZONE") var editedOn: Date = Date(),
+    var addedOn: Date = Date(),
+    var editedOn: Date = Date(),
     @Id @GeneratedValue var id: UUID? = null
 )
 
