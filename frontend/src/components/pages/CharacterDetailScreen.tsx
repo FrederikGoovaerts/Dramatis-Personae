@@ -240,12 +240,12 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
                     <Box marginBottom="1em">
                         <Typography variant="h5">Your notes</Typography>
                     </Box>
-                    {this.renderOwnNotes()}
+                    <Box marginBottom="2em">{this.renderOwnNotes()}</Box>
 
-                    <Box marginBottom="1em" marginTop="2em">
+                    <Box marginBottom="1em">
                         <Typography variant="h5">Notes by others</Typography>
                     </Box>
-                    {this.renderSharedNotes()}
+                    <Box marginBottom="2em">{this.renderSharedNotes()}</Box>
                     <Modal open={this.state.createOpen} onClose={this.closeCreateNote}>
                         <div className="modal">{this.renderCreateNote()}</div>
                     </Modal>
