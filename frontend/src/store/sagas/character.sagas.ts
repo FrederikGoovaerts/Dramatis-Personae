@@ -24,6 +24,17 @@ function* fetchNotes(action: characterActions.specificTypes['fetchNotes']) {
     yield put(characterActions.actions.setNotesLoading(false));
 }
 
+function* fetchSharedNotes(action: characterActions.specificTypes['fetchSharedNotes']) {
+    yield put(characterActions.actions.setSharedNotesLoading(true));
+    try {
+        const result = yield character.getSharedNotes(action.payload);
+        yield put(characterActions.actions.setSharedNotes(result));
+    } catch (e) {
+        console.error('Unable to fetch shared notes. Please try again later.');
+    }
+    yield put(characterActions.actions.setSharedNotesLoading(false));
+}
+
 function* editCharacter(action: characterActions.specificTypes['editCharacter']) {
     try {
         yield character.update(action.payload.characterId, action.payload);
@@ -62,6 +73,7 @@ function* setVisibility(action: characterActions.specificTypes['setVisible']) {
 export default function* watcher() {
     yield takeEvery(characterActions.names.fetchCharacter, fetchCharacter);
     yield takeEvery(characterActions.names.fetchNotes, fetchNotes);
+    yield takeEvery(characterActions.names.fetchSharedNotes, fetchSharedNotes);
     yield takeEvery(characterActions.names.editCharacter, editCharacter);
     yield takeEvery(characterActions.names.deleteCharacter, deleteCharacter);
     yield takeEvery(characterActions.names.createNote, createNote);
