@@ -85,7 +85,7 @@ class CharacterController(private val service: CharacterService) {
         @PathVariable id: UUID,
         @RequestBody dto: CreateNoteDto
     ): ResponseEntity<Unit> {
-        val success = this.service.createNote(auth.principal, id, dto.contents)
+        val success = this.service.createNote(auth.principal, id, dto.contents, dto.visibility)
         return ResponseEntity(if (success) HttpStatus.CREATED else HttpStatus.FORBIDDEN)
     }
 }
@@ -143,13 +143,14 @@ class CharacterService(private val repository: CharacterRepository) {
         return character.notes.filter { it.author == user }
     }
 
-    fun createNote(user: User, id: UUID, contents: String): Boolean {
+    fun createNote(user: User, id: UUID, contents: String, rawVisibility: String): Boolean {
         val characterQuery = repository.findById(id)
         if (!characterQuery.isPresent || !characterQuery.get().campaign.members.contains(user)) {
             return false
         }
+        val visibility = try { NoteVisibility.valueOf(rawVisibility) } catch (e: IllegalArgumentException) { return false }
         val character = characterQuery.get()
-        val newNote = Note(contents, user, character, NoteVisibility.valueOf("PRIVATE"))
+        val newNote = Note(contents, user, character, visibility)
         character.notes.add(newNote)
         this.repository.save(character)
         return true

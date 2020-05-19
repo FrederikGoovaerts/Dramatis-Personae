@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
 
-data class CreateNoteDto(val contents: String)
+data class CreateNoteDto(val contents: String, val visibility: String)
 
 data class NoteView(val contents: String, val addedOn: Date, val editedOn: Date, val id: UUID)
 
