@@ -27,9 +27,10 @@ import {
     Divider,
     Modal,
     Box,
-    FormControlLabel
+    FormControlLabel,
+    Tooltip
 } from '@material-ui/core';
-import { Edit, Add } from '@material-ui/icons';
+import { Edit, Add, VisibilityOff } from '@material-ui/icons';
 import { NewNoteForm } from '../molecules/NewNoteForm';
 import { EditNoteForm } from '../molecules/EditNoteForm';
 
@@ -131,13 +132,23 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
                     <ListItemText
                         primary={note.contents}
                         primaryTypographyProps={{ align: 'justify', className: 'CharacterDetail__noteContents' }}
-                        secondary={`Created ${note.addedOn.fromNow()}, last edited ${note.editedOn.fromNow()}`}
+                        secondary={`Created ${note.addedOn.fromNow()}, last edited ${note.editedOn.fromNow()}${
+                            !own ? `, by ${note.authorName}` : ''
+                        }`}
                     />
                     {own && (
                         <ListItemSecondaryAction>
                             <IconButton edge="end" onClick={openEdit}>
                                 <Edit />
                             </IconButton>
+                        </ListItemSecondaryAction>
+                    )}
+
+                    {!own && note.visibility === 'DM_SHARED' && (
+                        <ListItemSecondaryAction>
+                            <Tooltip title="Shared with DM only">
+                                <VisibilityOff />
+                            </Tooltip>
                         </ListItemSecondaryAction>
                     )}
                 </ListItem>
