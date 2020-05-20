@@ -1,15 +1,9 @@
 import { axiosInstance } from '../config/axios';
 import { api } from '../config/constants';
-import {
-    CreateNotePayload,
-    Character,
-    Note,
-    VisibilityUpdatePayload,
-    CharacterEditPayload,
-    NoteVisibility
-} from '../types';
 import { buildPath } from './base.api';
 import moment from 'moment';
+import { NoteVisibility, Note, CreateNotePayload } from '../types/note.types';
+import { Character, CharacterEditPayload, VisibilityUpdatePayload } from '../types/character.types';
 
 interface RawCharacter {
     id: string;
@@ -22,6 +16,7 @@ interface RawCharacter {
 interface RawNote {
     id: string;
     contents: string;
+    authorName: string;
     addedOn: string;
     editedOn: string;
     visibility: NoteVisibility;

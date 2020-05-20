@@ -1,7 +1,7 @@
 import { axiosInstance } from '../config/axios';
 import { api } from '../config/constants';
 import { buildPath } from './base.api';
-import { EditNotePayload } from '../types';
+import { EditNotePayload } from '../types/note.types';
 
 export async function edit(payload: EditNotePayload): Promise<void> {
     const url = buildPath(`${api.NOTE.PATH}/${payload.noteId}`);

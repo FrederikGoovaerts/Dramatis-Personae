@@ -5,7 +5,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { campaignActions } from '../../store/actions';
-import { CharacterPrototype } from '../../types';
+import { CharacterPrototype } from '../../types/character.types';
 
 interface Props {
     campaignId: string;

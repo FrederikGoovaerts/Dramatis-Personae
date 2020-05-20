@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 import { characterActions } from '../../store/actions';
 import { Paper, Typography, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
-import { NoteVisibility } from '../../types';
+import { NoteVisibility } from '../../types/note.types';
 
 interface Props {
     characterId: string;

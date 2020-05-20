@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 
 import { campaignActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
-import { Campaign } from '../../types';
+import { Campaign } from '../../types/campaign.types';
 
 import { Header } from '../molecules/Header';
 import { JoinCampaignForm } from '../molecules/JoinCampaignForm';
