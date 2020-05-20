@@ -5,6 +5,7 @@ export type NoteVisibility = 'PRIVATE' | 'DM_SHARED' | 'PUBLIC';
 export interface Note {
     id: string;
     contents: string;
+    authorName: string;
     addedOn: Moment;
     editedOn: Moment;
     visibility: NoteVisibility;
