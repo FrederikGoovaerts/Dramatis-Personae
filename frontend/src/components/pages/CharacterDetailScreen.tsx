@@ -13,7 +13,9 @@ import { routes } from '../../config/constants';
 import { EditCharacterForm } from '../molecules/EditCharacterForm';
 import { campaignActions, characterActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
-import { Campaign, Character, VisibilityUpdatePayload, Note } from '../../types';
+import { Character, VisibilityUpdatePayload } from '../../types/character.types';
+import { Campaign } from '../../types/campaign.types';
+import { Note } from '../../types/note.types';
 import { CampaignCharacterBreadcrumb } from '../molecules/CampaignCharacterBreadcrumbs';
 import { Header } from '../molecules/Header';
 import {

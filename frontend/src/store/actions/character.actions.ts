@@ -1,4 +1,5 @@
-import { Character, CharacterEditPayload, CreateNotePayload, VisibilityUpdatePayload, Note } from '../../types';
+import { CreateNotePayload, Note } from '../../types/note.types';
+import { Character, CharacterEditPayload, VisibilityUpdatePayload } from '../../types/character.types';
 import { ActionTypeMapping, ActionUnion, createAction } from './base';
 
 export enum names {

@@ -1,8 +1,9 @@
 import { axiosInstance } from '../config/axios';
 import { api } from '../config/constants';
-import { CampaignPrototype, CharacterPrototype, Campaign, ListCharacter, CampaignMember } from '../types';
 import { buildPath } from './base.api';
 import moment from 'moment';
+import { Campaign, CampaignPrototype, CampaignMember } from '../types/campaign.types';
+import { ListCharacter, CharacterPrototype } from '../types/character.types';
 
 interface RawListCharacter {
     name: string;
