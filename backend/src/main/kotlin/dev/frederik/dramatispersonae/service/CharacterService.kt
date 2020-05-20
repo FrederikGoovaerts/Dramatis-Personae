@@ -76,7 +76,7 @@ class CharacterController(private val service: CharacterService) {
             ResponseEntity(HttpStatus.FORBIDDEN)
         } else {
             ResponseEntity(list.map {
-                NoteView(it.contents, it.visibility, it.addedOn, it.editedOn, it.id!!)
+                NoteView(it.contents, it.author.fullName, it.visibility, it.addedOn, it.editedOn, it.id!!)
             }, HttpStatus.OK)
         }
     }
@@ -91,7 +91,7 @@ class CharacterController(private val service: CharacterService) {
             ResponseEntity(HttpStatus.FORBIDDEN)
         } else {
             ResponseEntity(list.map {
-                NoteView(it.contents, it.visibility, it.addedOn, it.editedOn, it.id!!)
+                NoteView(it.contents, it.author.fullName, it.visibility, it.addedOn, it.editedOn, it.id!!)
             }, HttpStatus.OK)
         }
     }
