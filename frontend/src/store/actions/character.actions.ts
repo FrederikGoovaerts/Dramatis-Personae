@@ -14,6 +14,8 @@ export enum names {
     setSharedNotes = 'SET_SHARED_NOTES',
     editCharacter = 'EDIT_CHARACTER',
     deleteCharacter = 'DELETE_CHARACTER',
+    acceptProposedCharacter = 'ACCEPT_PROPOSED_CHARACTER',
+    deleteProposedCharacter = 'DELETE_PROPOSED_CHARACTER',
     createNote = 'CREATE_NOTE',
     setVisibility = 'SET_CHARACTER_VISIBILITY'
 }
@@ -30,6 +32,8 @@ export const actions = {
     setSharedNotes: (p: Note[]) => createAction(names.setSharedNotes, p),
     editCharacter: (p: CharacterEditPayload) => createAction(names.editCharacter, p),
     deleteCharacter: (p: string) => createAction(names.deleteCharacter, p),
+    acceptProposedCharacter: (id: string) => createAction(names.acceptProposedCharacter, id),
+    deleteProposedCharacter: (p: string) => createAction(names.deleteProposedCharacter, p),
     createNote: (p: CreateNotePayload) => createAction(names.createNote, p),
     setVisible: (p: VisibilityUpdatePayload) => createAction(names.setVisibility, p)
 };
