@@ -20,7 +20,7 @@ data class ProposedCharacterView(
 @RequestMapping("/api/proposedcharacter")
 class ProposedCharacterController(private val service: ProposedCharacterService) {
 
-    @PutMapping("/{id}/accept")
+    @PostMapping("/{id}/accept")
     fun acceptProposedCharacter(
         auth: GoogleAuthentication,
         @PathVariable id: UUID
