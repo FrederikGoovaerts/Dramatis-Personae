@@ -90,7 +90,7 @@ class CampaignController(private val service: CampaignService) {
         return ResponseEntity(if (success) HttpStatus.CREATED else HttpStatus.FORBIDDEN)
     }
 
-    @GetMapping("/{id}/porposedcharacter")
+    @GetMapping("/{id}/proposedcharacter")
     fun getProposedCharacters(
         auth: GoogleAuthentication,
         @PathVariable id: UUID
@@ -109,7 +109,7 @@ class CampaignController(private val service: CampaignService) {
         }
     }
 
-    @PostMapping("/{id}/proposecharacter")
+    @PostMapping("/{id}/proposedcharacter")
     fun proposeCharacter(
         auth: GoogleAuthentication,
         @PathVariable id: UUID,
