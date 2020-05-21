@@ -1,6 +1,7 @@
 import { put, takeEvery } from 'redux-saga/effects';
-import { characterActions } from '../actions';
+import { characterActions, campaignActions } from '../actions';
 import * as character from '../../api/character.api';
+import * as proposedCharacter from '../../api/proposedcharacter.api';
 
 function* fetchCharacter(action: characterActions.specificTypes['fetchCharacter']) {
     yield put(characterActions.actions.setCharacterLoading(true));
@@ -52,6 +53,25 @@ function* deleteCharacter(action: characterActions.specificTypes['deleteCharacte
     }
 }
 
+function* acceptProposedCharacter(action: characterActions.specificTypes['acceptProposedCharacter']) {
+    try {
+        yield proposedCharacter.accept(action.payload);
+        yield put(campaignActions.actions.fetchCharacters(String(action.payload)));
+        yield put(campaignActions.actions.fetchProposedCharacters(String(action.payload)));
+    } catch (e) {
+        console.error('Unable to accept proposed character. Please try again later.');
+    }
+}
+
+function* deleteProposedCharacter(action: characterActions.specificTypes['deleteProposedCharacter']) {
+    try {
+        yield proposedCharacter.deletePermanently(action.payload);
+        yield put(campaignActions.actions.fetchProposedCharacters(String(action.payload)));
+    } catch (e) {
+        console.error('Unable to delete proposed character. Please try again later.');
+    }
+}
+
 function* createNote(action: characterActions.specificTypes['createNote']) {
     try {
         yield character.createNote(action.payload);
@@ -76,6 +96,8 @@ export default function* watcher() {
     yield takeEvery(characterActions.names.fetchSharedNotes, fetchSharedNotes);
     yield takeEvery(characterActions.names.editCharacter, editCharacter);
     yield takeEvery(characterActions.names.deleteCharacter, deleteCharacter);
+    yield takeEvery(characterActions.names.acceptProposedCharacter, acceptProposedCharacter);
+    yield takeEvery(characterActions.names.deleteProposedCharacter, deleteProposedCharacter);
     yield takeEvery(characterActions.names.createNote, createNote);
     yield takeEvery(characterActions.names.setVisibility, setVisibility);
 }
