@@ -111,9 +111,9 @@ class CampaignController(private val service: CampaignService) {
 
     @PostMapping("/{id}/proposecharacter")
     fun proposeCharacter(
-            auth: GoogleAuthentication,
-            @PathVariable id: UUID,
-            @RequestBody dto: CreateCharacterDto
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID,
+        @RequestBody dto: CreateCharacterDto
     ): ResponseEntity<Unit> {
         val success = this.service.proposeCharacter(auth.principal, id, dto.name, dto.description)
         return ResponseEntity(if (success) HttpStatus.CREATED else HttpStatus.FORBIDDEN)
