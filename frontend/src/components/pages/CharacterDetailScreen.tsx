@@ -253,11 +253,12 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
                         <Typography variant="h5">Your notes</Typography>
                     </Box>
                     <Box marginBottom="2em">{this.renderOwnNotes()}</Box>
-
-                    <Box marginBottom="1em">
-                        <Typography variant="h5">Notes by others</Typography>
-                    </Box>
-                    <Box marginBottom="2em">{this.renderSharedNotes()}</Box>
+                    {this.props.sharedNotes.length > 0 && (
+                        <Box marginBottom="1em">
+                            <Typography variant="h5">Notes by others</Typography>
+                        </Box>
+                    )}
+                    {this.props.sharedNotes.length > 0 && <Box marginBottom="2em">{this.renderSharedNotes()}</Box>}
                     <Modal open={this.state.createOpen} onClose={this.closeCreateNote}>
                         <div className="modal">{this.renderCreateNote()}</div>
                     </Modal>
