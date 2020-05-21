@@ -62,7 +62,7 @@ class CharacterController(private val service: CharacterService) {
 
     @DeleteMapping("/{id}")
     fun deleteCharacter(auth: GoogleAuthentication, @PathVariable id: UUID): ResponseEntity<Unit> {
-        val success = this.service.deleteCharacter(auth.principal, id)
+        val success = this.service.deleteProposedCharacter(auth.principal, id)
         return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
     }
 
@@ -142,7 +142,7 @@ class CharacterService(private val repository: CharacterRepository) {
         return true
     }
 
-    fun deleteCharacter(user: User, id: UUID): Boolean {
+    fun deleteProposedCharacter(user: User, id: UUID): Boolean {
         val characterQuery = repository.findById(id)
         if (!characterQuery.isPresent || !characterQuery.get().campaign.isOwnedBy(user)) {
             return false
