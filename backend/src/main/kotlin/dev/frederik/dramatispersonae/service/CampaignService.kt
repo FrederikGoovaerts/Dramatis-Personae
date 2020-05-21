@@ -1,10 +1,7 @@
 package dev.frederik.dramatispersonae.service
 
 import dev.frederik.dramatispersonae.auth.GoogleAuthentication
-import dev.frederik.dramatispersonae.model.Campaign
-import dev.frederik.dramatispersonae.model.CampaignRepository
-import dev.frederik.dramatispersonae.model.Character
-import dev.frederik.dramatispersonae.model.User
+import dev.frederik.dramatispersonae.model.*
 import java.util.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -93,6 +90,35 @@ class CampaignController(private val service: CampaignService) {
         return ResponseEntity(if (success) HttpStatus.CREATED else HttpStatus.FORBIDDEN)
     }
 
+    @GetMapping("/{id}/character")
+    fun getProposedCharacters(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID
+    ): ResponseEntity<List<ProposedCharacterView>> {
+        val list = this.service.getProposedCharacters(auth.principal, id)
+        return if (list === null) {
+            ResponseEntity(HttpStatus.FORBIDDEN)
+        } else {
+            ResponseEntity(list.map { ProposedCharacterView(
+                    it.name,
+                    it.description,
+                    it.proposedOn,
+                    it.proposedBy.fullName,
+                    it.id!!
+            ) }, HttpStatus.OK)
+        }
+    }
+
+    @PostMapping("/{id}/character")
+    fun proposeCharacter(
+            auth: GoogleAuthentication,
+            @PathVariable id: UUID,
+            @RequestBody dto: CreateCharacterDto
+    ): ResponseEntity<Unit> {
+        val success = this.service.proposeCharacter(auth.principal, id, dto.name, dto.description)
+        return ResponseEntity(if (success) HttpStatus.CREATED else HttpStatus.FORBIDDEN)
+    }
+
     @GetMapping("/{id}/members")
     fun getCampaignMembers(
         auth: GoogleAuthentication,
@@ -161,7 +187,7 @@ class CampaignService(private val repository: CampaignRepository) {
     }
 
     fun createCampaign(user: User, name: String): Campaign {
-        val newCampaign = Campaign(name, user, mutableListOf(user), mutableListOf())
+        val newCampaign = Campaign(name, user, mutableListOf(user), mutableListOf(), mutableListOf())
         return this.repository.save(newCampaign)
     }
 
@@ -251,6 +277,27 @@ class CampaignService(private val repository: CampaignRepository) {
         val campaign = campaignQuery.get()
         val newCharacter = Character(name, description, false, campaign, mutableListOf())
         campaign.characters.add(newCharacter)
+        this.repository.save(campaign)
+        return true
+    }
+
+    fun getProposedCharacters(user: User, id: UUID): List<ProposedCharacter>? {
+        val campaignQuery = repository.findById(id)
+        if (!campaignQuery.isPresent || !campaignQuery.get().members.contains(user)) {
+            return null
+        }
+        val campaign = campaignQuery.get()
+        return campaign.proposedCharacters.filter { campaign.isOwnedBy(user) || it.proposedBy == user }
+    }
+
+    fun proposeCharacter(user: User, id: UUID, name: String, description: String): Boolean {
+        val campaignQuery = repository.findById(id)
+        if (!campaignQuery.isPresent || !campaignQuery.get().members.contains(user)) {
+            return false
+        }
+        val campaign = campaignQuery.get()
+        val newProposedCharacter = ProposedCharacter(name, description, campaign, user)
+        campaign.proposedCharacters.add(newProposedCharacter)
         this.repository.save(campaign)
         return true
     }
