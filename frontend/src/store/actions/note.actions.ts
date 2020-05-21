@@ -1,4 +1,4 @@
-import { EditNotePayload, DeleteNotePayload } from '../../types';
+import { EditNotePayload, DeleteNotePayload } from '../../types/note.types';
 import { ActionTypeMapping, ActionUnion, createAction } from './base';
 
 export enum names {

@@ -1,5 +1,6 @@
-import { Campaign, ListCharacter, CharacterPrototype, CampaignEditPayload, CampaignMember } from '../../types';
+import { Campaign, CampaignEditPayload, CampaignMember } from '../../types/campaign.types';
 import { ActionTypeMapping, ActionUnion, createAction } from './base';
+import { CharacterPrototype, ListCharacter } from '../../types/character.types';
 
 export enum names {
     fetchCampaigns = 'FETCH_CAMPAIGNS',

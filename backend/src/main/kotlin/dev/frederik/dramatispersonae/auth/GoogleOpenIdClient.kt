@@ -52,7 +52,6 @@ class GoogleOpenIdClient(private val authenticationConfig: AuthenticationConfig)
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .POST(HttpRequest.BodyPublishers.ofString(reqBody)).build()
         return httpClient.send(req, HttpResponse.BodyHandlers.ofString()).body()
-
     }
 
     private fun mapToFormEncodedBody(pairs: Map<String, String>): String {
@@ -64,11 +63,13 @@ class GoogleOpenIdClient(private val authenticationConfig: AuthenticationConfig)
 
 data class DiscoveryDocument(val issuer: String, val authorization_endpoint: String, val token_endpoint: String)
 
-data class CodeResponse(val access_token: String,
-                   val id_token: String,
-                   val expires_in: Int,
-                   val token_type: String,
-                   val refresh_token: String)
+data class CodeResponse(
+    val access_token: String,
+    val id_token: String,
+    val expires_in: Int,
+    val token_type: String,
+    val refresh_token: String
+)
 
 data class RefreshResponse(val access_token: String, val id_token: String, val expires_in: Int, val token_type: String)
 

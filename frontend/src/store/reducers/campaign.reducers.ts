@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
-import { Campaign, ListCharacter, CampaignMember } from '../../types';
+import { Campaign, CampaignMember } from '../../types/campaign.types';
+import { ListCharacter } from '../../types/character.types';
 import { applicationActions, campaignActions } from '../actions';
 import { createReducer } from './base';
 
