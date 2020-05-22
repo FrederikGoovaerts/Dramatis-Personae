@@ -15,6 +15,14 @@ export interface ListCharacter {
     visible: boolean;
 }
 
+export interface ProposedCharacter {
+    id: string;
+    name: string;
+    description: string;
+    proposedOn: Moment;
+    proposedBy: string;
+}
+
 export interface CharacterPrototype {
     name: string;
     description: string;

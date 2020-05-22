@@ -7,27 +7,31 @@ import com.google.api.client.json.jackson2.JacksonFactory
 import dev.frederik.dramatispersonae.AuthenticationConfig
 import dev.frederik.dramatispersonae.model.User
 import dev.frederik.dramatispersonae.model.UserRepository
-import org.springframework.security.authentication.AbstractAuthenticationToken
-import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
 import java.security.GeneralSecurityException
 import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+import org.springframework.security.authentication.AbstractAuthenticationToken
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
 
 const val AUTHORIZATION_HEADER_KEY = "Authorization"
 const val TOKEN_PREFIX = "Bearer "
 
-class GoogleAuthentication(private val jwt: String,
-                           private val user: User) : AbstractAuthenticationToken(null) {
+class GoogleAuthentication(
+    private val jwt: String,
+    private val user: User
+) : AbstractAuthenticationToken(null) {
     override fun getCredentials(): String = jwt
     override fun getPrincipal(): User = user
 }
 
-class JwtAuthorizationFilter(authenticationManager: AuthenticationManager,
-                             authenticationConfig: AuthenticationConfig,
-                             private val userRepository: UserRepository) : BasicAuthenticationFilter(authenticationManager) {
+class JwtAuthorizationFilter(
+    authenticationManager: AuthenticationManager,
+    authenticationConfig: AuthenticationConfig,
+    private val userRepository: UserRepository
+) : BasicAuthenticationFilter(authenticationManager) {
     private val jwtVerifier: GoogleIdTokenVerifier = GoogleIdTokenVerifier
             .Builder(NetHttpTransport(), JacksonFactory())
             .setAudience(listOf(authenticationConfig.clientId))
@@ -63,8 +67,8 @@ class JwtAuthorizationFilter(authenticationManager: AuthenticationManager,
  * Dummy authorization filter for dev mode that regardless of request contents acts as if a dummy user is authenticated.
  */
 class DummyJwtAuthorizationFilter(
-        authenticationManager: AuthenticationManager,
-        private val userRepository: UserRepository
+    authenticationManager: AuthenticationManager,
+    private val userRepository: UserRepository
 ) : BasicAuthenticationFilter(authenticationManager) {
 
     private val DUMMY_GOOGLE_ID = "1"

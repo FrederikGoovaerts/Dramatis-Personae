@@ -23,12 +23,18 @@ export const api = {
         SUBPATH_LEAVE: '/leave',
         SUBPATH_ROTATE_INVITE_CODE: '/rotatecode',
         SUBPATH_KICK: '/kick',
-        SUBPATH_MEMBERS: '/members'
+        SUBPATH_MEMBERS: '/members',
+        SUBPATH_PROPOSED_CHARACTER: '/proposedcharacter'
     },
     CHARACTER: {
         PATH: '/character',
         SUBPATH_NOTE: '/note',
+        SUBPATH_SHARED_NOTES: '/sharednotes',
         SUBPATH_VISIBLE: '/visible'
+    },
+    PROPOSED_CHARACTER: {
+        PATH: '/proposedcharacter',
+        SUBPATH_ACCEPT: '/accept'
     },
     NOTE: {
         PATH: '/note'

@@ -8,7 +8,7 @@ import { Paper, Typography, Box, IconButton, CircularProgress } from '@material-
 import { campaignActions } from '../../store/actions';
 import { DeleteButton } from '../atoms/DeleteButton';
 import { RootState } from '../../store/reducers';
-import { CampaignMember } from '../../types';
+import { CampaignMember } from '../../types/campaign.types';
 import { HighlightOff } from '@material-ui/icons';
 
 interface Props {
