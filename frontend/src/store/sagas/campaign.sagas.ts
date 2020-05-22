@@ -80,9 +80,9 @@ function* proposeCharacter(action: campaignActions.specificTypes['proposeCharact
 
 function* acceptProposedCharacter(action: campaignActions.specificTypes['acceptProposedCharacter']) {
     try {
-        yield proposedCharacter.accept(action.payload);
-        yield put(campaignActions.actions.fetchCharacters(String(action.payload)));
-        yield put(campaignActions.actions.fetchProposedCharacters(String(action.payload)));
+        yield proposedCharacter.accept(action.payload.characterId);
+        yield put(campaignActions.actions.fetchCharacters(action.payload.campaignId));
+        yield put(campaignActions.actions.fetchProposedCharacters(action.payload.campaignId));
     } catch (e) {
         console.error('Unable to accept proposed character. Please try again later.');
     }
@@ -90,8 +90,8 @@ function* acceptProposedCharacter(action: campaignActions.specificTypes['acceptP
 
 function* deleteProposedCharacter(action: campaignActions.specificTypes['deleteProposedCharacter']) {
     try {
-        yield proposedCharacter.deletePermanently(action.payload);
-        yield put(campaignActions.actions.fetchProposedCharacters(String(action.payload)));
+        yield proposedCharacter.deletePermanently(action.payload.characterId);
+        yield put(campaignActions.actions.fetchProposedCharacters(action.payload.campaignId));
     } catch (e) {
         console.error('Unable to delete proposed character. Please try again later.');
     }
