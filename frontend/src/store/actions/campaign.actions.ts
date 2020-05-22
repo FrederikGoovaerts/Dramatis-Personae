@@ -15,6 +15,8 @@ export enum names {
     setCharacters = 'SET_CHARACTERS',
     fetchProposedCharacters = 'FETCH_PROPOSED_CHARACTERS',
     proposeCharacter = 'PROPOSE_CHARACTER',
+    acceptProposedCharacter = 'ACCEPT_PROPOSED_CHARACTER',
+    deleteProposedCharacter = 'DELETE_PROPOSED_CHARACTER',
     setProposedCharactersLoading = 'SET_PROPOSED_CHARACTERS_LOADING',
     setProposedCharacters = 'SET_PROPOSED_CHARACTERS',
     setMembersLoading = 'SET_MEMBERS_LOADING',
@@ -43,6 +45,8 @@ export const actions = {
     setCharacters: (p: ListCharacter[]) => createAction(names.setCharacters, p),
     proposeCharacter: (p: { campaignId: string; character: CharacterPrototype }) =>
         createAction(names.proposeCharacter, p),
+    acceptProposedCharacter: (id: string) => createAction(names.acceptProposedCharacter, id),
+    deleteProposedCharacter: (p: string) => createAction(names.deleteProposedCharacter, p),
     fetchProposedCharacters: (campaignId: string) => createAction(names.fetchProposedCharacters, campaignId),
     setProposedCharactersLoading: (p: boolean) => createAction(names.setProposedCharactersLoading, p),
     setProposedCharacters: (p: ProposedCharacter[]) => createAction(names.setProposedCharacters, p),
