@@ -8,13 +8,13 @@ import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { match, Redirect } from 'react-router';
-import { Fab, Modal, FormControlLabel, IconButton, Box, Button } from '@material-ui/core';
-import { Add, Visibility, Edit } from '@material-ui/icons';
+import { Fab, Modal, FormControlLabel, IconButton, Box, Button, ListItem } from '@material-ui/core';
+import { Add, Visibility, Edit, CheckCircle, Cancel } from '@material-ui/icons';
 
 import { routes } from '../../config/constants';
 import { campaignActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
-import { ListCharacter } from '../../types/character.types';
+import { ListCharacter, ProposedCharacter } from '../../types/character.types';
 import { Campaign } from '../../types/campaign.types';
 import { ListItemLink } from '../atoms/ListItemLink';
 import { CampaignCharacterBreadcrumb } from '../molecules/CampaignCharacterBreadcrumbs';
@@ -35,10 +35,14 @@ interface Props {
 interface MapProps {
     campaign: Campaign | null;
     characters: ListCharacter[];
+    proposedCharacters: ProposedCharacter[];
     loading: boolean;
     fetchCampaign: (campaignId: string) => void;
     fetchCharacters: (campaignId: string) => void;
+    fetchProposedCharacters: (campaignId: string) => void;
     fetchMembers: (campaignId: string) => void;
+    acceptProposedCharacter: (characterId: string) => void;
+    deleteProposedCharacter: (characterId: string) => void;
     deleteCampaign: (id: string) => void;
     leaveCampaign: (id: string) => void;
     rotateInviteCode: (id: string) => void;
@@ -69,6 +73,7 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
     componentDidMount(): void {
         this.props.fetchCampaign(this.props.match.params.id);
         this.props.fetchCharacters(this.props.match.params.id);
+        this.props.fetchProposedCharacters(this.props.match.params.id);
         this.props.fetchMembers(this.props.match.params.id);
     }
 
@@ -108,6 +113,29 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
             <ListItemText primary={character.name} secondary={`Added ${character.addedOn.fromNow()}`} />
             {this.props.campaign?.owner && <Visibility color={character.visible ? 'primary' : 'disabled'} />}
         </ListItemLink>
+    );
+
+    renderProposedCharacter = (character: ProposedCharacter) => (
+        <ListItem key={character.id}>
+            <ListItemText
+                primary={
+                    character.name +
+                    (this.props.campaign?.owner
+                        ? ` (Proposed ${character.proposedOn.fromNow()}
+                      by ${character.proposedBy})`
+                        : '')
+                }
+                secondary={character.description}
+            />
+            {this.props.campaign?.owner && (
+                <IconButton onClick={() => this.props.acceptProposedCharacter(character.id)}>
+                    <CheckCircle />
+                </IconButton>
+            )}
+            <IconButton onClick={() => this.props.deleteProposedCharacter(character.id)}>
+                <Cancel />
+            </IconButton>
+        </ListItem>
     );
 
     renderCreateCharacter = () => (
@@ -159,7 +187,7 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
         if (this.props.loading || !this.props.campaign) {
             contents = <CircularProgress />;
         } else {
-            const { campaign, characters } = this.props;
+            const { campaign, characters, proposedCharacters } = this.props;
             contents = (
                 <div>
                     <CampaignCharacterBreadcrumb campaign={campaign} />
@@ -168,7 +196,7 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                         campaign.owner ? 'you' : campaign.ownerName
                     }`}</Typography>
                     <Box marginTop="1em" marginBottom="1em">
-                        {this.props.campaign.owner && (
+                        {campaign.owner && (
                             <FormControlLabel
                                 control={
                                     <IconButton onClick={this.openEditCampaign}>
@@ -179,16 +207,28 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                             />
                         )}
                     </Box>
-                    {characters.length === 0 ? (
-                        <Typography variant="body1">This campaign does not have any characters yet.</Typography>
-                    ) : (
-                        <Paper>
-                            <List>{characters.map(this.renderCharacter)}</List>
-                        </Paper>
+                    <Box marginBottom="1em">
+                        {characters.length === 0 ? (
+                            <Typography variant="body1">This campaign does not have any characters yet.</Typography>
+                        ) : (
+                            <Paper>
+                                <List>{characters.map(this.renderCharacter)}</List>
+                            </Paper>
+                        )}
+                    </Box>
+                    {proposedCharacters.length > 0 && (
+                        <Box marginBottom="1em">
+                            <Box marginBottom="1em">
+                                <Typography variant="h5">Proposed characters</Typography>
+                            </Box>
+                            <Paper>
+                                <List>{proposedCharacters.map(this.renderProposedCharacter)}</List>
+                            </Paper>
+                        </Box>
                     )}
-                    {this.props.campaign.inviteCode && (
-                        <Box marginTop="1em">
-                            <Typography variant="caption">Invite code: {this.props.campaign.inviteCode}</Typography>
+                    {campaign.inviteCode && (
+                        <Box>
+                            <Typography variant="caption">Invite code: {campaign.inviteCode}</Typography>
                             <Box marginTop="0.5em">
                                 <Button onClick={this.rotateInviteCode} variant="outlined" size="small">
                                     Reset Invite Code
@@ -196,8 +236,8 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                             </Box>
                         </Box>
                     )}
-                    {!this.props.campaign.owner && (
-                        <Box marginTop="1em">
+                    {!campaign.owner && (
+                        <Box>
                             <ConfirmableButton
                                 onConfirm={this.leaveCampaign}
                                 defaultText="Leave campaign"
@@ -208,7 +248,7 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                     <Fab
                         className="CampaignDetail__createFab"
                         color="primary"
-                        onClick={this.props.campaign.owner ? this.openCreate : this.openPropose}
+                        onClick={campaign.owner ? this.openCreate : this.openPropose}
                     >
                         <Add />
                     </Fab>
@@ -237,12 +277,17 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
 const mapStateToProps = (state: RootState) => ({
     campaign: state.campaign.campaign,
     characters: state.campaign.characters,
-    loading: state.campaign.campaignLoading || state.campaign.charactersLoading
+    proposedCharacters: state.campaign.proposedCharacters,
+    loading:
+        state.campaign.campaignLoading || state.campaign.charactersLoading || state.campaign.proposedCharactersLoading
 });
 
 export const CampaignDetailScreen = connect(mapStateToProps, {
     fetchCampaign: campaignActions.actions.fetchCampaign,
     fetchCharacters: campaignActions.actions.fetchCharacters,
+    fetchProposedCharacters: campaignActions.actions.fetchProposedCharacters,
+    acceptProposedCharacter: campaignActions.actions.acceptProposedCharacter,
+    deleteProposedCharacter: campaignActions.actions.deleteProposedCharacter,
     fetchMembers: campaignActions.actions.fetchMembers,
     deleteCampaign: campaignActions.actions.deleteCampaign,
     leaveCampaign: campaignActions.actions.leaveCampaign,
