@@ -2,30 +2,19 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { ChangeEvent } from 'react';
 import * as React from 'react';
-import { connect } from 'react-redux';
-
-import { campaignActions } from '../../store/actions';
-import { CharacterPrototype } from '../../types/character.types';
 
 interface Props {
-    campaignId: string;
     className?: string;
-    onSubmitComplete?: () => void;
+    onSubmit: (name: string, description: string) => void;
 }
-
-interface MapProps {
-    createCharacter: (params: { campaignId: string; character: CharacterPrototype }) => void;
-}
-
-type AllProps = Props & MapProps;
 
 interface State {
     name: string;
     description: string;
 }
 
-class NewCharacterFormRaw extends React.Component<AllProps, State> {
-    constructor(props: AllProps) {
+export class NewCharacterForm extends React.Component<Props, State> {
+    constructor(props: Props) {
         super(props);
         this.state = { name: '', description: '' };
     }
@@ -39,17 +28,8 @@ class NewCharacterFormRaw extends React.Component<AllProps, State> {
     };
 
     handleSubmit = () => {
-        this.props.createCharacter({
-            campaignId: this.props.campaignId,
-            character: {
-                name: this.state.name,
-                description: this.state.description
-            }
-        });
+        this.props.onSubmit(this.state.name, this.state.description);
         this.setState({ name: '', description: '' });
-        if (this.props.onSubmitComplete) {
-            this.props.onSubmitComplete();
-        }
     };
 
     render() {
@@ -80,7 +60,3 @@ class NewCharacterFormRaw extends React.Component<AllProps, State> {
         );
     }
 }
-
-export const NewCharacterForm = connect(null, { createCharacter: campaignActions.actions.createCharacter })(
-    NewCharacterFormRaw
-);
