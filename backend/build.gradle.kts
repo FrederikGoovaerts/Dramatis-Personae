@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "dev.frederik"
-version = "0.1.0"
+version = "0.6.0"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
