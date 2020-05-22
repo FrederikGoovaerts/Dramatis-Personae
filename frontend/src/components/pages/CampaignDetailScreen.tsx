@@ -19,9 +19,10 @@ import { Campaign } from '../../types/campaign.types';
 import { ListItemLink } from '../atoms/ListItemLink';
 import { CampaignCharacterBreadcrumb } from '../molecules/CampaignCharacterBreadcrumbs';
 import { Header } from '../molecules/Header';
-import { NewCharacterForm } from '../molecules/NewCharacterForm';
 import { EditCampaignForm } from '../molecules/EditCampaignForm';
 import { ConfirmableButton } from '../atoms/DeleteButton';
+import { CreateCharacterForm } from '../molecules/CreateCharacterForm';
+import { ProposeCharacterForm } from '../molecules/ProposeCharacterForm';
 
 export interface MatchParams {
     id: string;
@@ -47,6 +48,7 @@ type AllProps = Props & MapProps;
 
 interface State {
     createOpen: boolean;
+    proposeOpen: boolean;
     editCampaignOpen: boolean;
     deleteCheck: boolean;
     inaccessible: boolean;
@@ -55,7 +57,13 @@ interface State {
 class CampaignDetailRaw extends React.Component<AllProps, State> {
     constructor(props: AllProps) {
         super(props);
-        this.state = { createOpen: false, editCampaignOpen: false, deleteCheck: false, inaccessible: false };
+        this.state = {
+            createOpen: false,
+            proposeOpen: false,
+            editCampaignOpen: false,
+            deleteCheck: false,
+            inaccessible: false
+        };
     }
 
     componentDidMount(): void {
@@ -68,12 +76,16 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
         this.setState({ createOpen: true });
     };
 
-    closeCreate = (): void => {
-        this.setState({ createOpen: false });
+    openPropose = (): void => {
+        this.setState({ proposeOpen: true });
     };
 
-    closeEditCampaign = (): void => {
-        this.setState({ editCampaignOpen: false });
+    openEditCampaign = (): void => {
+        this.setState({ editCampaignOpen: true });
+    };
+
+    closeModals = (): void => {
+        this.setState({ createOpen: false, proposeOpen: false, editCampaignOpen: false });
     };
 
     leaveCampaign = (): void => {
@@ -101,10 +113,21 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
     renderCreateCharacter = () => (
         <Paper className="CampaignDetail__createPaper">
             <Typography variant="h5">New character</Typography>
-            <NewCharacterForm
+            <CreateCharacterForm
                 campaignId={this.props.match.params.id}
                 className="CampaignDetail__createContainer"
-                onSubmitComplete={this.closeCreate}
+                onSubmitComplete={this.closeModals}
+            />
+        </Paper>
+    );
+
+    renderProposeCharacter = () => (
+        <Paper className="CampaignDetail__createPaper">
+            <Typography variant="h5">Propose character</Typography>
+            <ProposeCharacterForm
+                campaignId={this.props.match.params.id}
+                className="CampaignDetail__createContainer"
+                onSubmitComplete={this.closeModals}
             />
         </Paper>
     );
@@ -117,7 +140,7 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
             <EditCampaignForm
                 id={this.props.match.params.id}
                 name={this.props.campaign?.name}
-                onSubmitComplete={this.closeEditCampaign}
+                onSubmitComplete={this.closeModals}
                 onDelete={this.makeInaccessible}
             />
         );
@@ -148,7 +171,7 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                         {this.props.campaign.owner && (
                             <FormControlLabel
                                 control={
-                                    <IconButton onClick={() => this.setState({ editCampaignOpen: true })}>
+                                    <IconButton onClick={this.openEditCampaign}>
                                         <Edit />
                                     </IconButton>
                                 }
@@ -173,11 +196,7 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                             </Box>
                         </Box>
                     )}
-                    {this.props.campaign.owner ? (
-                        <Fab className="CampaignDetail__createFab" color="primary" onClick={this.openCreate}>
-                            <Add />
-                        </Fab>
-                    ) : (
+                    {!this.props.campaign.owner && (
                         <Box marginTop="1em">
                             <ConfirmableButton
                                 onConfirm={this.leaveCampaign}
@@ -186,11 +205,21 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                             />
                         </Box>
                     )}
+                    <Fab
+                        className="CampaignDetail__createFab"
+                        color="primary"
+                        onClick={this.props.campaign.owner ? this.openCreate : this.openPropose}
+                    >
+                        <Add />
+                    </Fab>
 
-                    <Modal open={this.state.createOpen} onClose={this.closeCreate}>
+                    <Modal open={this.state.createOpen} onClose={this.closeModals}>
                         <div className="modal">{this.renderCreateCharacter()}</div>
                     </Modal>
-                    <Modal open={this.state.editCampaignOpen} onClose={this.closeEditCampaign}>
+                    <Modal open={this.state.proposeOpen} onClose={this.closeModals}>
+                        <div className="modal">{this.renderProposeCharacter()}</div>
+                    </Modal>
+                    <Modal open={this.state.editCampaignOpen} onClose={this.closeModals}>
                         <div className="modal">{this.renderEditCampaign()}</div>
                     </Modal>
                 </div>
