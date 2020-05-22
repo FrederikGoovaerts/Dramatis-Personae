@@ -1,5 +1,6 @@
-import { Campaign, ListCharacter, CharacterPrototype, CampaignEditPayload, CampaignMember } from '../../types';
+import { Campaign, CampaignEditPayload, CampaignMember } from '../../types/campaign.types';
 import { ActionTypeMapping, ActionUnion, createAction } from './base';
+import { CharacterPrototype, ListCharacter, ProposedCharacter } from '../../types/character.types';
 
 export enum names {
     fetchCampaigns = 'FETCH_CAMPAIGNS',
@@ -12,6 +13,12 @@ export enum names {
     createCharacter = 'CREATE_CHARACTER',
     setCharactersLoading = 'SET_CHARACTERS_LOADING',
     setCharacters = 'SET_CHARACTERS',
+    fetchProposedCharacters = 'FETCH_PROPOSED_CHARACTERS',
+    proposeCharacter = 'PROPOSE_CHARACTER',
+    acceptProposedCharacter = 'ACCEPT_PROPOSED_CHARACTER',
+    deleteProposedCharacter = 'DELETE_PROPOSED_CHARACTER',
+    setProposedCharactersLoading = 'SET_PROPOSED_CHARACTERS_LOADING',
+    setProposedCharacters = 'SET_PROPOSED_CHARACTERS',
     setMembersLoading = 'SET_MEMBERS_LOADING',
     fetchMembers = 'FETCH_MEMBERS',
     setMembers = 'SET_MEMBERS',
@@ -36,6 +43,15 @@ export const actions = {
         createAction(names.createCharacter, p),
     setCharactersLoading: (p: boolean) => createAction(names.setCharactersLoading, p),
     setCharacters: (p: ListCharacter[]) => createAction(names.setCharacters, p),
+    proposeCharacter: (p: { campaignId: string; character: CharacterPrototype }) =>
+        createAction(names.proposeCharacter, p),
+    acceptProposedCharacter: (p: { campaignId: string; characterId: string }) =>
+        createAction(names.acceptProposedCharacter, p),
+    deleteProposedCharacter: (p: { campaignId: string; characterId: string }) =>
+        createAction(names.deleteProposedCharacter, p),
+    fetchProposedCharacters: (campaignId: string) => createAction(names.fetchProposedCharacters, campaignId),
+    setProposedCharactersLoading: (p: boolean) => createAction(names.setProposedCharactersLoading, p),
+    setProposedCharacters: (p: ProposedCharacter[]) => createAction(names.setProposedCharacters, p),
     fetchMembers: (campaignId: string) => createAction(names.fetchMembers, campaignId),
     setMembersLoading: (p: boolean) => createAction(names.setMembersLoading, p),
     setMembers: (p: CampaignMember[]) => createAction(names.setMembers, p),

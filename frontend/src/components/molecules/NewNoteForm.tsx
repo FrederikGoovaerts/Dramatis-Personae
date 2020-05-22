@@ -5,7 +5,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { characterActions } from '../../store/actions';
-import { Paper, Typography } from '@material-ui/core';
+import { Paper, Typography, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
+import { NoteVisibility } from '../../types/note.types';
 
 interface Props {
     characterId: string;
@@ -14,29 +15,35 @@ interface Props {
 }
 
 interface MapProps {
-    createNote: (params: { characterId: string; contents: string }) => void;
+    createNote: (params: { characterId: string; contents: string; visibility: NoteVisibility }) => void;
 }
 
 type AllProps = Props & MapProps;
 
 interface State {
     note: string;
+    visibility: NoteVisibility;
 }
 
 class NewNoteFormRaw extends React.Component<AllProps, State> {
     constructor(props: AllProps) {
         super(props);
-        this.state = { note: '' };
+        this.state = { note: '', visibility: 'PRIVATE' };
     }
 
-    handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    handleChangeContent = (event: ChangeEvent<HTMLInputElement>) => {
         this.setState({ note: event.target.value });
+    };
+
+    handleChangeVisibililty = (event: ChangeEvent<HTMLSelectElement>) => {
+        this.setState({ visibility: event.target.value as NoteVisibility });
     };
 
     handleSubmit = () => {
         this.props.createNote({
             characterId: this.props.characterId,
-            contents: this.state.note
+            contents: this.state.note,
+            visibility: this.state.visibility
         });
         this.setState({ note: '' });
         if (this.props.onSubmitComplete) {
@@ -56,9 +63,21 @@ class NewNoteFormRaw extends React.Component<AllProps, State> {
                         label="Note"
                         helperText="A note on the character, containing your thoughts on, experiences with, or suspicions about the character."
                         value={this.state.note}
-                        onChange={this.handleChange}
+                        onChange={this.handleChangeContent}
                         margin="normal"
                     />
+                    <FormControl variant="outlined" margin="normal">
+                        <InputLabel>Visibility</InputLabel>
+                        <Select
+                            value={this.state.visibility}
+                            onChange={this.handleChangeVisibililty}
+                            label="Visibility"
+                        >
+                            <MenuItem value="PRIVATE">Private</MenuItem>
+                            <MenuItem value="DM_SHARED">Shared with DM</MenuItem>
+                            <MenuItem value="PUBLIC">Public</MenuItem>
+                        </Select>
+                    </FormControl>
                     <Button variant="contained" color="primary" onClick={this.handleSubmit} disabled={!this.state.note}>
                         Create
                     </Button>

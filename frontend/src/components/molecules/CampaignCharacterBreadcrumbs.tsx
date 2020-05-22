@@ -4,7 +4,8 @@ import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { routes } from '../../config/constants';
-import { Campaign, Character } from '../../types';
+import { Campaign } from '../../types/campaign.types';
+import { Character } from '../../types/character.types';
 
 interface Props {
     campaign: Campaign;

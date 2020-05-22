@@ -1,8 +1,9 @@
 import { axiosInstance } from '../config/axios';
 import { api } from '../config/constants';
-import { CreateNotePayload, Character, Note, VisibilityUpdatePayload, CharacterEditPayload } from '../types';
 import { buildPath } from './base.api';
 import moment from 'moment';
+import { NoteVisibility, Note, CreateNotePayload } from '../types/note.types';
+import { Character, CharacterEditPayload, VisibilityUpdatePayload } from '../types/character.types';
 
 interface RawCharacter {
     id: string;
@@ -15,8 +16,10 @@ interface RawCharacter {
 interface RawNote {
     id: string;
     contents: string;
+    authorName: string;
     addedOn: string;
     editedOn: string;
+    visibility: NoteVisibility;
 }
 
 export async function get(id: string): Promise<Character> {
@@ -53,7 +56,17 @@ export async function getNotes(id: string): Promise<Array<Note>> {
     }));
 }
 
+export async function getSharedNotes(id: string): Promise<Array<Note>> {
+    const url = buildPath(`${api.CHARACTER.PATH}/${id}${api.CHARACTER.SUBPATH_SHARED_NOTES}`);
+    const data: Array<RawNote> = (await axiosInstance.get(url)).data;
+    return data.map((rawNote) => ({
+        ...rawNote,
+        editedOn: moment(rawNote.editedOn),
+        addedOn: moment(rawNote.addedOn)
+    }));
+}
+
 export async function createNote(payload: CreateNotePayload): Promise<void> {
     const url = buildPath(`${api.CHARACTER.PATH}/${payload.characterId}${api.CHARACTER.SUBPATH_NOTE}`);
-    await axiosInstance.post(url, { contents: payload.contents });
+    await axiosInstance.post(url, { contents: payload.contents, visibility: payload.visibility });
 }

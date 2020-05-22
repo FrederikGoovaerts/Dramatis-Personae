@@ -12,5 +12,4 @@ class UserController(val userRepository: UserRepository) {
 
     @GetMapping
     fun getSelf(auth: GoogleAuthentication) = UserView(auth.principal.fullName, auth.principal.email)
-
 }

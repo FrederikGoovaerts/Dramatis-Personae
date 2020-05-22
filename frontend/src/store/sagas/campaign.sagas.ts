@@ -1,7 +1,9 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { Campaign, CampaignPrototype, ListCharacter, CampaignMember } from '../../types';
+import { Campaign, CampaignPrototype, CampaignMember } from '../../types/campaign.types';
 import { campaignActions } from '../actions';
+import { ListCharacter, ProposedCharacter } from '../../types/character.types';
 import * as campaign from '../../api/campaign.api';
+import * as proposedCharacter from '../../api/proposedcharacter.api';
 
 function* fetchCampaigns() {
     yield put(campaignActions.actions.setCampaignsLoading(true));
@@ -36,6 +38,17 @@ function* fetchCharacters(action: campaignActions.specificTypes['fetchCharacters
     yield put(campaignActions.actions.setCharactersLoading(false));
 }
 
+function* fetchProposedCharacters(action: campaignActions.specificTypes['fetchProposedCharacters']) {
+    yield put(campaignActions.actions.setProposedCharactersLoading(true));
+    try {
+        const result: ProposedCharacter[] = yield call(campaign.getProposedCharacters, action.payload);
+        yield put(campaignActions.actions.setProposedCharacters(result));
+    } catch (e) {
+        console.error('Unable to fetch proposed characters. Please try again later.');
+    }
+    yield put(campaignActions.actions.setProposedCharactersLoading(false));
+}
+
 function* fetchMembers(action: campaignActions.specificTypes['fetchMembers']) {
     yield put(campaignActions.actions.setMembersLoading(true));
     try {
@@ -53,6 +66,34 @@ function* createCharacter(action: campaignActions.specificTypes['createCharacter
         yield put(campaignActions.actions.fetchCharacters(action.payload.campaignId));
     } catch (e) {
         console.error('Unable to create character. Please try again later.');
+    }
+}
+
+function* proposeCharacter(action: campaignActions.specificTypes['proposeCharacter']) {
+    try {
+        yield campaign.proposeCharacter(action.payload.campaignId, action.payload.character);
+        yield put(campaignActions.actions.fetchProposedCharacters(action.payload.campaignId));
+    } catch (e) {
+        console.error('Unable to propose character. Please try again later.');
+    }
+}
+
+function* acceptProposedCharacter(action: campaignActions.specificTypes['acceptProposedCharacter']) {
+    try {
+        yield proposedCharacter.accept(action.payload.characterId);
+        yield put(campaignActions.actions.fetchCharacters(action.payload.campaignId));
+        yield put(campaignActions.actions.fetchProposedCharacters(action.payload.campaignId));
+    } catch (e) {
+        console.error('Unable to accept proposed character. Please try again later.');
+    }
+}
+
+function* deleteProposedCharacter(action: campaignActions.specificTypes['deleteProposedCharacter']) {
+    try {
+        yield proposedCharacter.deletePermanently(action.payload.characterId);
+        yield put(campaignActions.actions.fetchProposedCharacters(action.payload.campaignId));
+    } catch (e) {
+        console.error('Unable to delete proposed character. Please try again later.');
     }
 }
 
@@ -124,8 +165,12 @@ export default function* watcher() {
     yield takeEvery(campaignActions.names.fetchCampaigns, fetchCampaigns);
     yield takeEvery(campaignActions.names.fetchCampaign, fetchCampaign);
     yield takeEvery(campaignActions.names.fetchCharacters, fetchCharacters);
+    yield takeEvery(campaignActions.names.fetchProposedCharacters, fetchProposedCharacters);
     yield takeEvery(campaignActions.names.fetchMembers, fetchMembers);
     yield takeEvery(campaignActions.names.createCharacter, createCharacter);
+    yield takeEvery(campaignActions.names.proposeCharacter, proposeCharacter);
+    yield takeEvery(campaignActions.names.acceptProposedCharacter, acceptProposedCharacter);
+    yield takeEvery(campaignActions.names.deleteProposedCharacter, deleteProposedCharacter);
     yield takeEvery(campaignActions.names.joinCampaign, joinCampaign);
     yield takeEvery(campaignActions.names.rotateInviteCode, rotateInviteCode);
     yield takeEvery(campaignActions.names.leaveCampaign, leaveCampaign);

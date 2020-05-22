@@ -13,7 +13,9 @@ import { routes } from '../../config/constants';
 import { EditCharacterForm } from '../molecules/EditCharacterForm';
 import { campaignActions, characterActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
-import { Campaign, Character, VisibilityUpdatePayload, Note } from '../../types';
+import { Character, VisibilityUpdatePayload } from '../../types/character.types';
+import { Campaign } from '../../types/campaign.types';
+import { Note } from '../../types/note.types';
 import { CampaignCharacterBreadcrumb } from '../molecules/CampaignCharacterBreadcrumbs';
 import { Header } from '../molecules/Header';
 import {
@@ -25,9 +27,10 @@ import {
     Divider,
     Modal,
     Box,
-    FormControlLabel
+    FormControlLabel,
+    Tooltip
 } from '@material-ui/core';
-import { Edit, Add } from '@material-ui/icons';
+import { Edit, Add, VisibilityOff } from '@material-ui/icons';
 import { NewNoteForm } from '../molecules/NewNoteForm';
 import { EditNoteForm } from '../molecules/EditNoteForm';
 
@@ -44,9 +47,11 @@ interface MapProps {
     character: Character | null;
     campaign: Campaign | null;
     notes: Note[];
+    sharedNotes: Note[];
     loading: boolean;
     fetchCharacter: (id: string) => void;
     fetchNotes: (id: string) => void;
+    fetchSharedNotes: (id: string) => void;
     fetchCampaign: (id: string) => void;
     setVisible: (payload: VisibilityUpdatePayload) => void;
 }
@@ -77,6 +82,7 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         this.props.fetchCharacter(this.props.match.params.characterId);
         this.props.fetchCampaign(this.props.match.params.campaignId);
         this.props.fetchNotes(this.props.match.params.characterId);
+        this.props.fetchSharedNotes(this.props.match.params.characterId);
     }
 
     handleToggleVisible = (event: ChangeEvent<HTMLInputElement>) => {
@@ -108,8 +114,7 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         return (
             <EditNoteForm
                 characterId={this.props.character.id}
-                noteId={this.state.editNote.id}
-                noteContents={this.state.editNote.contents}
+                note={this.state.editNote}
                 onSubmitComplete={this.closeEditNote}
             />
         );
@@ -119,7 +124,7 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         this.setState({ editNote: undefined });
     };
 
-    renderNote = (note: Note) => {
+    renderNote = (note: Note, own: boolean) => {
         const openEdit = () => this.setState({ editNote: note });
         return (
             <div key={note.id} className="CharacterDetail__note">
@@ -127,36 +132,61 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
                     <ListItemText
                         primary={note.contents}
                         primaryTypographyProps={{ align: 'justify', className: 'CharacterDetail__noteContents' }}
-                        secondary={`Created ${note.addedOn.fromNow()}, last edited ${note.editedOn.fromNow()}`}
+                        secondary={`Created ${note.addedOn.fromNow()}, last edited ${note.editedOn.fromNow()}${
+                            !own ? `, by ${note.authorName}` : ''
+                        }`}
                     />
-                    <ListItemSecondaryAction>
-                        <IconButton edge="end" onClick={openEdit}>
-                            <Edit />
-                        </IconButton>
-                    </ListItemSecondaryAction>
+                    {own && (
+                        <ListItemSecondaryAction>
+                            <IconButton edge="end" onClick={openEdit}>
+                                <Edit />
+                            </IconButton>
+                        </ListItemSecondaryAction>
+                    )}
+
+                    {!own && note.visibility === 'DM_SHARED' && (
+                        <ListItemSecondaryAction>
+                            <Tooltip title="Shared with DM only">
+                                <VisibilityOff />
+                            </Tooltip>
+                        </ListItemSecondaryAction>
+                    )}
                 </ListItem>
-                <Divider />
             </div>
         );
     };
 
-    renderNotes = () => {
-        const openCreate = () => this.setState({ createOpen: true });
+    renderOwnNote = (note: Note) => this.renderNote(note, true);
+
+    renderSharedNote = (note: Note) => this.renderNote(note, false);
+
+    renderNotes = (renderedNotes: JSX.Element[]) => {
+        for (let i = 1; i < renderedNotes.length; i = i + 2) {
+            renderedNotes.splice(i, 0, <Divider key={`divider${i}`} />);
+        }
         return (
             <Paper>
-                <List>
-                    {this.props.notes.map(this.renderNote)}
-                    <div key={'addButton'} className="CharacterDetail__note">
-                        <ListItem className="CharacterDetail__addButtonItem">
-                            <IconButton edge="end" color="primary" onClick={openCreate}>
-                                <Add />
-                            </IconButton>
-                        </ListItem>
-                    </div>
-                </List>
+                <List>{renderedNotes}</List>
             </Paper>
         );
     };
+
+    renderOwnNotes = () => {
+        const openCreate = () => this.setState({ createOpen: true });
+        const renderedNotes = [
+            ...this.props.notes.map(this.renderOwnNote),
+            <div key={'addButton'} className="CharacterDetail__note">
+                <ListItem className="CharacterDetail__addButtonItem">
+                    <IconButton edge="end" color="primary" onClick={openCreate}>
+                        <Add />
+                    </IconButton>
+                </ListItem>
+            </div>
+        ];
+        return this.renderNotes(renderedNotes);
+    };
+
+    renderSharedNotes = () => this.renderNotes(this.props.sharedNotes.map(this.renderSharedNote));
 
     renderEditCharacter = () => {
         if (!this.props.character) {
@@ -219,7 +249,16 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
                             />
                         )}
                     </Box>
-                    {this.renderNotes()}
+                    <Box marginBottom="1em">
+                        <Typography variant="h5">Your notes</Typography>
+                    </Box>
+                    <Box marginBottom="2em">{this.renderOwnNotes()}</Box>
+                    {this.props.sharedNotes.length > 0 && (
+                        <Box marginBottom="1em">
+                            <Typography variant="h5">Notes by others</Typography>
+                        </Box>
+                    )}
+                    {this.props.sharedNotes.length > 0 && <Box marginBottom="2em">{this.renderSharedNotes()}</Box>}
                     <Modal open={this.state.createOpen} onClose={this.closeCreateNote}>
                         <div className="modal">{this.renderCreateNote()}</div>
                     </Modal>
@@ -245,13 +284,19 @@ const mapStateToProps = (state: RootState) => ({
     character: state.character.character,
     campaign: state.campaign.campaign,
     notes: state.character.notes,
-    loading: state.character.loading && state.campaign.loading && state.character.notesLoading
+    sharedNotes: state.character.sharedNotes,
+    loading:
+        state.character.loading &&
+        state.campaign.loading &&
+        state.character.notesLoading &&
+        state.character.sharedNotesLoading
 });
 
 export const CharacterDetailScreen = connect(mapStateToProps, {
     fetchCharacter: characterActions.actions.fetchCharacter,
     fetchCampaign: campaignActions.actions.fetchCampaign,
     fetchNotes: characterActions.actions.fetchNotes,
+    fetchSharedNotes: characterActions.actions.fetchSharedNotes,
     setVisible: characterActions.actions.setVisible,
     deleteCharacter: characterActions.actions.deleteCharacter
 })(CharacterDetailRaw);

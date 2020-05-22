@@ -6,51 +6,57 @@ import { connect } from 'react-redux';
 
 import { noteActions } from '../../store/actions';
 import { DeleteButton } from '../atoms/DeleteButton';
-import { Paper, Typography } from '@material-ui/core';
+import { Paper, Typography, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
+import { Note, NoteVisibility } from '../../types/note.types';
 
 interface Props {
     characterId: string;
-    noteId: string;
-    noteContents: string;
+    note: Note;
     className?: string;
     onSubmitComplete?: () => void;
 }
 
 interface MapProps {
-    editNote: (params: { characterId: string; noteId: string; contents: string }) => void;
+    editNote: (params: { characterId: string; noteId: string; contents: string; visibility: NoteVisibility }) => void;
     deleteNote: (params: { characterId: string; noteId: string }) => void;
 }
 
 type AllProps = Props & MapProps;
 
 interface State {
-    note: string;
+    contents: string;
+    visibility: NoteVisibility;
 }
 
 class EditNoteFormRaw extends React.Component<AllProps, State> {
     constructor(props: AllProps) {
         super(props);
-        this.state = { note: this.props.noteContents };
+        this.state = { contents: this.props.note.contents, visibility: this.props.note.visibility };
     }
 
-    handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        this.setState({ note: event.target.value });
+    handleChangeContent = (event: ChangeEvent<HTMLInputElement>) => {
+        this.setState({ contents: event.target.value });
+    };
+
+    handleChangeVisibililty = (event: ChangeEvent<HTMLSelectElement>) => {
+        this.setState({ visibility: event.target.value as NoteVisibility });
     };
 
     handleSubmit = () => {
         this.props.editNote({
             characterId: this.props.characterId,
-            noteId: this.props.noteId,
-            contents: this.state.note
+            noteId: this.props.note.id,
+            contents: this.state.contents,
+            visibility: this.state.visibility
         });
-        this.setState({ note: '' });
+        this.setState({ contents: '', visibility: 'PRIVATE' });
         if (this.props.onSubmitComplete) {
             this.props.onSubmitComplete();
         }
     };
 
     handleDelete = () => {
-        this.props.deleteNote({ characterId: this.props.characterId, noteId: this.props.noteId });
+        this.props.deleteNote({ characterId: this.props.characterId, noteId: this.props.note.id });
         if (this.props.onSubmitComplete) {
             this.props.onSubmitComplete();
         }
@@ -69,11 +75,28 @@ class EditNoteFormRaw extends React.Component<AllProps, State> {
                         rows={5}
                         variant="outlined"
                         label="Note"
-                        value={this.state.note}
-                        onChange={this.handleChange}
+                        value={this.state.contents}
+                        onChange={this.handleChangeContent}
                         margin="normal"
                     />
-                    <Button variant="contained" color="primary" onClick={this.handleSubmit} disabled={!this.state.note}>
+                    <FormControl variant="outlined" margin="normal">
+                        <InputLabel>Visibility</InputLabel>
+                        <Select
+                            value={this.state.visibility}
+                            onChange={this.handleChangeVisibililty}
+                            label="Visibility"
+                        >
+                            <MenuItem value="PRIVATE">Private</MenuItem>
+                            <MenuItem value="DM_SHARED">Shared with DM</MenuItem>
+                            <MenuItem value="PUBLIC">Public</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={this.handleSubmit}
+                        disabled={!this.state.contents}
+                    >
                         Update
                     </Button>
                 </div>
