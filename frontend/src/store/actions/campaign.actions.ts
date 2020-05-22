@@ -45,8 +45,10 @@ export const actions = {
     setCharacters: (p: ListCharacter[]) => createAction(names.setCharacters, p),
     proposeCharacter: (p: { campaignId: string; character: CharacterPrototype }) =>
         createAction(names.proposeCharacter, p),
-    acceptProposedCharacter: (id: string) => createAction(names.acceptProposedCharacter, id),
-    deleteProposedCharacter: (p: string) => createAction(names.deleteProposedCharacter, p),
+    acceptProposedCharacter: (p: { campaignId: string; characterId: string }) =>
+        createAction(names.acceptProposedCharacter, p),
+    deleteProposedCharacter: (p: { campaignId: string; characterId: string }) =>
+        createAction(names.deleteProposedCharacter, p),
     fetchProposedCharacters: (campaignId: string) => createAction(names.fetchProposedCharacters, campaignId),
     setProposedCharactersLoading: (p: boolean) => createAction(names.setProposedCharactersLoading, p),
     setProposedCharacters: (p: ProposedCharacter[]) => createAction(names.setProposedCharacters, p),

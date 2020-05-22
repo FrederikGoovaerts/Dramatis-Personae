@@ -41,8 +41,8 @@ interface MapProps {
     fetchCharacters: (campaignId: string) => void;
     fetchProposedCharacters: (campaignId: string) => void;
     fetchMembers: (campaignId: string) => void;
-    acceptProposedCharacter: (characterId: string) => void;
-    deleteProposedCharacter: (characterId: string) => void;
+    acceptProposedCharacter: (p: { campaignId: string; characterId: string }) => void;
+    deleteProposedCharacter: (p: { campaignId: string; characterId: string }) => void;
     deleteCampaign: (id: string) => void;
     leaveCampaign: (id: string) => void;
     rotateInviteCode: (id: string) => void;
@@ -115,28 +115,39 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
         </ListItemLink>
     );
 
-    renderProposedCharacter = (character: ProposedCharacter) => (
-        <ListItem key={character.id}>
-            <ListItemText
-                primary={
-                    character.name +
-                    (this.props.campaign?.owner
-                        ? ` (Proposed ${character.proposedOn.fromNow()}
+    renderProposedCharacter = (character: ProposedCharacter) => {
+        const campaign = this.props.campaign!;
+        return (
+            <ListItem key={character.id}>
+                <ListItemText
+                    primary={
+                        character.name +
+                        (this.props.campaign?.owner
+                            ? ` (Proposed ${character.proposedOn.fromNow()}
                       by ${character.proposedBy})`
-                        : '')
-                }
-                secondary={character.description}
-            />
-            {this.props.campaign?.owner && (
-                <IconButton onClick={() => this.props.acceptProposedCharacter(character.id)}>
-                    <CheckCircle />
+                            : '')
+                    }
+                    secondary={character.description}
+                />
+                {this.props.campaign?.owner && (
+                    <IconButton
+                        onClick={() =>
+                            this.props.acceptProposedCharacter({ campaignId: campaign.id, characterId: character.id })
+                        }
+                    >
+                        <CheckCircle />
+                    </IconButton>
+                )}
+                <IconButton
+                    onClick={() =>
+                        this.props.deleteProposedCharacter({ campaignId: campaign.id, characterId: character.id })
+                    }
+                >
+                    <Cancel />
                 </IconButton>
-            )}
-            <IconButton onClick={() => this.props.deleteProposedCharacter(character.id)}>
-                <Cancel />
-            </IconButton>
-        </ListItem>
-    );
+            </ListItem>
+        );
+    };
 
     renderCreateCharacter = () => (
         <Paper className="CampaignDetail__createPaper">
