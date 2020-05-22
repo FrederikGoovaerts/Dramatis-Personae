@@ -116,7 +116,10 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
     );
 
     renderProposedCharacter = (character: ProposedCharacter) => {
-        const campaign = this.props.campaign!;
+        if (!this.props.campaign) {
+            return <div></div>;
+        }
+        const campaign = this.props.campaign;
         return (
             <ListItem key={character.id}>
                 <ListItemText
