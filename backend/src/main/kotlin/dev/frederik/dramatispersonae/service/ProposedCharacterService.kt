@@ -81,6 +81,7 @@ class ProposedCharacterService(
         val character = proposedCharacterQuery.get()
         character.name = name
         character.description = description
+        repository.save(character)
         return true
     }
 
