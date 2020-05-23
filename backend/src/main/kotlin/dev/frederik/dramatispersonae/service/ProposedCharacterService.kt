@@ -29,6 +29,16 @@ class ProposedCharacterController(private val service: ProposedCharacterService)
         return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
     }
 
+    @PutMapping("/{id}")
+    fun updateProposedCharacter(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID,
+        @RequestBody character: CreateCharacterDto
+    ): ResponseEntity<Unit> {
+        val success = this.service.updateProposedCharacter(auth.principal, id, character.name, character.description)
+        return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
+    }
+
     @DeleteMapping("/{id}")
     fun deleteProposedCharacter(auth: GoogleAuthentication, @PathVariable id: UUID): ResponseEntity<Unit> {
         val success = this.service.deleteProposedCharacter(auth.principal, id)
@@ -58,6 +68,19 @@ class ProposedCharacterService(
         proposedCharacter.campaign.proposedCharacters.remove(proposedCharacter)
         this.campaignRepository.save(proposedCharacter.campaign)
         this.repository.delete(proposedCharacter)
+        return true
+    }
+
+    fun updateProposedCharacter(user: User, id: UUID, name: String, description: String): Boolean {
+        val proposedCharacterQuery = repository.findById(id)
+        if (!proposedCharacterQuery.isPresent ||
+                (!proposedCharacterQuery.get().campaign.isOwnedBy(user) &&
+                        proposedCharacterQuery.get().proposedBy != user)) {
+            return false
+        }
+        val character = proposedCharacterQuery.get()
+        character.name = name
+        character.description = description
         return true
     }
 
