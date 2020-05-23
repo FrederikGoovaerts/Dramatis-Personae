@@ -1,4 +1,4 @@
-import { CharacterEditPayload } from '../../types/character.types';
+import { ProposedCharacterEditPayload } from '../../types/character.types';
 import { ActionTypeMapping, ActionUnion, createAction } from './base';
 
 export enum names {
@@ -12,7 +12,7 @@ export const actions = {
         createAction(names.acceptProposedCharacter, p),
     deleteProposedCharacter: (p: { campaignId: string; characterId: string }) =>
         createAction(names.deleteProposedCharacter, p),
-    editProposedCharacter: (p: CharacterEditPayload) => createAction(names.editProposedCharacter, p)
+    editProposedCharacter: (p: ProposedCharacterEditPayload) => createAction(names.editProposedCharacter, p)
 };
 
 export type allTypes = ActionUnion<typeof actions>;
