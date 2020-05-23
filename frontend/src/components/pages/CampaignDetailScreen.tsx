@@ -12,7 +12,7 @@ import { Fab, Modal, FormControlLabel, IconButton, Box, Button, ListItem } from 
 import { Add, Visibility, Edit, CheckCircle, Cancel } from '@material-ui/icons';
 
 import { routes } from '../../config/constants';
-import { campaignActions } from '../../store/actions';
+import { campaignActions, proposedCharacterActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
 import { ListCharacter, ProposedCharacter } from '../../types/character.types';
 import { Campaign } from '../../types/campaign.types';
@@ -300,8 +300,8 @@ export const CampaignDetailScreen = connect(mapStateToProps, {
     fetchCampaign: campaignActions.actions.fetchCampaign,
     fetchCharacters: campaignActions.actions.fetchCharacters,
     fetchProposedCharacters: campaignActions.actions.fetchProposedCharacters,
-    acceptProposedCharacter: campaignActions.actions.acceptProposedCharacter,
-    deleteProposedCharacter: campaignActions.actions.deleteProposedCharacter,
+    acceptProposedCharacter: proposedCharacterActions.actions.acceptProposedCharacter,
+    deleteProposedCharacter: proposedCharacterActions.actions.deleteProposedCharacter,
     fetchMembers: campaignActions.actions.fetchMembers,
     deleteCampaign: campaignActions.actions.deleteCampaign,
     leaveCampaign: campaignActions.actions.leaveCampaign,

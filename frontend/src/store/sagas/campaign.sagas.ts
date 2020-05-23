@@ -3,7 +3,6 @@ import { Campaign, CampaignPrototype, CampaignMember } from '../../types/campaig
 import { campaignActions } from '../actions';
 import { ListCharacter, ProposedCharacter } from '../../types/character.types';
 import * as campaign from '../../api/campaign.api';
-import * as proposedCharacter from '../../api/proposedcharacter.api';
 
 function* fetchCampaigns() {
     yield put(campaignActions.actions.setCampaignsLoading(true));
@@ -75,25 +74,6 @@ function* proposeCharacter(action: campaignActions.specificTypes['proposeCharact
         yield put(campaignActions.actions.fetchProposedCharacters(action.payload.campaignId));
     } catch (e) {
         console.error('Unable to propose character. Please try again later.');
-    }
-}
-
-function* acceptProposedCharacter(action: campaignActions.specificTypes['acceptProposedCharacter']) {
-    try {
-        yield proposedCharacter.accept(action.payload.characterId);
-        yield put(campaignActions.actions.fetchCharacters(action.payload.campaignId));
-        yield put(campaignActions.actions.fetchProposedCharacters(action.payload.campaignId));
-    } catch (e) {
-        console.error('Unable to accept proposed character. Please try again later.');
-    }
-}
-
-function* deleteProposedCharacter(action: campaignActions.specificTypes['deleteProposedCharacter']) {
-    try {
-        yield proposedCharacter.deletePermanently(action.payload.characterId);
-        yield put(campaignActions.actions.fetchProposedCharacters(action.payload.campaignId));
-    } catch (e) {
-        console.error('Unable to delete proposed character. Please try again later.');
     }
 }
 
@@ -169,8 +149,6 @@ export default function* watcher() {
     yield takeEvery(campaignActions.names.fetchMembers, fetchMembers);
     yield takeEvery(campaignActions.names.createCharacter, createCharacter);
     yield takeEvery(campaignActions.names.proposeCharacter, proposeCharacter);
-    yield takeEvery(campaignActions.names.acceptProposedCharacter, acceptProposedCharacter);
-    yield takeEvery(campaignActions.names.deleteProposedCharacter, deleteProposedCharacter);
     yield takeEvery(campaignActions.names.joinCampaign, joinCampaign);
     yield takeEvery(campaignActions.names.rotateInviteCode, rotateInviteCode);
     yield takeEvery(campaignActions.names.leaveCampaign, leaveCampaign);
