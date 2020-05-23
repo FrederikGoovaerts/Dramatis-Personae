@@ -3,7 +3,7 @@ import { api } from '../config/constants';
 import { buildPath } from './base.api';
 import moment from 'moment';
 import { NoteVisibility, Note, CreateNotePayload } from '../types/note.types';
-import { Character, CharacterEditPayload, VisibilityUpdatePayload } from '../types/character.types';
+import { Character, VisibilityUpdatePayload } from '../types/character.types';
 
 interface RawCharacter {
     id: string;
@@ -31,9 +31,9 @@ export async function get(id: string): Promise<Character> {
     };
 }
 
-export async function update(id: string, update: CharacterEditPayload): Promise<void> {
+export async function update(id: string, name: string, description: string): Promise<void> {
     const url = buildPath(`${api.CHARACTER.PATH}/${id}`);
-    await axiosInstance.put(url, update);
+    await axiosInstance.put(url, { name, description });
 }
 
 export async function setVisible(payload: VisibilityUpdatePayload): Promise<void> {

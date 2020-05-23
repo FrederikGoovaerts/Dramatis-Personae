@@ -37,7 +37,7 @@ function* fetchSharedNotes(action: characterActions.specificTypes['fetchSharedNo
 
 function* editCharacter(action: characterActions.specificTypes['editCharacter']) {
     try {
-        yield character.update(action.payload.characterId, action.payload);
+        yield character.update(action.payload.characterId, action.payload.name, action.payload.description);
         yield put(characterActions.actions.fetchCharacter(action.payload.characterId));
     } catch (e) {
         console.error('Unable to update character. Please try again later.');
