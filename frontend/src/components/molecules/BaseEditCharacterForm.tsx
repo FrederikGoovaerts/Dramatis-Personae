@@ -40,8 +40,6 @@ export class BaseEditCharacterForm extends React.Component<Props, State> {
         }
     };
 
-    canSubmit = () => this.state.name && this.state.description;
-
     render() {
         return (
             <Paper className="modalPaper">
@@ -59,12 +57,7 @@ export class BaseEditCharacterForm extends React.Component<Props, State> {
                         onChange={this.handleChangeDescription}
                         margin="normal"
                     />
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.handleSubmit}
-                        disabled={!this.canSubmit()}
-                    >
+                    <Button variant="contained" color="primary" onClick={this.handleSubmit} disabled={!this.state.name}>
                         Update
                     </Button>
                 </div>
