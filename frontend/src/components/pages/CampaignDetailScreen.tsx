@@ -12,7 +12,7 @@ import { Fab, Modal, FormControlLabel, IconButton, Box, Button, ListItem } from 
 import { Add, Visibility, Edit, CheckCircle, Cancel } from '@material-ui/icons';
 
 import { routes } from '../../config/constants';
-import { campaignActions } from '../../store/actions';
+import { campaignActions, proposedCharacterActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
 import { ListCharacter, ProposedCharacter } from '../../types/character.types';
 import { Campaign } from '../../types/campaign.types';
@@ -23,6 +23,7 @@ import { EditCampaignForm } from '../molecules/EditCampaignForm';
 import { ConfirmableButton } from '../atoms/DeleteButton';
 import { CreateCharacterForm } from '../molecules/CreateCharacterForm';
 import { ProposeCharacterForm } from '../molecules/ProposeCharacterForm';
+import { EditProposedCharacterForm } from '../molecules/EditProposedCharacterForm';
 
 export interface MatchParams {
     id: string;
@@ -53,6 +54,7 @@ type AllProps = Props & MapProps;
 interface State {
     createOpen: boolean;
     proposeOpen: boolean;
+    editProposedCharacter: ProposedCharacter | undefined;
     editCampaignOpen: boolean;
     deleteCheck: boolean;
     inaccessible: boolean;
@@ -64,6 +66,7 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
         this.state = {
             createOpen: false,
             proposeOpen: false,
+            editProposedCharacter: undefined,
             editCampaignOpen: false,
             deleteCheck: false,
             inaccessible: false
@@ -85,12 +88,21 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
         this.setState({ proposeOpen: true });
     };
 
+    openEditProposedCharacter = (proposedCharacter: ProposedCharacter): void => {
+        this.setState({ editProposedCharacter: proposedCharacter });
+    };
+
     openEditCampaign = (): void => {
         this.setState({ editCampaignOpen: true });
     };
 
     closeModals = (): void => {
-        this.setState({ createOpen: false, proposeOpen: false, editCampaignOpen: false });
+        this.setState({
+            createOpen: false,
+            proposeOpen: false,
+            editProposedCharacter: undefined,
+            editCampaignOpen: false
+        });
     };
 
     leaveCampaign = (): void => {
@@ -132,6 +144,9 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                     }
                     secondary={character.description}
                 />
+                <IconButton onClick={() => this.openEditProposedCharacter(character)}>
+                    <Edit />
+                </IconButton>
                 {this.props.campaign?.owner && (
                     <IconButton
                         onClick={() =>
@@ -184,6 +199,22 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                 name={this.props.campaign?.name}
                 onSubmitComplete={this.closeModals}
                 onDelete={this.makeInaccessible}
+            />
+        );
+    };
+
+    renderEditProposedCharacter = () => {
+        if (!this.state.editProposedCharacter) {
+            return undefined;
+        }
+        const character = this.state.editProposedCharacter;
+        return (
+            <EditProposedCharacterForm
+                campaignId={this.props.match.params.id}
+                characterId={character.id}
+                initialName={character.name}
+                initialDescription={character.description}
+                onSubmitComplete={this.closeModals}
             />
         );
     };
@@ -273,6 +304,9 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                     <Modal open={this.state.proposeOpen} onClose={this.closeModals}>
                         <div className="modal">{this.renderProposeCharacter()}</div>
                     </Modal>
+                    <Modal open={!!this.state.editProposedCharacter} onClose={this.closeModals}>
+                        <div className="modal">{this.renderEditProposedCharacter()}</div>
+                    </Modal>
                     <Modal open={this.state.editCampaignOpen} onClose={this.closeModals}>
                         <div className="modal">{this.renderEditCampaign()}</div>
                     </Modal>
@@ -300,8 +334,8 @@ export const CampaignDetailScreen = connect(mapStateToProps, {
     fetchCampaign: campaignActions.actions.fetchCampaign,
     fetchCharacters: campaignActions.actions.fetchCharacters,
     fetchProposedCharacters: campaignActions.actions.fetchProposedCharacters,
-    acceptProposedCharacter: campaignActions.actions.acceptProposedCharacter,
-    deleteProposedCharacter: campaignActions.actions.deleteProposedCharacter,
+    acceptProposedCharacter: proposedCharacterActions.actions.acceptProposedCharacter,
+    deleteProposedCharacter: proposedCharacterActions.actions.deleteProposedCharacter,
     fetchMembers: campaignActions.actions.fetchMembers,
     deleteCampaign: campaignActions.actions.deleteCampaign,
     leaveCampaign: campaignActions.actions.leaveCampaign,
