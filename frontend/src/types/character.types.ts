@@ -34,6 +34,13 @@ export interface CharacterEditPayload {
     description: string;
 }
 
+export interface ProposedCharacterEditPayload {
+    campaignId: string;
+    characterId: string;
+    name: string;
+    description: string;
+}
+
 export interface VisibilityUpdatePayload {
     characterId: string;
     visible: boolean;

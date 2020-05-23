@@ -12,6 +12,15 @@ function* acceptProposedCharacter(action: proposedCharacterActions.specificTypes
     }
 }
 
+function* editProposedCharacter(action: proposedCharacterActions.specificTypes['editProposedCharacter']) {
+    try {
+        yield proposedCharacter.update(action.payload.characterId, action.payload.name, action.payload.description);
+        yield put(campaignActions.actions.fetchProposedCharacters(action.payload.campaignId));
+    } catch (e) {
+        console.error('Unable to update character. Please try again later.');
+    }
+}
+
 function* deleteProposedCharacter(action: proposedCharacterActions.specificTypes['deleteProposedCharacter']) {
     try {
         yield proposedCharacter.deletePermanently(action.payload.characterId);
@@ -23,5 +32,6 @@ function* deleteProposedCharacter(action: proposedCharacterActions.specificTypes
 
 export default function* watcher() {
     yield takeEvery(proposedCharacterActions.names.acceptProposedCharacter, acceptProposedCharacter);
+    yield takeEvery(proposedCharacterActions.names.editProposedCharacter, editProposedCharacter);
     yield takeEvery(proposedCharacterActions.names.deleteProposedCharacter, deleteProposedCharacter);
 }
