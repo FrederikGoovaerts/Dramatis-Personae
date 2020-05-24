@@ -6,6 +6,7 @@ function* editNote(action: noteActions.specificTypes['editNote']) {
     try {
         yield note.edit(action.payload);
         yield put(characterActions.actions.fetchNotes(String(action.payload.characterId)));
+        yield put(characterActions.actions.fetchSharedNotes(String(action.payload.characterId)));
     } catch (e) {
         console.error('Unable to edit note. Please try again later.');
     }
