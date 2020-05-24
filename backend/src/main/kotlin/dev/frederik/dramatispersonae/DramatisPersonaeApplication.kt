@@ -32,6 +32,8 @@ class LocalDevFixtures(
         val campaign1 = Campaign("Camp short", user1, mutableListOf(user1, user2))
         val campaign2 = Campaign("Camp2", user2, mutableListOf(user2))
         val campaign3 = Campaign("A campaign with a rather long name", user2, mutableListOf(user1, user2))
+        val campaign4 = Campaign("An auto-propose-accepting campaign", user2, mutableListOf(user1, user2))
+        campaign4.autoAcceptProposedCharacter = true
         val char1 = Character("Char1", "A visible char in an owned campaign", true, campaign1, mutableListOf())
         val char2 = Character("Char2", "An invisible char in an owned campaign", false, campaign1, mutableListOf())
         val char3 = Character("Char3", "A visible char in a non-owned campaign", true, campaign3, mutableListOf())
@@ -65,5 +67,6 @@ class LocalDevFixtures(
         this.campaignRepository.save(campaign1)
         this.campaignRepository.save(campaign2)
         this.campaignRepository.save(campaign3)
+        this.campaignRepository.save(campaign4)
     }
 }
