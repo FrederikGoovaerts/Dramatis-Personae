@@ -196,7 +196,8 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
         return (
             <EditCampaignForm
                 id={this.props.match.params.id}
-                name={this.props.campaign?.name}
+                name={this.props.campaign.name}
+                settings={this.props.campaign.settings}
                 onSubmitComplete={this.closeModals}
                 onDelete={this.makeInaccessible}
             />
