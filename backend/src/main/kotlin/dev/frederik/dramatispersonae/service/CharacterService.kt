@@ -72,13 +72,7 @@ class CharacterController(private val service: CharacterService) {
         @PathVariable id: UUID
     ): ResponseEntity<List<NoteView>> {
         val list = this.service.getCharacterNotes(auth.principal, id)
-        return if (list === null) {
-            ResponseEntity(HttpStatus.FORBIDDEN)
-        } else {
-            ResponseEntity(list.map {
-                NoteView(it.contents, it.author.fullName, it.visibility, it.addedOn, it.editedOn, it.id!!)
-            }, HttpStatus.OK)
-        }
+        return returnNotes(list, auth.principal)
     }
 
     @GetMapping("/{id}/sharednotes")
@@ -87,11 +81,23 @@ class CharacterController(private val service: CharacterService) {
         @PathVariable id: UUID
     ): ResponseEntity<List<NoteView>> {
         val list = this.service.getCharacterSharedNotes(auth.principal, id)
+        return returnNotes(list, auth.principal)
+    }
+
+    fun returnNotes(list: List<Note>?, user: User): ResponseEntity<List<NoteView>> {
         return if (list === null) {
             ResponseEntity(HttpStatus.FORBIDDEN)
         } else {
             ResponseEntity(list.map {
-                NoteView(it.contents, it.author.fullName, it.visibility, it.addedOn, it.editedOn, it.id!!)
+                NoteView(
+                    it.contents,
+                    it.author.fullName,
+                    it.visibility,
+                    it.addedOn,
+                    it.editedOn,
+                    it.author == user,
+                    it.id!!
+                )
             }, HttpStatus.OK)
         }
     }

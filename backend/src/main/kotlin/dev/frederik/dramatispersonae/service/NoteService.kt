@@ -10,7 +10,15 @@ import org.springframework.web.bind.annotation.*
 
 data class CreateNoteDto(val contents: String, val visibility: String)
 
-data class NoteView(val contents: String, val authorName: String, val visibility: NoteVisibility, val addedOn: Date, val editedOn: Date, val id: UUID)
+data class NoteView(
+    val contents: String,
+    val authorName: String,
+    val visibility: NoteVisibility,
+    val addedOn: Date,
+    val editedOn: Date,
+    val owned: Boolean,
+    val id: UUID
+)
 
 @RestController
 @RequestMapping("/api/note")
