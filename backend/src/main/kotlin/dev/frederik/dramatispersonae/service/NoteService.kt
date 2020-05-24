@@ -46,10 +46,12 @@ class NoteService(private val repository: NoteRepository) {
         if (!editAllowed) {
             return false
         }
-        val visibility = try { NoteVisibility.valueOf(rawVisibility) } catch (e: IllegalArgumentException) { return false }
         note.contents = contents
         note.editedOn = Date()
-        note.visibility = visibility
+        if (note.author == user) {
+            val visibility = try { NoteVisibility.valueOf(rawVisibility) } catch (e: IllegalArgumentException) { return false }
+            note.visibility = visibility
+        }
         this.repository.save(note)
         return true
     }
