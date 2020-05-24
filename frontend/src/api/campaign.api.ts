@@ -35,9 +35,9 @@ export async function create(campaignPrototype: CampaignPrototype): Promise<void
     await axiosInstance.post(url, campaignPrototype);
 }
 
-export async function update(id: string, name: string): Promise<void> {
+export async function update(id: string, name: string, autoAcceptProposedCharacter: boolean): Promise<void> {
     const url = buildPath(`${api.CAMPAIGN.PATH}/${id}`);
-    await axiosInstance.put(url, { name });
+    await axiosInstance.put(url, { name, autoAcceptProposedCharacter });
 }
 
 export async function deletePermanently(campaignId: string): Promise<void> {
