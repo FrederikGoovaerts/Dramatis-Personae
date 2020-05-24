@@ -9,6 +9,7 @@ export interface Note {
     addedOn: Moment;
     editedOn: Moment;
     visibility: NoteVisibility;
+    owned: boolean;
 }
 
 export interface CreateNotePayload {

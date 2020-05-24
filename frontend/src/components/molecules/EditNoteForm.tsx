@@ -6,8 +6,9 @@ import { connect } from 'react-redux';
 
 import { noteActions } from '../../store/actions';
 import { DeleteButton } from '../atoms/DeleteButton';
-import { Paper, Typography, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
+import { Paper, Typography, FormControl, InputLabel, Select, MenuItem, Box } from '@material-ui/core';
 import { Note, NoteVisibility } from '../../types/note.types';
+import { AlertBox } from '../atoms/AlertBox';
 
 interface Props {
     characterId: string;
@@ -79,18 +80,25 @@ class EditNoteFormRaw extends React.Component<AllProps, State> {
                         onChange={this.handleChangeContent}
                         margin="normal"
                     />
-                    <FormControl variant="outlined" margin="normal">
-                        <InputLabel>Visibility</InputLabel>
-                        <Select
-                            value={this.state.visibility}
-                            onChange={this.handleChangeVisibililty}
-                            label="Visibility"
-                        >
-                            <MenuItem value="PRIVATE">Private</MenuItem>
-                            <MenuItem value="DM_SHARED">Shared with DM</MenuItem>
-                            <MenuItem value="PUBLIC">Public</MenuItem>
-                        </Select>
-                    </FormControl>
+                    {this.props.note.owned && (
+                        <FormControl variant="outlined" margin="normal">
+                            <InputLabel>Visibility</InputLabel>
+                            <Select
+                                value={this.state.visibility}
+                                onChange={this.handleChangeVisibililty}
+                                label="Visibility"
+                            >
+                                <MenuItem value="PRIVATE">Private</MenuItem>
+                                <MenuItem value="DM_SHARED">Shared with DM</MenuItem>
+                                <MenuItem value="PUBLIC">Public</MenuItem>
+                            </Select>
+                        </FormControl>
+                    )}
+                    {!this.props.note.owned && (
+                        <Box marginBottom="0.5em">
+                            <AlertBox text="When editing a shared note at the same time as a player, only one copy will be saved." />
+                        </Box>
+                    )}
                     <Button
                         variant="contained"
                         color="primary"

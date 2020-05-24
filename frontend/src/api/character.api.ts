@@ -20,6 +20,7 @@ interface RawNote {
     addedOn: string;
     editedOn: string;
     visibility: NoteVisibility;
+    owned: boolean;
 }
 
 export async function get(id: string): Promise<Character> {

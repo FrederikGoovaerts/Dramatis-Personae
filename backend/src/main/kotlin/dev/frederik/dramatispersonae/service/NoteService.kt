@@ -10,7 +10,15 @@ import org.springframework.web.bind.annotation.*
 
 data class CreateNoteDto(val contents: String, val visibility: String)
 
-data class NoteView(val contents: String, val authorName: String, val visibility: NoteVisibility, val addedOn: Date, val editedOn: Date, val id: UUID)
+data class NoteView(
+    val contents: String,
+    val authorName: String,
+    val visibility: NoteVisibility,
+    val addedOn: Date,
+    val editedOn: Date,
+    val owned: Boolean,
+    val id: UUID
+)
 
 @RestController
 @RequestMapping("/api/note")
@@ -38,14 +46,20 @@ class NoteService(private val repository: NoteRepository) {
 
     fun updateNote(user: User, id: UUID, contents: String, rawVisibility: String): Boolean {
         val noteQuery = repository.findById(id)
-        if (!noteQuery.isPresent || noteQuery.get().author != user) {
+        if (!noteQuery.isPresent) {
             return false
         }
-        val visibility = try { NoteVisibility.valueOf(rawVisibility) } catch (e: IllegalArgumentException) { return false }
         val note = noteQuery.get()
+        val editAllowed = note.author == user || (note.visibility != NoteVisibility.PRIVATE && note.character.campaign.isOwnedBy(user))
+        if (!editAllowed) {
+            return false
+        }
         note.contents = contents
         note.editedOn = Date()
-        note.visibility = visibility
+        if (note.author == user) {
+            val visibility = try { NoteVisibility.valueOf(rawVisibility) } catch (e: IllegalArgumentException) { return false }
+            note.visibility = visibility
+        }
         this.repository.save(note)
         return true
     }
