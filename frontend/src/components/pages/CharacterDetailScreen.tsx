@@ -28,7 +28,8 @@ import {
     Modal,
     Box,
     FormControlLabel,
-    Tooltip
+    Tooltip,
+    ListItemIcon
 } from '@material-ui/core';
 import { Edit, Add, VisibilityOff } from '@material-ui/icons';
 import { NewNoteForm } from '../molecules/NewNoteForm';
@@ -136,19 +137,18 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
                             !own ? `, by ${note.authorName}` : ''
                         }`}
                     />
-                    {own && (
+                    {!own && note.visibility === 'DM_SHARED' && (
+                        <ListItemIcon>
+                            <Tooltip title="Shared with DM only">
+                                <VisibilityOff />
+                            </Tooltip>
+                        </ListItemIcon>
+                    )}
+                    {(own || this.props.campaign?.owner) && (
                         <ListItemSecondaryAction>
                             <IconButton edge="end" onClick={openEdit}>
                                 <Edit />
                             </IconButton>
-                        </ListItemSecondaryAction>
-                    )}
-
-                    {!own && note.visibility === 'DM_SHARED' && (
-                        <ListItemSecondaryAction>
-                            <Tooltip title="Shared with DM only">
-                                <VisibilityOff />
-                            </Tooltip>
                         </ListItemSecondaryAction>
                     )}
                 </ListItem>
