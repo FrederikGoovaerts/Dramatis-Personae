@@ -3,17 +3,18 @@ import TextField from '@material-ui/core/TextField';
 import { ChangeEvent } from 'react';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Paper, Typography, Box, IconButton, CircularProgress } from '@material-ui/core';
+import { Paper, Typography, Box, IconButton, CircularProgress, FormControlLabel, Checkbox } from '@material-ui/core';
+import { HighlightOff } from '@material-ui/icons';
 
 import { campaignActions } from '../../store/actions';
 import { DeleteButton } from '../atoms/DeleteButton';
 import { RootState } from '../../store/reducers';
-import { CampaignMember } from '../../types/campaign.types';
-import { HighlightOff } from '@material-ui/icons';
+import { CampaignMember, CampaignSettings } from '../../types/campaign.types';
 
 interface Props {
     id: string;
     name: string;
+    settings: CampaignSettings;
     onSubmitComplete?: () => void;
     onDelete?: () => void;
 }
@@ -21,7 +22,7 @@ interface Props {
 interface MapProps {
     members: CampaignMember[];
     membersLoading: boolean;
-    editCampaign: (payload: { id: string; name: string }) => void;
+    editCampaign: (payload: { id: string; name: string; autoAcceptProposedCharacter: boolean }) => void;
     deleteCampaign: (params: string) => void;
     kickFromCampaign: (params: { campaignId: string; userId: string }) => void;
 }
@@ -30,12 +31,13 @@ type AllProps = Props & MapProps;
 
 interface State {
     name: string;
+    autoAcceptProposedCharacter: boolean;
 }
 
 class EditCampaignFormRaw extends React.Component<AllProps, State> {
     constructor(props: AllProps) {
         super(props);
-        this.state = { name: props.name };
+        this.state = { name: props.name, autoAcceptProposedCharacter: props.settings.autoAcceptProposedCharacter };
     }
 
     handleChangeName = (event: ChangeEvent<HTMLInputElement>) => {
@@ -45,7 +47,8 @@ class EditCampaignFormRaw extends React.Component<AllProps, State> {
     handleSubmit = () => {
         this.props.editCampaign({
             id: this.props.id,
-            name: this.state.name
+            name: this.state.name,
+            autoAcceptProposedCharacter: this.state.autoAcceptProposedCharacter
         });
         if (this.props.onSubmitComplete) {
             this.props.onSubmitComplete();
@@ -57,6 +60,10 @@ class EditCampaignFormRaw extends React.Component<AllProps, State> {
         if (this.props.onDelete) {
             setTimeout(this.props.onDelete, 500);
         }
+    };
+
+    handleChangeAutoAcceptProposedCharacter = (event: ChangeEvent<HTMLInputElement>) => {
+        this.setState({ autoAcceptProposedCharacter: event.target.checked });
     };
 
     handleKick = (member: CampaignMember) => {
@@ -84,6 +91,17 @@ class EditCampaignFormRaw extends React.Component<AllProps, State> {
                         <DeleteButton onConfirm={this.handleDelete} />
                     </div>
                     <TextField label="Name" value={this.state.name} onChange={this.handleChangeName} margin="normal" />
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={this.state.autoAcceptProposedCharacter}
+                                onChange={this.handleChangeAutoAcceptProposedCharacter}
+                                name="autoAcceptProposedCharacter"
+                                color="primary"
+                            />
+                        }
+                        label="Auto accept proposed characters"
+                    />
                     <Button variant="contained" color="primary" onClick={this.handleSubmit} disabled={!this.state.name}>
                         Update
                     </Button>

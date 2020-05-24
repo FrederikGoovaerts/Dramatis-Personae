@@ -9,8 +9,10 @@ import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
 
 data class CreateCampaignDto(val name: String)
+data class UpdateCampaignDto(val name: String, val autoAcceptProposedCharacter: Boolean)
 
-data class CampaignView(val name: String, val id: UUID, val owner: Boolean, val ownerName: String, val inviteCode: UUID?)
+data class CampaignSettingsView(val autoAcceptProposedCharacter: Boolean)
+data class CampaignView(val name: String, val id: UUID, val owner: Boolean, val ownerName: String, val settings: CampaignSettingsView, val inviteCode: UUID?)
 data class CampaignMemberView(val name: String, val id: UUID, val owner: Boolean)
 
 @RestController
@@ -25,6 +27,7 @@ class CampaignController(private val service: CampaignService) {
                     it.id!!,
                     it.isOwnedBy(auth.principal),
                     it.owner.fullName,
+                    CampaignSettingsView(it.autoAcceptProposedCharacter),
                     if (it.isOwnedBy(auth.principal)) it.inviteCode else null
                 )
             }
@@ -40,6 +43,7 @@ class CampaignController(private val service: CampaignService) {
                 campaign.id!!,
                 campaign.isOwnedBy(auth.principal),
                 campaign.owner.fullName,
+                CampaignSettingsView(campaign.autoAcceptProposedCharacter),
                 if (campaign.isOwnedBy(auth.principal)) campaign.inviteCode else null
             ), HttpStatus.OK)
         }
@@ -55,9 +59,9 @@ class CampaignController(private val service: CampaignService) {
     fun updateCampaign(
         auth: GoogleAuthentication,
         @PathVariable id: UUID,
-        @RequestBody campaign: CreateCampaignDto
+        @RequestBody campaign: UpdateCampaignDto
     ): ResponseEntity<Unit> {
-        val success = this.service.updateCampaign(auth.principal, id, campaign.name)
+        val success = this.service.updateCampaign(auth.principal, id, campaign.name, campaign.autoAcceptProposedCharacter)
         return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
     }
 
@@ -191,13 +195,14 @@ class CampaignService(private val repository: CampaignRepository) {
         return this.repository.save(newCampaign)
     }
 
-    fun updateCampaign(user: User, id: UUID, name: String): Boolean {
+    fun updateCampaign(user: User, id: UUID, name: String, autoAcceptProposedCharacter: Boolean): Boolean {
         val campaignQuery = repository.findById(id)
         if (!campaignQuery.isPresent || !campaignQuery.get().isOwnedBy(user)) {
             return false
         }
         val campaign = campaignQuery.get()
         campaign.name = name
+        campaign.autoAcceptProposedCharacter = autoAcceptProposedCharacter
         this.repository.save(campaign)
         return true
     }
