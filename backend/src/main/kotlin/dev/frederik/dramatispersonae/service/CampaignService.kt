@@ -301,8 +301,13 @@ class CampaignService(private val repository: CampaignRepository) {
             return false
         }
         val campaign = campaignQuery.get()
-        val newProposedCharacter = ProposedCharacter(name, description, campaign, user)
-        campaign.proposedCharacters.add(newProposedCharacter)
+        if (campaign.autoAcceptProposedCharacter) {
+            val newCharacter = Character(name, description, true, campaign)
+            campaign.characters.add(newCharacter)
+        } else {
+            val newProposedCharacter = ProposedCharacter(name, description, campaign, user)
+            campaign.proposedCharacters.add(newProposedCharacter)
+        }
         this.repository.save(campaign)
         return true
     }
