@@ -38,11 +38,15 @@ class NoteService(private val repository: NoteRepository) {
 
     fun updateNote(user: User, id: UUID, contents: String, rawVisibility: String): Boolean {
         val noteQuery = repository.findById(id)
-        if (!noteQuery.isPresent || noteQuery.get().author != user) {
+        if (!noteQuery.isPresent) {
+            return false
+        }
+        val note = noteQuery.get()
+        val editAllowed = note.author == user || (note.visibility != NoteVisibility.PRIVATE && note.character.campaign.isOwnedBy(user))
+        if (!editAllowed) {
             return false
         }
         val visibility = try { NoteVisibility.valueOf(rawVisibility) } catch (e: IllegalArgumentException) { return false }
-        val note = noteQuery.get()
         note.contents = contents
         note.editedOn = Date()
         note.visibility = visibility
