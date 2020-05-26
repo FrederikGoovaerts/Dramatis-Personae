@@ -18,8 +18,8 @@ interface Props {
 }
 
 interface MapProps {
-    editNote: (params: { characterId: string; noteId: string; contents: string; visibility: NoteVisibility }) => void;
-    deleteNote: (params: { characterId: string; noteId: string }) => void;
+    editCharacterNote: (params: { id: string; noteId: string; contents: string; visibility: NoteVisibility }) => void;
+    deleteCharacterNote: (params: { id: string; noteId: string }) => void;
 }
 
 type AllProps = Props & MapProps;
@@ -44,8 +44,8 @@ class EditNoteFormRaw extends React.Component<AllProps, State> {
     };
 
     handleSubmit = () => {
-        this.props.editNote({
-            characterId: this.props.characterId,
+        this.props.editCharacterNote({
+            id: this.props.characterId,
             noteId: this.props.note.id,
             contents: this.state.contents,
             visibility: this.state.visibility
@@ -57,7 +57,7 @@ class EditNoteFormRaw extends React.Component<AllProps, State> {
     };
 
     handleDelete = () => {
-        this.props.deleteNote({ characterId: this.props.characterId, noteId: this.props.note.id });
+        this.props.deleteCharacterNote({ id: this.props.characterId, noteId: this.props.note.id });
         if (this.props.onSubmitComplete) {
             this.props.onSubmitComplete();
         }
@@ -114,6 +114,6 @@ class EditNoteFormRaw extends React.Component<AllProps, State> {
 }
 
 export const EditNoteForm = connect(null, {
-    editNote: noteActions.actions.editNote,
-    deleteNote: noteActions.actions.deleteNote
+    editCharacterNote: noteActions.actions.editCharacterNote,
+    deleteCharacterNote: noteActions.actions.deleteCharacterNote
 })(EditNoteFormRaw);

@@ -21,8 +21,8 @@ data class NoteView(
 )
 
 @RestController
-@RequestMapping("/api/note")
-class NoteController(private val service: NoteService) {
+@RequestMapping("/api/characternote")
+class CharacterNoteController(private val service: CharacterNoteService) {
 
     @PutMapping("/{id}")
     fun updateNote(
@@ -42,7 +42,7 @@ class NoteController(private val service: NoteService) {
 }
 
 @Component
-class NoteService(private val repository: NoteRepository) {
+class CharacterNoteService(private val repository: CharacterNoteRepository) {
 
     fun updateNote(user: User, id: UUID, contents: String, rawVisibility: String): Boolean {
         val noteQuery = repository.findById(id)

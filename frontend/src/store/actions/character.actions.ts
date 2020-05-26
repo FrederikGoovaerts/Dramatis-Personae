@@ -6,15 +6,15 @@ export enum names {
     fetchCharacter = 'FETCH_CHARACTER',
     setCharacterLoading = 'SET_CHARACTER_LOADING',
     setCharacter = 'SET_CHARACTER',
-    fetchNotes = 'FETCH_NOTES',
-    setNotesLoading = 'SET_NOTES_LOADING',
-    setNotes = 'SET_NOTES',
-    fetchSharedNotes = 'FETCH_SHARED_NOTES',
-    setSharedNotesLoading = 'SET_SHARED_NOTES_LOADING',
-    setSharedNotes = 'SET_SHARED_NOTES',
+    fetchNotes = 'FETCH_CHARACTER_NOTES',
+    setNotesLoading = 'SET_CHARACTER_NOTES_LOADING',
+    setNotes = 'SET_CHARACTER_NOTES',
+    fetchSharedNotes = 'FETCH_SHARED_CHARACTER_NOTES',
+    setSharedNotesLoading = 'SET_SHARED_CHARACTER_NOTES_LOADING',
+    setSharedNotes = 'SET_SHARED_CHARACTER_NOTES',
     editCharacter = 'EDIT_CHARACTER',
     deleteCharacter = 'DELETE_CHARACTER',
-    createNote = 'CREATE_NOTE',
+    createNote = 'CREATE_CHARACTER_NOTE',
     setVisibility = 'SET_CHARACTER_VISIBILITY'
 }
 

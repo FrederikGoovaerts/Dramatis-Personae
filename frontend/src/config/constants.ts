@@ -36,8 +36,8 @@ export const api = {
         PATH: '/proposedcharacter',
         SUBPATH_ACCEPT: '/accept'
     },
-    NOTE: {
-        PATH: '/note'
+    CHARACTER_NOTE: {
+        PATH: '/characternote'
     }
 };
 

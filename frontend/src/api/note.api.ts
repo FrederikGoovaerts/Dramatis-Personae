@@ -3,12 +3,12 @@ import { api } from '../config/constants';
 import { buildPath } from './base.api';
 import { EditNotePayload } from '../types/note.types';
 
-export async function edit(payload: EditNotePayload): Promise<void> {
-    const url = buildPath(`${api.NOTE.PATH}/${payload.noteId}`);
+export async function editCharacterNote(payload: EditNotePayload): Promise<void> {
+    const url = buildPath(`${api.CHARACTER_NOTE.PATH}/${payload.noteId}`);
     await axiosInstance.put(url, { contents: payload.contents, visibility: payload.visibility });
 }
 
-export async function deletePermanently(id: string): Promise<void> {
-    const url = buildPath(`${api.NOTE.PATH}/${id}`);
+export async function deleteCharacterNote(id: string): Promise<void> {
+    const url = buildPath(`${api.CHARACTER_NOTE.PATH}/${id}`);
     await axiosInstance.delete(url);
 }

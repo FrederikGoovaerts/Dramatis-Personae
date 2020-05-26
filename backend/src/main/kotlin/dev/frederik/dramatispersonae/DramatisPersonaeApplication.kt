@@ -38,11 +38,11 @@ class LocalDevFixtures(
         val char2 = Character("Char2", "An invisible char in an owned campaign", false, campaign1, mutableListOf())
         val char3 = Character("Char3", "A visible char in a non-owned campaign", true, campaign3, mutableListOf())
         val char4 = Character("Char4", "An invisible char in a non-owned campaign", false, campaign3, mutableListOf())
-        val note1 = Note("Test note", user1, char1, NoteVisibility.PRIVATE)
-        val note2 = Note("Another note, but one with a lot more text. This note allows us to test the wrapping and te" +
+        val note1 = CharacterNote("Test note", user1, char1, NoteVisibility.PRIVATE)
+        val note2 = CharacterNote("Another note, but one with a lot more text. This note allows us to test the wrapping and te" +
                 "xt rendering behaviour of a longer note. Actually you know what I'm adding a longer one with some lo" +
                 "rem ipsum.", user1, char1, NoteVisibility.DM_SHARED)
-        val note3 = Note("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ipsum libero, dictum at faci" +
+        val note3 = CharacterNote("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ipsum libero, dictum at faci" +
                 "lisis sit amet, posuere non eros. Proin dignissim finibus massa, eget mattis risus. Pellentesque hab" +
                 "itant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec non nisi nibh. N" +
                 "ulla eu augue et enim auctor auctor vel in lorem. Aliquam dignissim malesuada finibus. Sed lobortis " +
@@ -51,9 +51,9 @@ class LocalDevFixtures(
                 " dui elementum finibus. Aliquam eget vehicula leo, non ultricies nisl. Interdum et malesuada fames a" +
                 "c ante ipsum primis in faucibus. Duis consequat diam odio, a cursus libero lobortis a. Proin ultrici" +
                 "es et lorem non ultrices. ", user1, char1, NoteVisibility.PUBLIC)
-        val note4 = Note("Test note private of user 2", user2, char1, NoteVisibility.PRIVATE)
-        val note5 = Note("Test note dm-shared of user 2", user2, char1, NoteVisibility.DM_SHARED)
-        val note6 = Note("Test note public of user 2", user2, char1, NoteVisibility.PUBLIC)
+        val note4 = CharacterNote("Test note private of user 2", user2, char1, NoteVisibility.PRIVATE)
+        val note5 = CharacterNote("Test note dm-shared of user 2", user2, char1, NoteVisibility.DM_SHARED)
+        val note6 = CharacterNote("Test note public of user 2", user2, char1, NoteVisibility.PUBLIC)
         char1.notes.add(note1)
         char1.notes.add(note2)
         char1.notes.add(note3)

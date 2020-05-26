@@ -15,7 +15,7 @@ interface Props {
 }
 
 interface MapProps {
-    createNote: (params: { characterId: string; contents: string; visibility: NoteVisibility }) => void;
+    createNote: (params: { id: string; contents: string; visibility: NoteVisibility }) => void;
 }
 
 type AllProps = Props & MapProps;
@@ -41,7 +41,7 @@ class NewNoteFormRaw extends React.Component<AllProps, State> {
 
     handleSubmit = () => {
         this.props.createNote({
-            characterId: this.props.characterId,
+            id: this.props.characterId,
             contents: this.state.note,
             visibility: this.state.visibility
         });
