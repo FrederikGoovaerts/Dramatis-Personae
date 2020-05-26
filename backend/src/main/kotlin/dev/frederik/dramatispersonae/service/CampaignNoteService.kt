@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/characternote")
-class CharacterNoteController(private val service: CharacterNoteService) {
+@RequestMapping("/api/campaignnote")
+class CampaignNoteController(private val service: CampaignNoteService) {
 
     @PutMapping("/{id}")
     fun updateNote(
@@ -30,7 +30,7 @@ class CharacterNoteController(private val service: CharacterNoteService) {
 }
 
 @Component
-class CharacterNoteService(repository: CharacterNoteRepository) : NoteService<CharacterNote>(repository) {
+class CampaignNoteService(repository: CampaignNoteRepository) : NoteService<CampaignNote>(repository) {
 
-    override fun editAllowed(note: CharacterNote, user: User) = note.author == user || (note.visibility != NoteVisibility.PRIVATE && note.character.campaign.isOwnedBy(user))
+    override fun editAllowed(note: CampaignNote, user: User) = note.author == user || (note.visibility != NoteVisibility.PRIVATE && note.campaign.isOwnedBy(user))
 }
