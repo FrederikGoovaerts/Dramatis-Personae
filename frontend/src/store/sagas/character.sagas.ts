@@ -55,7 +55,7 @@ function* deleteCharacter(action: characterActions.specificTypes['deleteCharacte
 function* createNote(action: characterActions.specificTypes['createNote']) {
     try {
         yield character.createNote(action.payload);
-        yield put(characterActions.actions.fetchNotes(String(action.payload.characterId)));
+        yield put(characterActions.actions.fetchNotes(String(action.payload.id)));
     } catch (e) {
         console.error('Unable to create note. Please try again later.');
     }

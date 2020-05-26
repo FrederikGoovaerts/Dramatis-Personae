@@ -84,7 +84,7 @@ class CharacterController(private val service: CharacterService) {
         return returnNotes(list, auth.principal)
     }
 
-    fun returnNotes(list: List<Note>?, user: User): ResponseEntity<List<NoteView>> {
+    fun returnNotes(list: List<CharacterNote>?, user: User): ResponseEntity<List<NoteView>> {
         return if (list === null) {
             ResponseEntity(HttpStatus.FORBIDDEN)
         } else {
@@ -157,7 +157,7 @@ class CharacterService(private val repository: CharacterRepository) {
         return true
     }
 
-    fun getCharacterNotes(user: User, characterId: UUID): List<Note>? {
+    fun getCharacterNotes(user: User, characterId: UUID): List<CharacterNote>? {
         val characterQuery = repository.findById(characterId)
         if (!characterQuery.isPresent || !(characterQuery.get().campaign.members.contains(user))) {
             return null
@@ -166,7 +166,7 @@ class CharacterService(private val repository: CharacterRepository) {
         return character.notes.filter { it.author == user }
     }
 
-    fun getCharacterSharedNotes(user: User, characterId: UUID): List<Note>? {
+    fun getCharacterSharedNotes(user: User, characterId: UUID): List<CharacterNote>? {
         val characterQuery = repository.findById(characterId)
         if (!characterQuery.isPresent || !(characterQuery.get().campaign.members.contains(user))) {
             return null
@@ -189,7 +189,7 @@ class CharacterService(private val repository: CharacterRepository) {
         }
         val visibility = try { NoteVisibility.valueOf(rawVisibility) } catch (e: IllegalArgumentException) { return false }
         val character = characterQuery.get()
-        val newNote = Note(contents, user, character, visibility)
+        val newNote = CharacterNote(contents, user, character, visibility)
         character.notes.add(newNote)
         this.repository.save(character)
         return true

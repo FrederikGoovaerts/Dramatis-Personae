@@ -4,12 +4,8 @@ import java.util.*
 import javax.persistence.*
 import org.springframework.data.repository.CrudRepository
 
-enum class NoteVisibility {
-    PRIVATE, DM_SHARED, PUBLIC
-}
-
 @Entity
-data class Note(
+data class CharacterNote(
     @Column(name = "contents", columnDefinition = "TEXT") var contents: String,
     @OneToOne var author: User,
     @ManyToOne var character: Character,
@@ -19,4 +15,4 @@ data class Note(
     @Id @GeneratedValue var id: UUID? = null
 )
 
-interface NoteRepository : CrudRepository<Note, UUID>
+interface CharacterNoteRepository : CrudRepository<CharacterNote, UUID>
