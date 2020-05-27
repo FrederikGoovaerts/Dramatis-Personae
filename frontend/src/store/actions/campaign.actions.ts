@@ -1,6 +1,7 @@
 import { Campaign, CampaignEditPayload, CampaignMember } from '../../types/campaign.types';
 import { ActionTypeMapping, ActionUnion, createAction } from './base';
 import { CharacterPrototype, ListCharacter, ProposedCharacter } from '../../types/character.types';
+import { Note, CreateNotePayload } from '../../types/note.types';
 
 export enum names {
     fetchCampaigns = 'FETCH_CAMPAIGNS',
@@ -26,7 +27,14 @@ export enum names {
     kickFromCampaign = 'KICK_FROM_CAMPAIGN',
     leaveCampaign = 'LEAVE_CAMPAIGN',
     editCampaign = 'EDIT_CAMPAIGN',
-    deleteCampaign = 'DELETE_CAMPAIGN'
+    deleteCampaign = 'DELETE_CAMPAIGN',
+    fetchNotes = 'FETCH_CAMPAIGN_NOTES',
+    setNotesLoading = 'SET_CAMPAIGN_NOTES_LOADING',
+    setNotes = 'SET_CAMPAIGN_NOTES',
+    fetchSharedNotes = 'FETCH_SHARED_CAMPAIGN_NOTES',
+    setSharedNotesLoading = 'SET_SHARED_CAMPAIGN_NOTES_LOADING',
+    setSharedNotes = 'SET_SHARED_CAMPAIGN_NOTES',
+    createNote = 'CREATE_CAMPAIGN_NOTE'
 }
 
 export const actions = {
@@ -55,7 +63,14 @@ export const actions = {
     leaveCampaign: (p: string) => createAction(names.leaveCampaign, p),
     kickFromCampaign: (p: { campaignId: string; userId: string }) => createAction(names.kickFromCampaign, p),
     editCampaign: (p: CampaignEditPayload) => createAction(names.editCampaign, p),
-    deleteCampaign: (p: string) => createAction(names.deleteCampaign, p)
+    deleteCampaign: (p: string) => createAction(names.deleteCampaign, p),
+    fetchNotes: (id: string) => createAction(names.fetchNotes, id),
+    setNotesLoading: (p: boolean) => createAction(names.setNotesLoading, p),
+    setNotes: (p: Note[]) => createAction(names.setNotes, p),
+    fetchSharedNotes: (id: string) => createAction(names.fetchSharedNotes, id),
+    setSharedNotesLoading: (p: boolean) => createAction(names.setSharedNotesLoading, p),
+    setSharedNotes: (p: Note[]) => createAction(names.setSharedNotes, p),
+    createNote: (p: CreateNotePayload) => createAction(names.createNote, p)
 };
 
 export type allTypes = ActionUnion<typeof actions>;
