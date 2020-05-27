@@ -175,6 +175,34 @@ class CampaignController(private val service: CampaignService) {
         val success = this.service.rotateInviteCode(auth.principal, id)
         return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
     }
+
+    @GetMapping("/{id}/note")
+    fun getNoteList(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID
+    ): ResponseEntity<List<NoteView>> {
+        val list = this.service.getNotes(auth.principal, id)
+        return returnNotes(list, auth.principal)
+    }
+
+    @GetMapping("/{id}/sharednotes")
+    fun getSharedNotes(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID
+    ): ResponseEntity<List<NoteView>> {
+        val list = this.service.getSharedNotes(auth.principal, id)
+        return returnNotes(list, auth.principal)
+    }
+
+    @PostMapping("/{id}/note")
+    fun createNote(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID,
+        @RequestBody dto: CreateNoteDto
+    ): ResponseEntity<Unit> {
+        val success = this.service.createNote(auth.principal, id, dto.contents, dto.visibility)
+        return ResponseEntity(if (success) HttpStatus.CREATED else HttpStatus.FORBIDDEN)
+    }
 }
 
 @Component
@@ -319,5 +347,43 @@ class CampaignService(private val repository: CampaignRepository) {
         }
         val campaign = campaignQuery.get()
         return campaign.members.map { it to campaign.isOwnedBy(it) }.toMap()
+    }
+
+    fun getNotes(user: User, campaignId: UUID): List<CampaignNote>? {
+        val campaignQuery = repository.findById(campaignId)
+        if (!campaignQuery.isPresent || !(campaignQuery.get().members.contains(user))) {
+            return null
+        }
+        val campaign = campaignQuery.get()
+        return campaign.notes.filter { it.author == user }
+    }
+
+    fun getSharedNotes(user: User, campaignId: UUID): List<CampaignNote>? {
+        val campaignQuery = repository.findById(campaignId)
+        if (!campaignQuery.isPresent || !(campaignQuery.get().members.contains(user))) {
+            return null
+        }
+        val campaign = campaignQuery.get()
+        return if (campaign.isOwnedBy(user)) {
+            campaign.notes.filter {
+                it.author != user &&
+                        (it.visibility === NoteVisibility.DM_SHARED || it.visibility === NoteVisibility.PUBLIC)
+            }
+        } else {
+            campaign.notes.filter { it.author != user && it.visibility === NoteVisibility.PUBLIC }
+        }
+    }
+
+    fun createNote(user: User, id: UUID, contents: String, rawVisibility: String): Boolean {
+        val campaignQuery = repository.findById(id)
+        if (!campaignQuery.isPresent || !campaignQuery.get().members.contains(user)) {
+            return false
+        }
+        val visibility = try { NoteVisibility.valueOf(rawVisibility) } catch (e: IllegalArgumentException) { return false }
+        val campaign = campaignQuery.get()
+        val newNote = CampaignNote(contents, user, campaign, visibility)
+        campaign.notes.add(newNote)
+        this.repository.save(campaign)
+        return true
     }
 }
