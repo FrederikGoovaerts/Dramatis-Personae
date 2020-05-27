@@ -41,6 +41,8 @@ interface MapProps {
     fetchCampaign: (campaignId: string) => void;
     fetchCharacters: (campaignId: string) => void;
     fetchProposedCharacters: (campaignId: string) => void;
+    fetchNotes: (campaignId: string) => void;
+    fetchSharedNotes: (campaignId: string) => void;
     fetchMembers: (campaignId: string) => void;
     acceptProposedCharacter: (p: { campaignId: string; characterId: string }) => void;
     deleteProposedCharacter: (p: { campaignId: string; characterId: string }) => void;
@@ -77,6 +79,8 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
         this.props.fetchCampaign(this.props.match.params.id);
         this.props.fetchCharacters(this.props.match.params.id);
         this.props.fetchProposedCharacters(this.props.match.params.id);
+        this.props.fetchNotes(this.props.match.params.id);
+        this.props.fetchSharedNotes(this.props.match.params.id);
         this.props.fetchMembers(this.props.match.params.id);
     }
 
@@ -335,6 +339,8 @@ export const CampaignDetailScreen = connect(mapStateToProps, {
     fetchCampaign: campaignActions.actions.fetchCampaign,
     fetchCharacters: campaignActions.actions.fetchCharacters,
     fetchProposedCharacters: campaignActions.actions.fetchProposedCharacters,
+    fetchNotes: campaignActions.actions.fetchNotes,
+    fetchSharedNotes: campaignActions.actions.fetchSharedNotes,
     acceptProposedCharacter: proposedCharacterActions.actions.acceptProposedCharacter,
     deleteProposedCharacter: proposedCharacterActions.actions.deleteProposedCharacter,
     fetchMembers: campaignActions.actions.fetchMembers,
