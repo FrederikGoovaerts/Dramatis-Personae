@@ -24,7 +24,9 @@ export const api = {
         SUBPATH_ROTATE_INVITE_CODE: '/rotatecode',
         SUBPATH_KICK: '/kick',
         SUBPATH_MEMBERS: '/members',
-        SUBPATH_PROPOSED_CHARACTER: '/proposedcharacter'
+        SUBPATH_PROPOSED_CHARACTER: '/proposedcharacter',
+        SUBPATH_NOTE: '/note',
+        SUBPATH_SHARED_NOTES: '/sharednotes'
     },
     CHARACTER: {
         PATH: '/character',
@@ -38,6 +40,9 @@ export const api = {
     },
     CHARACTER_NOTE: {
         PATH: '/characternote'
+    },
+    CAMPAIGN_NOTE: {
+        PATH: '/campaignnote'
     }
 };
 
