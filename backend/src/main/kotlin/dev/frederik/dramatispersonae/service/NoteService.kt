@@ -3,6 +3,8 @@ package dev.frederik.dramatispersonae.service
 import dev.frederik.dramatispersonae.model.*
 import java.util.*
 import org.springframework.data.repository.CrudRepository
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 
 data class CreateNoteDto(val contents: String, val visibility: String)
 
@@ -15,6 +17,24 @@ data class NoteView(
     val owned: Boolean,
     val id: UUID
 )
+
+fun returnNotes(list: List<Note>?, user: User): ResponseEntity<List<NoteView>> {
+    return if (list === null) {
+        ResponseEntity(HttpStatus.FORBIDDEN)
+    } else {
+        ResponseEntity(list.map {
+            NoteView(
+                    it.contents,
+                    it.author.fullName,
+                    it.visibility,
+                    it.addedOn,
+                    it.editedOn,
+                    it.author == user,
+                    it.id!!
+            )
+        }, HttpStatus.OK)
+    }
+}
 
 abstract class NoteService<T : Note>(private val repository: CrudRepository<T, UUID>) {
 
