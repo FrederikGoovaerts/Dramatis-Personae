@@ -7,6 +7,7 @@ import { ListCharacter, CharacterPrototype, ProposedCharacter } from '../types/c
 
 interface RawListCharacter {
     name: string;
+    description: string;
     visible: boolean;
     addedOn: string;
     id: string;
