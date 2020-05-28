@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*
 
 data class CreateCharacterDto(val name: String, val description: String)
 
-data class CharacterListView(val name: String, val visible: Boolean, val addedOn: Date, val id: UUID)
+data class CharacterListView(val name: String, val description: String, val visible: Boolean, val addedOn: Date, val id: UUID)
 data class CharacterDetailView(
     val name: String,
     val description: String,
