@@ -16,8 +16,6 @@ import { RootState } from '../../store/reducers';
 import { Character, VisibilityUpdatePayload } from '../../types/character.types';
 import { Campaign } from '../../types/campaign.types';
 import { Note } from '../../types/note.types';
-import { CampaignCharacterBreadcrumb } from '../molecules/CampaignCharacterBreadcrumbs';
-import { Header } from '../molecules/Header';
 import {
     ListItem,
     ListItemText,
