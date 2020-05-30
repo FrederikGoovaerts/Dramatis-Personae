@@ -34,6 +34,7 @@ import {
 import { Edit, Add, VisibilityOff } from '@material-ui/icons';
 import { NewNoteForm } from '../molecules/NewNoteForm';
 import { EditNoteForm } from '../molecules/EditNoteForm';
+import { CharacterHeader } from '../molecules/CharacterHeader';
 
 export interface MatchParams {
     campaignId: string;
@@ -214,7 +215,7 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         if (!this.props.character || !this.props.campaign || this.props.loading) {
             contents = <CircularProgress />;
         } else {
-            const { campaign, character } = this.props;
+            const { character } = this.props;
             contents = (
                 <div>
                     <Box className="CharacterDetail__header">
@@ -272,7 +273,7 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         }
         return (
             <div className="CharacterDetail__container">
-                <Header />
+                <CharacterHeader campaignId={this.props.match.params.campaignId} />
                 {contents}
             </div>
         );
