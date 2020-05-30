@@ -217,7 +217,6 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
             const { campaign, character } = this.props;
             contents = (
                 <div>
-                    <CampaignCharacterBreadcrumb campaign={campaign} character={character} />
                     <Box className="CharacterDetail__header">
                         <Typography gutterBottom variant="h4">
                             {character.name}
