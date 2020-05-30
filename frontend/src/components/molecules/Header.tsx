@@ -7,35 +7,33 @@ import Typography from '@material-ui/core/Typography';
 
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 
-import { routes } from '../../config/constants';
 import { applicationActions } from '../../store/actions';
 import { PersonaeNoCircleIcon } from '../../assets/svg/PersonaeNoCircleIcon';
+import { Box } from '@material-ui/core';
 
 export interface Props {
+    leftContent?: JSX.Element;
     logout: () => void;
 }
 
 const HeaderRaw = (props: Props) => (
-    <AppBar position="absolute" style={{ marginBottom: 100 }}>
+    <AppBar position="absolute">
         <Toolbar>
             <div className="Header__content">
-                <div className="Header__side">
-                    <Link to={routes.root}>
+                {props.leftContent || (
+                    <Box className="Header__side">
                         <PersonaeNoCircleIcon
                             className={'Header__icon'}
                             width={'2em'}
                             height={'2em'}
                             fill={'#ffffff'}
                         />
-                    </Link>
-                    <Link to={routes.root} className="unstyled">
                         <Typography variant="h6" color="inherit">
                             Dramatis Personae
                         </Typography>
-                    </Link>
-                </div>
+                    </Box>
+                )}
 
                 <div className="Header__side">
                     <Button variant="contained" color="primary" onClick={props.logout}>

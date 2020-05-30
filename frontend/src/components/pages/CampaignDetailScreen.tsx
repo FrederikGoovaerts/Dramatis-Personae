@@ -18,7 +18,7 @@ import { ListCharacter, ProposedCharacter } from '../../types/character.types';
 import { Campaign } from '../../types/campaign.types';
 import { ListItemLink } from '../atoms/ListItemLink';
 import { CampaignCharacterBreadcrumb } from '../molecules/CampaignCharacterBreadcrumbs';
-import { Header } from '../molecules/Header';
+import { CampaignHeader } from '../molecules/CampaignHeader';
 import { EditCampaignForm } from '../molecules/EditCampaignForm';
 import { ConfirmableButton } from '../atoms/DeleteButton';
 import { CreateCharacterForm } from '../molecules/CreateCharacterForm';
@@ -320,7 +320,7 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
         }
         return (
             <div className={'CampaignDetail__container'}>
-                <Header />
+                <CampaignHeader />
                 {contents}
             </div>
         );
