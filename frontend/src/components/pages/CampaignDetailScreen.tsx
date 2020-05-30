@@ -17,7 +17,6 @@ import { RootState } from '../../store/reducers';
 import { ListCharacter, ProposedCharacter } from '../../types/character.types';
 import { Campaign } from '../../types/campaign.types';
 import { ListItemLink } from '../atoms/ListItemLink';
-import { CampaignCharacterBreadcrumb } from '../molecules/CampaignCharacterBreadcrumbs';
 import { CampaignHeader } from '../molecules/CampaignHeader';
 import { EditCampaignForm } from '../molecules/EditCampaignForm';
 import { ConfirmableButton } from '../atoms/DeleteButton';
