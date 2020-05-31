@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 
 interface Props {
     campaign: Campaign;
-    inviteCode: string;
     onInaccessible: () => void;
 }
 
@@ -73,8 +72,7 @@ class CampaignDetailsRaw extends React.Component<AllProps, State> {
     };
 
     render() {
-        const { inviteCode, campaign } = this.props;
-        const { owner, ownerName } = campaign;
+        const { owner, ownerName, inviteCode } = this.props.campaign;
         return (
             <Box>
                 <Typography variant={'subtitle1'}>{`Run by ${owner ? 'you' : ownerName}`}</Typography>
