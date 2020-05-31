@@ -34,9 +34,9 @@ export class ReturningHeader extends React.Component<Props, State> {
                             onClick={() => {
                                 this.setState({ return: true });
                             }}
+                            startIcon={<ArrowBack />}
                         >
-                            <ArrowBack />
-                            <Typography>{this.props.returnLabel}</Typography>
+                            {this.props.returnLabel}
                         </Button>
                         {this.props.title && (
                             <Box marginLeft="1em">
