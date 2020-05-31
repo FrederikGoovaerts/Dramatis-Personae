@@ -1,6 +1,6 @@
 import './CampaignList.scss';
 
-import { Grid, Paper, CircularProgress, Typography } from '@material-ui/core';
+import { Grid, Paper, CircularProgress, Typography, Toolbar, Box } from '@material-ui/core';
 import { ChangeEvent } from 'react';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -78,9 +78,10 @@ class CampaignListRaw extends React.Component<AllProps> {
         return (
             <div className="CampaignList__container">
                 <Header />
-                <Typography variant="h4" gutterBottom>
-                    Campaigns
-                </Typography>
+                <Toolbar />
+                <Box marginY="1em">
+                    <Typography variant="h4">Campaigns</Typography>
+                </Box>
                 <div className="CampaignList__content">{contents}</div>
             </div>
         );

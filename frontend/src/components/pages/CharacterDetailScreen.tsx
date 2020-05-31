@@ -27,7 +27,8 @@ import {
     Box,
     FormControlLabel,
     Tooltip,
-    ListItemIcon
+    ListItemIcon,
+    Toolbar
 } from '@material-ui/core';
 import { Edit, Add, VisibilityOff } from '@material-ui/icons';
 import { NewNoteForm } from '../molecules/NewNoteForm';
@@ -266,6 +267,7 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         return (
             <Box className="CharacterDetail__container">
                 <CharacterHeader campaignId={this.props.match.params.campaignId} name={this.props.character?.name} />
+                <Toolbar />
                 {contents}
             </Box>
         );
