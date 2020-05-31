@@ -7,7 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { match, Redirect } from 'react-router';
+import { match, Redirect, Route, Switch } from 'react-router';
 import {
     Fab,
     Modal,
@@ -35,6 +35,7 @@ import { CreateCharacterForm } from '../molecules/CreateCharacterForm';
 import { ProposeCharacterForm } from '../molecules/ProposeCharacterForm';
 import { EditProposedCharacterForm } from '../molecules/EditProposedCharacterForm';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import { CampaignCharacters } from './CampaignCharacters';
 
 const styles = (theme: Theme) => ({
     appBar: {
@@ -44,6 +45,7 @@ const styles = (theme: Theme) => ({
         width: '10em'
     },
     content: {
+        marginTop: '1em',
         marginLeft: '10em'
     }
 });
@@ -81,7 +83,6 @@ interface State {
     proposeOpen: boolean;
     editProposedCharacter: ProposedCharacter | undefined;
     editCampaignOpen: boolean;
-    deleteCheck: boolean;
     inaccessible: boolean;
 }
 
@@ -93,15 +94,12 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
             proposeOpen: false,
             editProposedCharacter: undefined,
             editCampaignOpen: false,
-            deleteCheck: false,
             inaccessible: false
         };
     }
 
     componentDidMount(): void {
         this.props.fetchCampaign(this.props.match.params.id);
-        this.props.fetchCharacters(this.props.match.params.id);
-        this.props.fetchProposedCharacters(this.props.match.params.id);
         this.props.fetchNotes(this.props.match.params.id);
         this.props.fetchSharedNotes(this.props.match.params.id);
         this.props.fetchMembers(this.props.match.params.id);
@@ -255,13 +253,14 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                 </div>
             );
         }
+        const { campaign, loading } = this.props;
 
         let contents: React.ReactNode;
-        if (this.props.loading || !this.props.campaign) {
+        if (loading || !campaign) {
             contents = <CircularProgress />;
         } else {
-            const { campaign, characters, proposedCharacters } = this.props;
-            contents = (
+            const { characters, proposedCharacters } = this.props;
+            const temp = (
                 <div>
                     <Typography variant={'subtitle1'}>{`Run by ${
                         campaign.owner ? 'you' : campaign.ownerName
@@ -338,11 +337,32 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                     </Modal>
                 </div>
             );
+
+            const { path, url } = this.props.match;
+
+            contents = (
+                <Switch>
+                    <Route
+                        path={`${path}${routes.campaign.subpathCharacters}`}
+                        exact
+                        render={() => (
+                            <CampaignCharacters campaignId={campaign.id} owner={campaign.owner} matchUrl={url} />
+                        )}
+                    />
+                    <Route path={`${path}${routes.campaign.subpathDetails}`} exact render={() => temp} />
+                    <Route path={`${path}${routes.campaign.subpathNotes}`} exact render={() => temp} />
+                    <Redirect to={`${path}${routes.campaign.subpathCharacters}`} />
+                </Switch>
+            );
         }
         return (
             <div className={'CampaignDetail__container'}>
                 <CampaignHeader name={this.props.campaign?.name} className={this.props.classes.appBar} />
-                <Drawer variant="permanent" classes={{ paper: this.props.classes.drawerPaper }}>
+                <Drawer
+                    variant="permanent"
+                    PaperProps={{ elevation: 1 }}
+                    classes={{ paper: this.props.classes.drawerPaper }}
+                >
                     <Toolbar />
                     <List>
                         {['Characters', 'Notes', 'Details'].map((text) => (
@@ -365,8 +385,7 @@ const mapStateToProps = (state: RootState) => ({
     campaign: state.campaign.campaign,
     characters: state.campaign.characters,
     proposedCharacters: state.campaign.proposedCharacters,
-    loading:
-        state.campaign.campaignLoading || state.campaign.charactersLoading || state.campaign.proposedCharactersLoading
+    loading: state.campaign.campaignLoading
 });
 
 export const CampaignDetailScreen = connect(mapStateToProps, {
