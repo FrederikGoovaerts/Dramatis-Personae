@@ -215,13 +215,12 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         } else {
             const { character } = this.props;
             contents = (
-                <div>
-                    <Box className="CharacterDetail__header">
-                        <Typography gutterBottom className="CharacterDetail__descriptionContents">
-                            {character.description}
-                        </Typography>
-
-                        {this.props.campaign.owner && (
+                <Box>
+                    <Box marginBottom="1em">
+                        <Typography variant="subtitle1">{character.description}</Typography>
+                    </Box>
+                    {this.props.campaign.owner && (
+                        <Paper className="CharacterDetail__adminControls">
                             <FormControlLabel
                                 control={
                                     <Switch
@@ -232,8 +231,6 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
                                 }
                                 label="Visible to players"
                             />
-                        )}
-                        {this.props.campaign.owner && (
                             <FormControlLabel
                                 control={
                                     <IconButton onClick={() => this.setState({ editCharacterOpen: true })}>
@@ -242,8 +239,8 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
                                 }
                                 label="Edit character"
                             />
-                        )}
-                    </Box>
+                        </Paper>
+                    )}
                     <Box marginBottom="1em">
                         <Typography variant="h5">Your notes</Typography>
                     </Box>
@@ -263,14 +260,14 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
                     <Modal open={this.state.editNote !== undefined} onClose={this.closeEditNote}>
                         <div className="modal">{this.renderEditNote()}</div>
                     </Modal>
-                </div>
+                </Box>
             );
         }
         return (
-            <div className="CharacterDetail__container">
+            <Box className="CharacterDetail__container">
                 <CharacterHeader campaignId={this.props.match.params.campaignId} name={this.props.character?.name} />
                 {contents}
-            </div>
+            </Box>
         );
     }
 }
