@@ -48,7 +48,12 @@ export const api = {
 
 export const routes = {
     character: '/character/',
-    campaign: '/campaign/',
+    campaign: {
+        path: '/campaign/',
+        subpathCharacters: '/characters',
+        subpathNotes: '/notes',
+        subpathDetails: '/details'
+    },
     root: '/'
 };
 

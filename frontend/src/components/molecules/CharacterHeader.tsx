@@ -8,5 +8,9 @@ interface Props {
 }
 
 export const CharacterHeader = (props: Props) => (
-    <ReturningHeader returnRoute={`${routes.campaign}${props.campaignId}`} returnLabel="Campaign" title={props.name} />
+    <ReturningHeader
+        returnRoute={`${routes.campaign.path}${props.campaignId}`}
+        returnLabel="Campaign"
+        title={props.name}
+    />
 );
