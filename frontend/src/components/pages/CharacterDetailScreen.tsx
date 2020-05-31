@@ -207,7 +207,7 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
 
     render() {
         if (this.state.deleted) {
-            return <Redirect to={`${routes.campaign}${this.props.match.params.campaignId}`} />;
+            return <Redirect to={`${routes.campaign.path}${this.props.match.params.campaignId}`} />;
         }
 
         let contents: React.ReactNode;

@@ -40,10 +40,10 @@ class App extends React.Component<TMapProps & TActionProps & RouteComponentProps
                             <Route path={routes.root} exact render={this.campaignList} />
                             <Route
                                 strict
-                                path={`${routes.campaign}:campaignId${routes.character}:characterId`}
+                                path={`${routes.campaign.path}:campaignId${routes.character}:characterId`}
                                 component={this.characterDetail}
                             />
-                            <Route strict path={`${routes.campaign}:id`} component={this.campaignDetail} />
+                            <Route strict path={`${routes.campaign.path}:id`} component={this.campaignDetail} />
                             <Redirect to={routes.root} />
                         </Switch>
                     </div>
