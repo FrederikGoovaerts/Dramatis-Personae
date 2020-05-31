@@ -217,9 +217,6 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
             contents = (
                 <div>
                     <Box className="CharacterDetail__header">
-                        <Typography gutterBottom variant="h4">
-                            {character.name}
-                        </Typography>
                         <Typography gutterBottom className="CharacterDetail__descriptionContents">
                             {character.description}
                         </Typography>

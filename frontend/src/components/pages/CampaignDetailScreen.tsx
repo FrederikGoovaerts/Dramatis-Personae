@@ -239,7 +239,6 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
             const { campaign, characters, proposedCharacters } = this.props;
             contents = (
                 <div>
-                    <Typography variant={'h4'}>{campaign.name}</Typography>
                     <Typography variant={'subtitle1'}>{`Run by ${
                         campaign.owner ? 'you' : campaign.ownerName
                     }`}</Typography>
