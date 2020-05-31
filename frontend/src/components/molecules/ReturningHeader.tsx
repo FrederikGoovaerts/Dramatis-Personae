@@ -8,6 +8,7 @@ interface Props {
     title?: string;
     returnLabel: string;
     returnRoute: string;
+    className?: string;
 }
 
 interface State {
@@ -26,6 +27,7 @@ export class ReturningHeader extends React.Component<Props, State> {
         }
         return (
             <Header
+                className={this.props.className}
                 leftContent={
                     <Box display="flex" alignItems="center">
                         <Button
