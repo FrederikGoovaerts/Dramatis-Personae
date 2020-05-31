@@ -318,7 +318,7 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
         }
         return (
             <div className={'CampaignDetail__container'}>
-                <CampaignHeader />
+                <CampaignHeader name={this.props.campaign?.name} />
                 {contents}
             </div>
         );

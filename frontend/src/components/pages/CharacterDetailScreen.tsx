@@ -271,7 +271,7 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         }
         return (
             <div className="CharacterDetail__container">
-                <CharacterHeader campaignId={this.props.match.params.campaignId} />
+                <CharacterHeader campaignId={this.props.match.params.campaignId} name={this.props.character?.name} />
                 {contents}
             </div>
         );

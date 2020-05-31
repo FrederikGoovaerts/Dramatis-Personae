@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { Header } from './Header';
-import { Button, Typography } from '@material-ui/core';
+import { Button, Typography, Box } from '@material-ui/core';
 import { ArrowBack } from '@material-ui/icons';
 import { Redirect } from 'react-router';
 
 interface Props {
+    title?: string;
     returnLabel: string;
     returnRoute: string;
 }
@@ -26,16 +27,23 @@ export class ReturningHeader extends React.Component<Props, State> {
         return (
             <Header
                 leftContent={
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => {
-                            this.setState({ return: true });
-                        }}
-                    >
-                        <ArrowBack />
-                        <Typography>{this.props.returnLabel}</Typography>
-                    </Button>
+                    <Box display="flex" alignItems="center">
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => {
+                                this.setState({ return: true });
+                            }}
+                        >
+                            <ArrowBack />
+                            <Typography>{this.props.returnLabel}</Typography>
+                        </Button>
+                        {this.props.title && (
+                            <Box marginLeft="1em">
+                                <Typography variant="h5">{this.props.title}</Typography>
+                            </Box>
+                        )}
+                    </Box>
                 }
             />
         );
