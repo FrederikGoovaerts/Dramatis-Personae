@@ -13,8 +13,11 @@
     }
 }
 
-.CharacterDetail__header {
-    margin-bottom: 2em;
+.CharacterDetail__adminControls {
+    display: inline-flex;
+    flex-direction: column;
+    padding: 0.5em 1em;
+    margin-bottom: 1em;
 }
 
 .CharacterDetail__descriptionContents {
