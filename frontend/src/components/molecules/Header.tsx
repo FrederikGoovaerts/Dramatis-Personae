@@ -12,7 +12,7 @@ import { applicationActions } from '../../store/actions';
 import { PersonaeNoCircleIcon } from '../../assets/svg/PersonaeNoCircleIcon';
 import { Box } from '@material-ui/core';
 
-export interface Props {
+interface Props {
     leftContent?: JSX.Element;
     logout: () => void;
 }

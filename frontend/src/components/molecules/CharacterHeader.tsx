@@ -3,9 +3,10 @@ import { routes } from '../../config/constants';
 import { ReturningHeader } from './ReturningHeader';
 
 interface Props {
+    name?: string;
     campaignId: string;
 }
 
 export const CharacterHeader = (props: Props) => (
-    <ReturningHeader returnRoute={`${routes.campaign}${props.campaignId}`} returnLabel="Back to campaign" />
+    <ReturningHeader returnRoute={`${routes.campaign}${props.campaignId}`} returnLabel="Campaign" title={props.name} />
 );
