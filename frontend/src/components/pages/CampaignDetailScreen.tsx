@@ -8,7 +8,18 @@ import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { match, Redirect } from 'react-router';
-import { Fab, Modal, FormControlLabel, IconButton, Box, Button, ListItem } from '@material-ui/core';
+import {
+    Fab,
+    Modal,
+    FormControlLabel,
+    IconButton,
+    Box,
+    Button,
+    ListItem,
+    Drawer,
+    Toolbar,
+    Theme
+} from '@material-ui/core';
 import { Add, Visibility, Edit, CheckCircle, Cancel } from '@material-ui/icons';
 
 import { routes } from '../../config/constants';
@@ -23,6 +34,19 @@ import { ConfirmableButton } from '../atoms/DeleteButton';
 import { CreateCharacterForm } from '../molecules/CreateCharacterForm';
 import { ProposeCharacterForm } from '../molecules/ProposeCharacterForm';
 import { EditProposedCharacterForm } from '../molecules/EditProposedCharacterForm';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+
+const styles = (theme: Theme) => ({
+    appBar: {
+        zIndex: theme.zIndex.drawer + 1
+    },
+    drawerPaper: {
+        width: '10em'
+    },
+    content: {
+        marginLeft: '10em'
+    }
+});
 
 export interface MatchParams {
     id: string;
@@ -32,7 +56,7 @@ interface Props {
     match: match<MatchParams>;
 }
 
-interface MapProps {
+interface MapProps extends WithStyles<typeof styles> {
     campaign: Campaign | null;
     characters: ListCharacter[];
     proposedCharacters: ProposedCharacter[];
@@ -317,8 +341,21 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
         }
         return (
             <div className={'CampaignDetail__container'}>
-                <CampaignHeader name={this.props.campaign?.name} />
-                {contents}
+                <CampaignHeader name={this.props.campaign?.name} className={this.props.classes.appBar} />
+                <Drawer variant="permanent" classes={{ paper: this.props.classes.drawerPaper }}>
+                    <Toolbar />
+                    <List>
+                        {['Characters', 'Notes', 'Details'].map((text) => (
+                            <ListItem button key={text}>
+                                <ListItemText primary={text} />
+                            </ListItem>
+                        ))}
+                    </List>
+                </Drawer>
+                <Box className={this.props.classes.content}>
+                    <Toolbar />
+                    {contents}
+                </Box>
             </div>
         );
     }
@@ -344,4 +381,4 @@ export const CampaignDetailScreen = connect(mapStateToProps, {
     deleteCampaign: campaignActions.actions.deleteCampaign,
     leaveCampaign: campaignActions.actions.leaveCampaign,
     rotateInviteCode: campaignActions.actions.rotateInviteCode
-})(CampaignDetailRaw);
+})(withStyles(styles)(CampaignDetailRaw));

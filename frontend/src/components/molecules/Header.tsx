@@ -13,12 +13,13 @@ import { PersonaeNoCircleIcon } from '../../assets/svg/PersonaeNoCircleIcon';
 import { Box } from '@material-ui/core';
 
 interface Props {
+    className?: string;
     leftContent?: JSX.Element;
     logout: () => void;
 }
 
 const HeaderRaw = (props: Props) => (
-    <AppBar position="absolute">
+    <AppBar position="absolute" className={props.className}>
         <Toolbar>
             <div className="Header__content">
                 {props.leftContent || (
