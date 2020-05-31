@@ -19,7 +19,7 @@ interface Props {
 }
 
 const HeaderRaw = (props: Props) => (
-    <AppBar position="absolute" className={props.className}>
+    <AppBar position="fixed" className={props.className}>
         <Toolbar>
             <div className="Header__content">
                 {props.leftContent || (
