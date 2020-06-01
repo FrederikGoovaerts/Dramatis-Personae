@@ -1,36 +1,28 @@
+import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { ChangeEvent } from 'react';
-import * as React from 'react';
-import { connect } from 'react-redux';
-
-import { noteActions } from '../../store/actions';
-import { DeleteButton } from '../atoms/DeleteButton';
 import { Paper, Typography, FormControl, InputLabel, Select, MenuItem, Box } from '@material-ui/core';
+
+import { DeleteButton } from '../atoms/DeleteButton';
 import { Note, NoteVisibility } from '../../types/note.types';
 import { AlertBox } from '../atoms/AlertBox';
 
 interface Props {
-    characterId: string;
     note: Note;
     className?: string;
     onSubmitComplete?: () => void;
+    editCharacterNote: (contents: string, visibility: NoteVisibility) => void;
+    deleteCharacterNote: () => void;
 }
-
-interface MapProps {
-    editCharacterNote: (params: { id: string; noteId: string; contents: string; visibility: NoteVisibility }) => void;
-    deleteCharacterNote: (params: { id: string; noteId: string }) => void;
-}
-
-type AllProps = Props & MapProps;
 
 interface State {
     contents: string;
     visibility: NoteVisibility;
 }
 
-class EditNoteFormRaw extends React.Component<AllProps, State> {
-    constructor(props: AllProps) {
+export class EditNoteForm extends React.Component<Props, State> {
+    constructor(props: Props) {
         super(props);
         this.state = { contents: this.props.note.contents, visibility: this.props.note.visibility };
     }
@@ -44,12 +36,7 @@ class EditNoteFormRaw extends React.Component<AllProps, State> {
     };
 
     handleSubmit = () => {
-        this.props.editCharacterNote({
-            id: this.props.characterId,
-            noteId: this.props.note.id,
-            contents: this.state.contents,
-            visibility: this.state.visibility
-        });
+        this.props.editCharacterNote(this.state.contents, this.state.visibility);
         this.setState({ contents: '', visibility: 'PRIVATE' });
         if (this.props.onSubmitComplete) {
             this.props.onSubmitComplete();
@@ -57,7 +44,7 @@ class EditNoteFormRaw extends React.Component<AllProps, State> {
     };
 
     handleDelete = () => {
-        this.props.deleteCharacterNote({ id: this.props.characterId, noteId: this.props.note.id });
+        this.props.deleteCharacterNote();
         if (this.props.onSubmitComplete) {
             this.props.onSubmitComplete();
         }
@@ -113,7 +100,7 @@ class EditNoteFormRaw extends React.Component<AllProps, State> {
     }
 }
 
-export const EditNoteForm = connect(null, {
-    editCharacterNote: noteActions.actions.editCharacterNote,
-    deleteCharacterNote: noteActions.actions.deleteCharacterNote
-})(EditNoteFormRaw);
+// export const EditNoteForm = connect(null, {
+//     editCharacterNote: noteActions.actions.editCharacterNote,
+//     deleteCharacterNote: noteActions.actions.deleteCharacterNote
+// })(EditNoteFormRaw);

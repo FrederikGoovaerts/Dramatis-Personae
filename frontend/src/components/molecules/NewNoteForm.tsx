@@ -1,32 +1,24 @@
+import * as React from 'react';
+import { ChangeEvent } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import { ChangeEvent } from 'react';
-import * as React from 'react';
-import { connect } from 'react-redux';
 
-import { characterActions } from '../../store/actions';
 import { Paper, Typography, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 import { NoteVisibility } from '../../types/note.types';
 
 interface Props {
-    characterId: string;
     className?: string;
+    create: (contents: string, visibility: NoteVisibility) => void;
     onSubmitComplete?: () => void;
 }
-
-interface MapProps {
-    createNote: (params: { id: string; contents: string; visibility: NoteVisibility }) => void;
-}
-
-type AllProps = Props & MapProps;
 
 interface State {
     note: string;
     visibility: NoteVisibility;
 }
 
-class NewNoteFormRaw extends React.Component<AllProps, State> {
-    constructor(props: AllProps) {
+export class NewNoteForm extends React.Component<Props, State> {
+    constructor(props: Props) {
         super(props);
         this.state = { note: '', visibility: 'PRIVATE' };
     }
@@ -40,11 +32,7 @@ class NewNoteFormRaw extends React.Component<AllProps, State> {
     };
 
     handleSubmit = () => {
-        this.props.createNote({
-            id: this.props.characterId,
-            contents: this.state.note,
-            visibility: this.state.visibility
-        });
+        this.props.create(this.state.note, this.state.visibility);
         this.setState({ note: '' });
         if (this.props.onSubmitComplete) {
             this.props.onSubmitComplete();
@@ -87,4 +75,4 @@ class NewNoteFormRaw extends React.Component<AllProps, State> {
     }
 }
 
-export const NewNoteForm = connect(null, { createNote: characterActions.actions.createNote })(NewNoteFormRaw);
+// export const NewNoteForm = connect(null, { createNote: characterActions.actions.createNote })(NewNoteFormRaw);
