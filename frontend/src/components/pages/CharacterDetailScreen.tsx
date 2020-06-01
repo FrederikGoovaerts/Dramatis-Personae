@@ -217,7 +217,7 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
             const { character } = this.props;
             contents = (
                 <Box>
-                    <Box marginBottom="1em">
+                    <Box marginY="1em">
                         <Typography variant="subtitle1">{character.description}</Typography>
                     </Box>
                     {this.props.campaign.owner && (
