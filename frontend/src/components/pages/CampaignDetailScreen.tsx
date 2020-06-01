@@ -66,39 +66,15 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
 
     render() {
         if (this.state.inaccessible) {
-            return (
-                <div>
-                    <Redirect to={routes.root} />
-                </div>
-            );
+            return <Redirect to={routes.root} />;
         }
-        const { campaign, loading } = this.props;
 
-        let contents: React.ReactNode;
-        if (loading || !campaign) {
-            contents = <CircularProgress />;
-        } else {
-            const { path, url } = this.props.match;
+        const {
+            campaign,
+            loading,
+            match: { path, url }
+        } = this.props;
 
-            contents = (
-                <Switch>
-                    <Route
-                        path={`${path}${routes.campaign.subpathCharacters}`}
-                        exact
-                        render={() => (
-                            <CampaignCharacters campaignId={campaign.id} owner={campaign.owner} matchUrl={url} />
-                        )}
-                    />
-                    <Route
-                        path={`${path}${routes.campaign.subpathDetails}`}
-                        exact
-                        render={() => <CampaignDetails campaign={campaign} onInaccessible={this.makeInaccessible} />}
-                    />
-                    <Route path={`${path}${routes.campaign.subpathNotes}`} exact component={CircularProgress} />
-                    <Redirect to={`${path}${routes.campaign.subpathCharacters}`} />
-                </Switch>
-            );
-        }
         return (
             <div className={'CampaignDetail__container'}>
                 <CampaignHeader name={this.props.campaign?.name} className={this.props.classes.appBar} />
@@ -118,7 +94,32 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                 </Drawer>
                 <Box className={this.props.classes.content}>
                     <Toolbar />
-                    {contents}
+                    {loading || !campaign ? (
+                        <CircularProgress />
+                    ) : (
+                        <Switch>
+                            <Route
+                                path={`${path}${routes.campaign.subpathCharacters}`}
+                                exact
+                                render={() => (
+                                    <CampaignCharacters
+                                        campaignId={campaign.id}
+                                        owner={campaign.owner}
+                                        matchUrl={url}
+                                    />
+                                )}
+                            />
+                            <Route
+                                path={`${path}${routes.campaign.subpathDetails}`}
+                                exact
+                                render={() => (
+                                    <CampaignDetails campaign={campaign} onInaccessible={this.makeInaccessible} />
+                                )}
+                            />
+                            <Route path={`${path}${routes.campaign.subpathNotes}`} exact component={CircularProgress} />
+                            <Redirect to={`${path}${routes.campaign.subpathCharacters}`} />
+                        </Switch>
+                    )}
                 </Box>
             </div>
         );
