@@ -27,7 +27,9 @@ class App extends React.Component<TMapProps & TActionProps & RouteComponentProps
     }
 
     campaignList = ({ match }: RouteComponentProps<{}>) => <CampaignList match={match} />;
-    campaignDetail = ({ match }: RouteComponentProps<CampaignMatchParams>) => <CampaignDetailScreen match={match} />;
+    campaignDetail = ({ match, location }: RouteComponentProps<CampaignMatchParams>) => (
+        <CampaignDetailScreen match={match} path={location.pathname} />
+    );
     characterDetail = ({ match }: RouteComponentProps<CharacterMatchParams>) => <CharacterDetailScreen match={match} />;
 
     render() {

@@ -16,6 +16,7 @@ import { CampaignHeader } from '../molecules/CampaignHeader';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import { CampaignCharacters } from './CampaignCharacters';
 import { CampaignDetails } from './CampaignDetails';
+import { ListItemLink } from '../atoms/ListItemLink';
 
 const styles = (theme: Theme) => ({
     appBar: {
@@ -36,6 +37,7 @@ export interface MatchParams {
 
 interface Props {
     match: match<MatchParams>;
+    path: string;
 }
 
 interface MapProps extends WithStyles<typeof styles> {
@@ -75,6 +77,10 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
             match: { path, url }
         } = this.props;
 
+        const characterUrl = `${url}${routes.campaign.subpathCharacters}`;
+        const notesUrl = `${url}${routes.campaign.subpathNotes}`;
+        const detailsUrl = `${url}${routes.campaign.subpathDetails}`;
+
         return (
             <div className={'CampaignDetail__container'}>
                 <CampaignHeader name={this.props.campaign?.name} className={this.props.classes.appBar} />
@@ -85,11 +91,15 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                 >
                     <Toolbar />
                     <List>
-                        {['Characters', 'Notes', 'Details'].map((text) => (
-                            <ListItem button key={text}>
-                                <ListItemText primary={text} />
-                            </ListItem>
-                        ))}
+                        <ListItemLink selected={this.props.path === characterUrl} to={characterUrl}>
+                            <ListItemText primary="Characters" />
+                        </ListItemLink>
+                        <ListItemLink selected={this.props.path === notesUrl} to={notesUrl}>
+                            <ListItemText primary="Notes" />
+                        </ListItemLink>
+                        <ListItemLink selected={this.props.path === detailsUrl} to={detailsUrl}>
+                            <ListItemText primary="Details" />
+                        </ListItemLink>
                     </List>
                 </Drawer>
                 <Box className={this.props.classes.content}>
