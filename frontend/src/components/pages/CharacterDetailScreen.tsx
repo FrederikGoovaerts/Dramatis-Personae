@@ -16,24 +16,10 @@ import { RootState } from '../../store/reducers';
 import { Character, VisibilityUpdatePayload } from '../../types/character.types';
 import { Campaign } from '../../types/campaign.types';
 import { Note } from '../../types/note.types';
-import {
-    ListItem,
-    ListItemText,
-    ListItemSecondaryAction,
-    IconButton,
-    List,
-    Divider,
-    Modal,
-    Box,
-    FormControlLabel,
-    Tooltip,
-    ListItemIcon,
-    Toolbar
-} from '@material-ui/core';
-import { Edit, Add, VisibilityOff } from '@material-ui/icons';
-import { NewNoteForm } from '../molecules/NewNoteForm';
-import { EditNoteForm } from '../molecules/EditNoteForm';
+import { IconButton, Modal, Box, FormControlLabel, Toolbar } from '@material-ui/core';
+import { Edit } from '@material-ui/icons';
 import { CharacterHeader } from '../molecules/CharacterHeader';
+import { Notes } from '../molecules/Notes';
 
 export interface MatchParams {
     campaignId: string;
@@ -58,10 +44,7 @@ interface MapProps {
 }
 
 interface State {
-    createOpen: boolean;
-    editNote: Note | undefined;
     editCharacterOpen: boolean;
-    deleteCheck: boolean;
     deleted: boolean;
 }
 
@@ -71,10 +54,7 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
     constructor(props: AllProps) {
         super(props);
         this.state = {
-            createOpen: false,
-            editNote: undefined,
             editCharacterOpen: false,
-            deleteCheck: false,
             deleted: false
         };
     }
@@ -92,101 +72,9 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         }
     };
 
-    renderCreateNote = () => (
-        <NewNoteForm
-            characterId={this.props.match.params.characterId}
-            className="CharacterDetail__modalContainer"
-            onSubmitComplete={this.closeCreateNote}
-        />
-    );
-
-    closeCreateNote = () => {
-        this.setState({ createOpen: false });
-    };
-
     closeEditCharacter = () => {
         this.setState({ editCharacterOpen: false });
     };
-
-    renderEditNote = () => {
-        if (!this.props.character || !this.state.editNote) {
-            return <div />;
-        }
-        return (
-            <EditNoteForm
-                characterId={this.props.character.id}
-                note={this.state.editNote}
-                onSubmitComplete={this.closeEditNote}
-            />
-        );
-    };
-
-    closeEditNote = () => {
-        this.setState({ editNote: undefined });
-    };
-
-    renderNote = (note: Note, own: boolean) => {
-        const openEdit = () => this.setState({ editNote: note });
-        return (
-            <div key={note.id} className="CharacterDetail__note">
-                <ListItem>
-                    <ListItemText
-                        primary={note.contents}
-                        primaryTypographyProps={{ align: 'justify', className: 'CharacterDetail__noteContents' }}
-                        secondary={`Created ${note.addedOn.fromNow()}, last edited ${note.editedOn.fromNow()}${
-                            !own ? `, by ${note.authorName}` : ''
-                        }`}
-                    />
-                    {!own && note.visibility === 'DM_SHARED' && (
-                        <ListItemIcon>
-                            <Tooltip title="Shared with DM only">
-                                <VisibilityOff />
-                            </Tooltip>
-                        </ListItemIcon>
-                    )}
-                    {(own || this.props.campaign?.owner) && (
-                        <ListItemSecondaryAction>
-                            <IconButton edge="end" onClick={openEdit}>
-                                <Edit />
-                            </IconButton>
-                        </ListItemSecondaryAction>
-                    )}
-                </ListItem>
-            </div>
-        );
-    };
-
-    renderOwnNote = (note: Note) => this.renderNote(note, true);
-
-    renderSharedNote = (note: Note) => this.renderNote(note, false);
-
-    renderNotes = (renderedNotes: JSX.Element[]) => {
-        for (let i = 1; i < renderedNotes.length; i = i + 2) {
-            renderedNotes.splice(i, 0, <Divider key={`divider${i}`} />);
-        }
-        return (
-            <Paper>
-                <List>{renderedNotes}</List>
-            </Paper>
-        );
-    };
-
-    renderOwnNotes = () => {
-        const openCreate = () => this.setState({ createOpen: true });
-        const renderedNotes = [
-            ...this.props.notes.map(this.renderOwnNote),
-            <div key={'addButton'} className="CharacterDetail__note">
-                <ListItem className="CharacterDetail__addButtonItem">
-                    <IconButton edge="end" color="primary" onClick={openCreate}>
-                        <Add />
-                    </IconButton>
-                </ListItem>
-            </div>
-        ];
-        return this.renderNotes(renderedNotes);
-    };
-
-    renderSharedNotes = () => this.renderNotes(this.props.sharedNotes.map(this.renderSharedNote));
 
     renderEditCharacter = () => {
         if (!this.props.character) {
@@ -242,24 +130,13 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
                             />
                         </Paper>
                     )}
-                    <Box marginBottom="1em">
-                        <Typography variant="h5">Your notes</Typography>
-                    </Box>
-                    <Box marginBottom="2em">{this.renderOwnNotes()}</Box>
-                    {this.props.sharedNotes.length > 0 && (
-                        <Box marginBottom="1em">
-                            <Typography variant="h5">Notes by others</Typography>
-                        </Box>
-                    )}
-                    {this.props.sharedNotes.length > 0 && <Box marginBottom="2em">{this.renderSharedNotes()}</Box>}
-                    <Modal open={this.state.createOpen} onClose={this.closeCreateNote}>
-                        <div className="modal">{this.renderCreateNote()}</div>
-                    </Modal>
+                    <Notes
+                        campaignOwner={this.props.campaign.owner}
+                        notes={this.props.notes}
+                        sharedNotes={this.props.sharedNotes}
+                    />
                     <Modal open={this.state.editCharacterOpen} onClose={this.closeEditCharacter}>
                         <div className="modal">{this.renderEditCharacter()}</div>
-                    </Modal>
-                    <Modal open={this.state.editNote !== undefined} onClose={this.closeEditNote}>
-                        <div className="modal">{this.renderEditNote()}</div>
                     </Modal>
                 </Box>
             );
