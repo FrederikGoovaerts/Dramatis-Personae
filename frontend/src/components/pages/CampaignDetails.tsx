@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { Box, Typography, FormControlLabel, IconButton, Button, Modal } from '@material-ui/core';
-import { Edit } from '@material-ui/icons';
+import { Box, Typography, FormControlLabel, IconButton, Button, Modal, CircularProgress } from '@material-ui/core';
+import { Edit, HighlightOff, Person } from '@material-ui/icons';
 import { ConfirmableButton } from '../atoms/DeleteButton';
 import { EditCampaignForm } from '../molecules/EditCampaignForm';
-import { Campaign } from '../../types/campaign.types';
+import { Campaign, CampaignMember } from '../../types/campaign.types';
 import { campaignActions } from '../../store/actions';
 import { connect } from 'react-redux';
+import { RootState } from '../../store/reducers';
 
 interface Props {
     campaign: Campaign;
@@ -13,10 +14,13 @@ interface Props {
 }
 
 interface MapProps {
+    members: CampaignMember[];
+    membersLoading: boolean;
+    fetchMembers: (campaignId: string) => void;
     deleteCampaign: (id: string) => void;
     leaveCampaign: (id: string) => void;
     rotateInviteCode: (id: string) => void;
-    fetchMembers: (campaignId: string) => void;
+    kickFromCampaign: (params: { campaignId: string; userId: string }) => void;
 }
 
 type AllProps = Props & MapProps;
@@ -50,10 +54,32 @@ class CampaignDetailsRaw extends React.Component<AllProps, State> {
         }
     };
 
+    handleKick = (member: CampaignMember) => {
+        this.props.kickFromCampaign({ campaignId: this.props.campaign.id, userId: member.id });
+    };
+
     rotateInviteCode = (): void => {
         if (this.props.campaign) {
             this.props.rotateInviteCode(this.props.campaign.id);
         }
+    };
+
+    renderMember = (member: CampaignMember) => {
+        const kick = () => this.handleKick(member);
+        return (
+            <Box key={member.id} flexDirection="row" display="flex" alignItems="center">
+                {this.props.campaign.owner ? (
+                    <IconButton onClick={kick} disabled={member.owner}>
+                        <HighlightOff />
+                    </IconButton>
+                ) : (
+                    <Box margin="0.5em">
+                        <Person />
+                    </Box>
+                )}
+                <Typography>{member.name}</Typography>
+            </Box>
+        );
     };
 
     renderEditCampaign = () => {
@@ -75,17 +101,22 @@ class CampaignDetailsRaw extends React.Component<AllProps, State> {
         const { owner, ownerName, inviteCode } = this.props.campaign;
         return (
             <Box>
-                <Typography variant={'subtitle1'}>{`Run by ${owner ? 'you' : ownerName}`}</Typography>
-                <Box marginTop="1em" marginBottom="1em">
-                    {owner && (
-                        <FormControlLabel
-                            control={
-                                <IconButton onClick={this.openEditCampaign}>
-                                    <Edit />
-                                </IconButton>
-                            }
-                            label="Edit campaign"
-                        />
+                <Typography gutterBottom variant={'subtitle1'}>{`Campaign owner: ${ownerName}`}</Typography>
+                {owner && (
+                    <Box marginY="1em">
+                        <Button variant="contained" onClick={this.openEditCampaign}>
+                            Edit campaign
+                        </Button>
+                    </Box>
+                )}
+                <Box marginY="1em">
+                    <Typography variant="h6">Campaign members</Typography>
+                    {this.props.membersLoading ? (
+                        <Box display="flex" justifyContent="center">
+                            <CircularProgress />
+                        </Box>
+                    ) : (
+                        this.props.members.map(this.renderMember)
                     )}
                 </Box>
                 {inviteCode && (
@@ -116,8 +147,14 @@ class CampaignDetailsRaw extends React.Component<AllProps, State> {
     }
 }
 
-export const CampaignDetails = connect(null, {
+const mapStateToProps = (state: RootState) => ({
+    members: state.campaign.members,
+    membersLoading: state.campaign.membersLoading
+});
+
+export const CampaignDetails = connect(mapStateToProps, {
     fetchMembers: campaignActions.actions.fetchMembers,
+    kickFromCampaign: campaignActions.actions.kickFromCampaign,
     deleteCampaign: campaignActions.actions.deleteCampaign,
     leaveCampaign: campaignActions.actions.leaveCampaign,
     rotateInviteCode: campaignActions.actions.rotateInviteCode

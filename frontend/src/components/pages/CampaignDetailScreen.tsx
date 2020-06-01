@@ -6,7 +6,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { match, Redirect, Route, Switch } from 'react-router';
-import { Box, ListItem, Drawer, Toolbar, Theme } from '@material-ui/core';
+import { Box, Drawer, Toolbar, Theme } from '@material-ui/core';
 
 import { routes } from '../../config/constants';
 import { campaignActions, proposedCharacterActions } from '../../store/actions';
