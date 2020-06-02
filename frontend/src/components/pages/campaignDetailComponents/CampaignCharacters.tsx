@@ -12,14 +12,14 @@ import {
     CircularProgress
 } from '@material-ui/core';
 import { Add, Visibility, Edit, CheckCircle, Cancel } from '@material-ui/icons';
-import { ListCharacter, ProposedCharacter } from '../../types/character.types';
-import { ListItemLink } from '../atoms/ListItemLink';
-import { routes } from '../../config/constants';
-import { CreateCharacterForm } from '../molecules/CreateCharacterForm';
-import { ProposeCharacterForm } from '../molecules/ProposeCharacterForm';
-import { EditProposedCharacterForm } from '../molecules/EditProposedCharacterForm';
-import { RootState } from '../../store/reducers';
-import { campaignActions, proposedCharacterActions } from '../../store/actions';
+import { ListCharacter, ProposedCharacter } from '../../../types/character.types';
+import { ListItemLink } from '../../atoms/ListItemLink';
+import { routes } from '../../../config/constants';
+import { CreateCharacterForm } from '../../molecules/CreateCharacterForm';
+import { ProposeCharacterForm } from '../../molecules/ProposeCharacterForm';
+import { EditProposedCharacterForm } from '../../molecules/EditProposedCharacterForm';
+import { RootState } from '../../../store/reducers';
+import { campaignActions, proposedCharacterActions } from '../../../store/actions';
 import { connect } from 'react-redux';
 
 interface Props {
