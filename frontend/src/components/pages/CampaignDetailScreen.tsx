@@ -17,6 +17,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import { CampaignCharacters } from './CampaignCharacters';
 import { CampaignDetails } from './CampaignDetails';
 import { ListItemLink } from '../atoms/ListItemLink';
+import { CampaignNotes } from './CampaignNotes';
 
 const styles = (theme: Theme) => ({
     appBar: {
@@ -126,7 +127,11 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                                     <CampaignDetails campaign={campaign} onInaccessible={this.makeInaccessible} />
                                 )}
                             />
-                            <Route path={`${path}${routes.campaign.subpathNotes}`} exact component={CircularProgress} />
+                            <Route
+                                path={`${path}${routes.campaign.subpathNotes}`}
+                                exact
+                                render={() => <CampaignNotes owner={campaign.owner} campaignId={campaign.id} />}
+                            />
                             <Redirect to={`${path}${routes.campaign.subpathCharacters}`} />
                         </Switch>
                     )}
