@@ -10,7 +10,7 @@ data class Character(
     var description: String,
     var isVisible: Boolean,
     @ManyToOne var campaign: Campaign,
-    @OneToMany(mappedBy = "character", cascade = [CascadeType.ALL]) var notes: MutableList<Note> = mutableListOf(),
+    @OneToMany(mappedBy = "character", cascade = [CascadeType.ALL]) var notes: MutableList<CharacterNote> = mutableListOf(),
     var addedOn: Date = Date(),
     @Id @GeneratedValue var id: UUID? = null
 )

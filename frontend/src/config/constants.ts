@@ -24,7 +24,9 @@ export const api = {
         SUBPATH_ROTATE_INVITE_CODE: '/rotatecode',
         SUBPATH_KICK: '/kick',
         SUBPATH_MEMBERS: '/members',
-        SUBPATH_PROPOSED_CHARACTER: '/proposedcharacter'
+        SUBPATH_PROPOSED_CHARACTER: '/proposedcharacter',
+        SUBPATH_NOTE: '/note',
+        SUBPATH_SHARED_NOTES: '/sharednotes'
     },
     CHARACTER: {
         PATH: '/character',
@@ -36,14 +38,22 @@ export const api = {
         PATH: '/proposedcharacter',
         SUBPATH_ACCEPT: '/accept'
     },
-    NOTE: {
-        PATH: '/note'
+    CHARACTER_NOTE: {
+        PATH: '/characternote'
+    },
+    CAMPAIGN_NOTE: {
+        PATH: '/campaignnote'
     }
 };
 
 export const routes = {
     character: '/character/',
-    campaign: '/campaign/',
+    campaign: {
+        path: '/campaign/',
+        subpathCharacters: '/characters',
+        subpathNotes: '/notes',
+        subpathDetails: '/details'
+    },
     root: '/'
 };
 

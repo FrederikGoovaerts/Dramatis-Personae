@@ -35,6 +35,15 @@ function* fetchSharedNotes(action: characterActions.specificTypes['fetchSharedNo
     yield put(characterActions.actions.setSharedNotesLoading(false));
 }
 
+function* createNote(action: characterActions.specificTypes['createNote']) {
+    try {
+        yield character.createNote(action.payload);
+        yield put(characterActions.actions.fetchNotes(String(action.payload.id)));
+    } catch (e) {
+        console.error('Unable to create note. Please try again later.');
+    }
+}
+
 function* editCharacter(action: characterActions.specificTypes['editCharacter']) {
     try {
         yield character.update(action.payload.characterId, action.payload.name, action.payload.description);
@@ -52,15 +61,6 @@ function* deleteCharacter(action: characterActions.specificTypes['deleteCharacte
     }
 }
 
-function* createNote(action: characterActions.specificTypes['createNote']) {
-    try {
-        yield character.createNote(action.payload);
-        yield put(characterActions.actions.fetchNotes(String(action.payload.characterId)));
-    } catch (e) {
-        console.error('Unable to create note. Please try again later.');
-    }
-}
-
 function* setVisibility(action: characterActions.specificTypes['setVisible']) {
     try {
         yield character.setVisible(action.payload);
@@ -74,8 +74,8 @@ export default function* watcher() {
     yield takeEvery(characterActions.names.fetchCharacter, fetchCharacter);
     yield takeEvery(characterActions.names.fetchNotes, fetchNotes);
     yield takeEvery(characterActions.names.fetchSharedNotes, fetchSharedNotes);
+    yield takeEvery(characterActions.names.createNote, createNote);
     yield takeEvery(characterActions.names.editCharacter, editCharacter);
     yield takeEvery(characterActions.names.deleteCharacter, deleteCharacter);
-    yield takeEvery(characterActions.names.createNote, createNote);
     yield takeEvery(characterActions.names.setVisibility, setVisibility);
 }

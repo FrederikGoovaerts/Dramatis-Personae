@@ -2,13 +2,17 @@ import { EditNotePayload, DeleteNotePayload } from '../../types/note.types';
 import { ActionTypeMapping, ActionUnion, createAction } from './base';
 
 export enum names {
-    editNote = 'EDIT_NOTE',
-    deleteNote = 'DELETE_NOTE'
+    editCharacterNote = 'EDIT_CHARACTER_NOTE',
+    deleteCharacterNote = 'DELETE_CHARACTER_NOTE',
+    editCampaignNote = 'EDIT_CAMPAIGN_NOTE',
+    deleteCampaignNote = 'DELETE_CAMPAIGN_NOTE'
 }
 
 export const actions = {
-    editNote: (p: EditNotePayload) => createAction(names.editNote, p),
-    deleteNote: (p: DeleteNotePayload) => createAction(names.deleteNote, p)
+    editCharacterNote: (p: EditNotePayload) => createAction(names.editCharacterNote, p),
+    deleteCharacterNote: (p: DeleteNotePayload) => createAction(names.deleteCharacterNote, p),
+    editCampaignNote: (p: EditNotePayload) => createAction(names.editCampaignNote, p),
+    deleteCampaignNote: (p: DeleteNotePayload) => createAction(names.deleteCampaignNote, p)
 };
 
 export type allTypes = ActionUnion<typeof actions>;

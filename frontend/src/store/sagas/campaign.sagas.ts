@@ -142,6 +142,37 @@ function* deleteCampaign(action: campaignActions.specificTypes['deleteCampaign']
     }
 }
 
+function* fetchNotes(action: campaignActions.specificTypes['fetchNotes']) {
+    yield put(campaignActions.actions.setNotesLoading(true));
+    try {
+        const result = yield campaign.getNotes(action.payload);
+        yield put(campaignActions.actions.setNotes(result));
+    } catch (e) {
+        console.error('Unable to fetch notes. Please try again later.');
+    }
+    yield put(campaignActions.actions.setNotesLoading(false));
+}
+
+function* fetchSharedNotes(action: campaignActions.specificTypes['fetchSharedNotes']) {
+    yield put(campaignActions.actions.setSharedNotesLoading(true));
+    try {
+        const result = yield campaign.getSharedNotes(action.payload);
+        yield put(campaignActions.actions.setSharedNotes(result));
+    } catch (e) {
+        console.error('Unable to fetch shared notes. Please try again later.');
+    }
+    yield put(campaignActions.actions.setSharedNotesLoading(false));
+}
+
+function* createNote(action: campaignActions.specificTypes['createNote']) {
+    try {
+        yield campaign.createNote(action.payload);
+        yield put(campaignActions.actions.fetchNotes(String(action.payload.id)));
+    } catch (e) {
+        console.error('Unable to create note. Please try again later.');
+    }
+}
+
 export default function* watcher() {
     yield takeEvery(campaignActions.names.fetchCampaigns, fetchCampaigns);
     yield takeEvery(campaignActions.names.fetchCampaign, fetchCampaign);
@@ -157,4 +188,7 @@ export default function* watcher() {
     yield takeEvery(campaignActions.names.newCampaign, newCampaign);
     yield takeEvery(campaignActions.names.editCampaign, editCampaign);
     yield takeEvery(campaignActions.names.deleteCampaign, deleteCampaign);
+    yield takeEvery(campaignActions.names.fetchNotes, fetchNotes);
+    yield takeEvery(campaignActions.names.fetchSharedNotes, fetchSharedNotes);
+    yield takeEvery(campaignActions.names.createNote, createNote);
 }
