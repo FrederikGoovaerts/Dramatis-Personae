@@ -11,6 +11,7 @@ import { AlertBox } from '../atoms/AlertBox';
 interface Props {
     note: Note;
     className?: string;
+    deletable: boolean;
     onSubmitComplete?: () => void;
     editNote: (contents: string, visibility: NoteVisibility) => void;
     deleteNote: () => void;
@@ -56,7 +57,7 @@ export class EditNoteForm extends React.Component<Props, State> {
                 <div className="modalContainer">
                     <div className="modalHeader">
                         <Typography variant="h5">Update note</Typography>
-                        <DeleteButton onConfirm={this.handleDelete} />
+                        {this.props.deletable && <DeleteButton onConfirm={this.handleDelete} />}
                     </div>
                     <TextField
                         multiline

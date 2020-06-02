@@ -68,6 +68,7 @@ export class Notes extends React.Component<Props, State> {
                 onSubmitComplete={this.closeEdit}
                 editNote={editRenderedNote}
                 deleteNote={deleteRenderedNote}
+                deletable={this.props.notes.includes(this.state.editNote)}
             />
         );
     };
