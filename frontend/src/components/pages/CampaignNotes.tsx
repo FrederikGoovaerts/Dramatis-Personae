@@ -2,9 +2,9 @@ import * as React from 'react';
 import { CircularProgress } from '@material-ui/core';
 import { ProposedCharacter } from '../../types/character.types';
 import { RootState } from '../../store/reducers';
-import { campaignActions } from '../../store/actions';
+import { campaignActions, noteActions } from '../../store/actions';
 import { connect } from 'react-redux';
-import { Note, CreateNotePayload, NoteVisibility } from '../../types/note.types';
+import { Note, CreateNotePayload, NoteVisibility, EditNotePayload, DeleteNotePayload } from '../../types/note.types';
 import { Notes } from '../molecules/Notes';
 
 interface Props {
@@ -19,6 +19,8 @@ interface MapProps {
     fetchNotes: (campaignId: string) => void;
     fetchSharedNotes: (campaignId: string) => void;
     createNote: (payload: CreateNotePayload) => void;
+    editCampaignNote: (payload: EditNotePayload) => void;
+    deleteCampaignNote: (payload: DeleteNotePayload) => void;
 }
 
 type AllProps = Props & MapProps;
@@ -57,8 +59,10 @@ class CampaignNotesRaw extends React.Component<AllProps, State> {
                 createNote={(contents: string, visibility: NoteVisibility) =>
                     this.props.createNote({ id: campaignId, contents, visibility })
                 }
-                deleteNote={console.log}
-                editNote={console.log}
+                editNote={(noteId: string, contents: string, visibility: NoteVisibility) =>
+                    this.props.editCampaignNote({ id: campaignId, noteId, contents, visibility })
+                }
+                deleteNote={(noteId: string) => this.props.deleteCampaignNote({ id: campaignId, noteId })}
             />
         );
     }
@@ -73,5 +77,7 @@ const mapStateToProps = (state: RootState) => ({
 export const CampaignNotes = connect(mapStateToProps, {
     fetchNotes: campaignActions.actions.fetchNotes,
     fetchSharedNotes: campaignActions.actions.fetchSharedNotes,
-    createNote: campaignActions.actions.createNote
+    createNote: campaignActions.actions.createNote,
+    editCampaignNote: noteActions.actions.editCampaignNote,
+    deleteCampaignNote: noteActions.actions.deleteCampaignNote
 })(CampaignNotesRaw);
