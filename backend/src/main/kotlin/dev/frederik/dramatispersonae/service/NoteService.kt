@@ -1,10 +1,15 @@
 package dev.frederik.dramatispersonae.service
 
+import dev.frederik.dramatispersonae.auth.GoogleAuthentication
 import dev.frederik.dramatispersonae.model.*
 import java.util.*
 import org.springframework.data.repository.CrudRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
 
 data class CreateNoteDto(val contents: String, val visibility: String)
 
@@ -33,6 +38,25 @@ fun returnNotes(list: List<Note>?, user: User): ResponseEntity<List<NoteView>> {
                     it.id!!
             )
         }, HttpStatus.OK)
+    }
+}
+
+abstract class NoteController<T : Note>(private val service: NoteService<T>) {
+
+    @PutMapping("/{id}")
+    fun updateNote(
+            auth: GoogleAuthentication,
+            @PathVariable id: UUID,
+            @RequestBody note: CreateNoteDto
+    ): ResponseEntity<Unit> {
+        val success = this.service.updateNote(auth.principal, id, note.contents, note.visibility)
+        return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
+    }
+
+    @DeleteMapping("/{id}")
+    fun deleteNote(auth: GoogleAuthentication, @PathVariable id: UUID): ResponseEntity<Unit> {
+        val success = this.service.deleteNote(auth.principal, id)
+        return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
     }
 }
 
