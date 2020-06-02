@@ -3,39 +3,36 @@ import TextField from '@material-ui/core/TextField';
 import { ChangeEvent } from 'react';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Paper, Typography, Box, IconButton, CircularProgress } from '@material-ui/core';
+import { Paper, Typography, Box, FormControlLabel, Checkbox } from '@material-ui/core';
 
 import { campaignActions } from '../../store/actions';
 import { DeleteButton } from '../atoms/DeleteButton';
-import { RootState } from '../../store/reducers';
-import { CampaignMember } from '../../types/campaign.types';
-import { HighlightOff } from '@material-ui/icons';
+import { CampaignSettings } from '../../types/campaign.types';
 
 interface Props {
     id: string;
     name: string;
+    settings: CampaignSettings;
     onSubmitComplete?: () => void;
     onDelete?: () => void;
 }
 
 interface MapProps {
-    members: CampaignMember[];
-    membersLoading: boolean;
-    editCampaign: (payload: { id: string; name: string }) => void;
+    editCampaign: (payload: { id: string; name: string; autoAcceptProposedCharacter: boolean }) => void;
     deleteCampaign: (params: string) => void;
-    kickFromCampaign: (params: { campaignId: string; userId: string }) => void;
 }
 
 type AllProps = Props & MapProps;
 
 interface State {
     name: string;
+    autoAcceptProposedCharacter: boolean;
 }
 
 class EditCampaignFormRaw extends React.Component<AllProps, State> {
     constructor(props: AllProps) {
         super(props);
-        this.state = { name: props.name };
+        this.state = { name: props.name, autoAcceptProposedCharacter: props.settings.autoAcceptProposedCharacter };
     }
 
     handleChangeName = (event: ChangeEvent<HTMLInputElement>) => {
@@ -45,7 +42,8 @@ class EditCampaignFormRaw extends React.Component<AllProps, State> {
     handleSubmit = () => {
         this.props.editCampaign({
             id: this.props.id,
-            name: this.state.name
+            name: this.state.name,
+            autoAcceptProposedCharacter: this.state.autoAcceptProposedCharacter
         });
         if (this.props.onSubmitComplete) {
             this.props.onSubmitComplete();
@@ -59,20 +57,8 @@ class EditCampaignFormRaw extends React.Component<AllProps, State> {
         }
     };
 
-    handleKick = (member: CampaignMember) => {
-        this.props.kickFromCampaign({ campaignId: this.props.id, userId: member.id });
-    };
-
-    renderMember = (member: CampaignMember) => {
-        const kick = () => this.handleKick(member);
-        return (
-            <Box key={member.id} flexDirection="row" display="flex" alignItems="center">
-                <IconButton onClick={kick} disabled={member.owner}>
-                    <HighlightOff />
-                </IconButton>
-                <Typography>{member.name}</Typography>
-            </Box>
-        );
+    handleChangeAutoAcceptProposedCharacter = (event: ChangeEvent<HTMLInputElement>) => {
+        this.setState({ autoAcceptProposedCharacter: event.target.checked });
     };
 
     render() {
@@ -84,32 +70,30 @@ class EditCampaignFormRaw extends React.Component<AllProps, State> {
                         <DeleteButton onConfirm={this.handleDelete} />
                     </div>
                     <TextField label="Name" value={this.state.name} onChange={this.handleChangeName} margin="normal" />
+                    <Box marginY="1em">
+                        <Typography variant="h6">Campaign settings</Typography>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={this.state.autoAcceptProposedCharacter}
+                                    onChange={this.handleChangeAutoAcceptProposedCharacter}
+                                    name="autoAcceptProposedCharacter"
+                                    color="primary"
+                                />
+                            }
+                            label="Auto accept proposed characters"
+                        />
+                    </Box>
                     <Button variant="contained" color="primary" onClick={this.handleSubmit} disabled={!this.state.name}>
                         Update
                     </Button>
-                    <Box marginTop="1em">
-                        <Typography variant="h6">Campaign members</Typography>
-                        {this.props.membersLoading ? (
-                            <Box display="flex" justifyContent="center">
-                                <CircularProgress />
-                            </Box>
-                        ) : (
-                            this.props.members.map(this.renderMember)
-                        )}
-                    </Box>
                 </div>
             </Paper>
         );
     }
 }
 
-const mapStateToProps = (state: RootState) => ({
-    members: state.campaign.members,
-    membersLoading: state.campaign.membersLoading
-});
-
-export const EditCampaignForm = connect(mapStateToProps, {
+export const EditCampaignForm = connect(null, {
     editCampaign: campaignActions.actions.editCampaign,
-    deleteCampaign: campaignActions.actions.deleteCampaign,
-    kickFromCampaign: campaignActions.actions.kickFromCampaign
+    deleteCampaign: campaignActions.actions.deleteCampaign
 })(EditCampaignFormRaw);

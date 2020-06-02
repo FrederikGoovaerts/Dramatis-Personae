@@ -4,9 +4,12 @@ import { buildPath } from './base.api';
 import moment from 'moment';
 import { Campaign, CampaignPrototype, CampaignMember } from '../types/campaign.types';
 import { ListCharacter, CharacterPrototype, ProposedCharacter } from '../types/character.types';
+import { RawNote } from './note.api';
+import { CreateNotePayload, Note } from '../types/note.types';
 
 interface RawListCharacter {
     name: string;
+    description: string;
     visible: boolean;
     addedOn: string;
     id: string;
@@ -35,9 +38,9 @@ export async function create(campaignPrototype: CampaignPrototype): Promise<void
     await axiosInstance.post(url, campaignPrototype);
 }
 
-export async function update(id: string, name: string): Promise<void> {
+export async function update(id: string, name: string, autoAcceptProposedCharacter: boolean): Promise<void> {
     const url = buildPath(`${api.CAMPAIGN.PATH}/${id}`);
-    await axiosInstance.put(url, { name });
+    await axiosInstance.put(url, { name, autoAcceptProposedCharacter });
 }
 
 export async function deletePermanently(campaignId: string): Promise<void> {
@@ -96,4 +99,29 @@ export async function rotateInviteCode(id: string): Promise<void> {
 export async function kick(campaignId: string, userId: string): Promise<void> {
     const url = buildPath(`${api.CAMPAIGN.PATH}/${campaignId}${api.CAMPAIGN.SUBPATH_KICK}/${userId}`);
     await axiosInstance.post(url);
+}
+
+export async function getNotes(id: string): Promise<Array<Note>> {
+    const url = buildPath(`${api.CAMPAIGN.PATH}/${id}${api.CAMPAIGN.SUBPATH_NOTE}`);
+    const data: Array<RawNote> = (await axiosInstance.get(url)).data;
+    return data.map((rawNote) => ({
+        ...rawNote,
+        editedOn: moment(rawNote.editedOn),
+        addedOn: moment(rawNote.addedOn)
+    }));
+}
+
+export async function getSharedNotes(id: string): Promise<Array<Note>> {
+    const url = buildPath(`${api.CAMPAIGN.PATH}/${id}${api.CAMPAIGN.SUBPATH_SHARED_NOTES}`);
+    const data: Array<RawNote> = (await axiosInstance.get(url)).data;
+    return data.map((rawNote) => ({
+        ...rawNote,
+        editedOn: moment(rawNote.editedOn),
+        addedOn: moment(rawNote.addedOn)
+    }));
+}
+
+export async function createNote(payload: CreateNotePayload): Promise<void> {
+    const url = buildPath(`${api.CAMPAIGN.PATH}/${payload.id}${api.CAMPAIGN.SUBPATH_NOTE}`);
+    await axiosInstance.post(url, { contents: payload.contents, visibility: payload.visibility });
 }

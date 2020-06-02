@@ -3,7 +3,6 @@ import { Campaign, CampaignPrototype, CampaignMember } from '../../types/campaig
 import { campaignActions } from '../actions';
 import { ListCharacter, ProposedCharacter } from '../../types/character.types';
 import * as campaign from '../../api/campaign.api';
-import * as proposedCharacter from '../../api/proposedcharacter.api';
 
 function* fetchCampaigns() {
     yield put(campaignActions.actions.setCampaignsLoading(true));
@@ -72,28 +71,10 @@ function* createCharacter(action: campaignActions.specificTypes['createCharacter
 function* proposeCharacter(action: campaignActions.specificTypes['proposeCharacter']) {
     try {
         yield campaign.proposeCharacter(action.payload.campaignId, action.payload.character);
-        yield put(campaignActions.actions.fetchProposedCharacters(action.payload.campaignId));
-    } catch (e) {
-        console.error('Unable to propose character. Please try again later.');
-    }
-}
-
-function* acceptProposedCharacter(action: campaignActions.specificTypes['acceptProposedCharacter']) {
-    try {
-        yield proposedCharacter.accept(action.payload.characterId);
         yield put(campaignActions.actions.fetchCharacters(action.payload.campaignId));
         yield put(campaignActions.actions.fetchProposedCharacters(action.payload.campaignId));
     } catch (e) {
-        console.error('Unable to accept proposed character. Please try again later.');
-    }
-}
-
-function* deleteProposedCharacter(action: campaignActions.specificTypes['deleteProposedCharacter']) {
-    try {
-        yield proposedCharacter.deletePermanently(action.payload.characterId);
-        yield put(campaignActions.actions.fetchProposedCharacters(action.payload.campaignId));
-    } catch (e) {
-        console.error('Unable to delete proposed character. Please try again later.');
+        console.error('Unable to propose character. Please try again later.');
     }
 }
 
@@ -145,7 +126,7 @@ function* newCampaign(action: campaignActions.specificTypes['newCampaign']) {
 
 function* editCampaign(action: campaignActions.specificTypes['editCampaign']) {
     try {
-        yield campaign.update(action.payload.id, action.payload.name);
+        yield campaign.update(action.payload.id, action.payload.name, action.payload.autoAcceptProposedCharacter);
         yield put(campaignActions.actions.fetchCampaign(action.payload.id));
     } catch (e) {
         console.error('Unable to delete campaign. Please try again later.');
@@ -161,6 +142,37 @@ function* deleteCampaign(action: campaignActions.specificTypes['deleteCampaign']
     }
 }
 
+function* fetchNotes(action: campaignActions.specificTypes['fetchNotes']) {
+    yield put(campaignActions.actions.setNotesLoading(true));
+    try {
+        const result = yield campaign.getNotes(action.payload);
+        yield put(campaignActions.actions.setNotes(result));
+    } catch (e) {
+        console.error('Unable to fetch notes. Please try again later.');
+    }
+    yield put(campaignActions.actions.setNotesLoading(false));
+}
+
+function* fetchSharedNotes(action: campaignActions.specificTypes['fetchSharedNotes']) {
+    yield put(campaignActions.actions.setSharedNotesLoading(true));
+    try {
+        const result = yield campaign.getSharedNotes(action.payload);
+        yield put(campaignActions.actions.setSharedNotes(result));
+    } catch (e) {
+        console.error('Unable to fetch shared notes. Please try again later.');
+    }
+    yield put(campaignActions.actions.setSharedNotesLoading(false));
+}
+
+function* createNote(action: campaignActions.specificTypes['createNote']) {
+    try {
+        yield campaign.createNote(action.payload);
+        yield put(campaignActions.actions.fetchNotes(String(action.payload.id)));
+    } catch (e) {
+        console.error('Unable to create note. Please try again later.');
+    }
+}
+
 export default function* watcher() {
     yield takeEvery(campaignActions.names.fetchCampaigns, fetchCampaigns);
     yield takeEvery(campaignActions.names.fetchCampaign, fetchCampaign);
@@ -169,8 +181,6 @@ export default function* watcher() {
     yield takeEvery(campaignActions.names.fetchMembers, fetchMembers);
     yield takeEvery(campaignActions.names.createCharacter, createCharacter);
     yield takeEvery(campaignActions.names.proposeCharacter, proposeCharacter);
-    yield takeEvery(campaignActions.names.acceptProposedCharacter, acceptProposedCharacter);
-    yield takeEvery(campaignActions.names.deleteProposedCharacter, deleteProposedCharacter);
     yield takeEvery(campaignActions.names.joinCampaign, joinCampaign);
     yield takeEvery(campaignActions.names.rotateInviteCode, rotateInviteCode);
     yield takeEvery(campaignActions.names.leaveCampaign, leaveCampaign);
@@ -178,4 +188,7 @@ export default function* watcher() {
     yield takeEvery(campaignActions.names.newCampaign, newCampaign);
     yield takeEvery(campaignActions.names.editCampaign, editCampaign);
     yield takeEvery(campaignActions.names.deleteCampaign, deleteCampaign);
+    yield takeEvery(campaignActions.names.fetchNotes, fetchNotes);
+    yield takeEvery(campaignActions.names.fetchSharedNotes, fetchSharedNotes);
+    yield takeEvery(campaignActions.names.createNote, createNote);
 }

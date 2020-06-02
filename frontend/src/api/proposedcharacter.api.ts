@@ -7,6 +7,11 @@ export async function accept(id: string): Promise<void> {
     await axiosInstance.post(url);
 }
 
+export async function update(id: string, name: string, description: string): Promise<void> {
+    const url = buildPath(`${api.PROPOSED_CHARACTER.PATH}/${id}`);
+    await axiosInstance.put(url, { name, description });
+}
+
 export async function deletePermanently(id: string): Promise<void> {
     const url = buildPath(`${api.PROPOSED_CHARACTER.PATH}/${id}`);
     await axiosInstance.delete(url);

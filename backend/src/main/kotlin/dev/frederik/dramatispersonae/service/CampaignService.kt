@@ -9,8 +9,10 @@ import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
 
 data class CreateCampaignDto(val name: String)
+data class UpdateCampaignDto(val name: String, val autoAcceptProposedCharacter: Boolean)
 
-data class CampaignView(val name: String, val id: UUID, val owner: Boolean, val ownerName: String, val inviteCode: UUID?)
+data class CampaignSettingsView(val autoAcceptProposedCharacter: Boolean)
+data class CampaignView(val name: String, val id: UUID, val owner: Boolean, val ownerName: String, val settings: CampaignSettingsView, val inviteCode: UUID?)
 data class CampaignMemberView(val name: String, val id: UUID, val owner: Boolean)
 
 @RestController
@@ -25,6 +27,7 @@ class CampaignController(private val service: CampaignService) {
                     it.id!!,
                     it.isOwnedBy(auth.principal),
                     it.owner.fullName,
+                    CampaignSettingsView(it.autoAcceptProposedCharacter),
                     if (it.isOwnedBy(auth.principal)) it.inviteCode else null
                 )
             }
@@ -40,6 +43,7 @@ class CampaignController(private val service: CampaignService) {
                 campaign.id!!,
                 campaign.isOwnedBy(auth.principal),
                 campaign.owner.fullName,
+                CampaignSettingsView(campaign.autoAcceptProposedCharacter),
                 if (campaign.isOwnedBy(auth.principal)) campaign.inviteCode else null
             ), HttpStatus.OK)
         }
@@ -55,9 +59,9 @@ class CampaignController(private val service: CampaignService) {
     fun updateCampaign(
         auth: GoogleAuthentication,
         @PathVariable id: UUID,
-        @RequestBody campaign: CreateCampaignDto
+        @RequestBody campaign: UpdateCampaignDto
     ): ResponseEntity<Unit> {
-        val success = this.service.updateCampaign(auth.principal, id, campaign.name)
+        val success = this.service.updateCampaign(auth.principal, id, campaign.name, campaign.autoAcceptProposedCharacter)
         return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
     }
 
@@ -76,7 +80,7 @@ class CampaignController(private val service: CampaignService) {
         return if (list === null) {
             ResponseEntity(HttpStatus.FORBIDDEN)
         } else {
-            ResponseEntity(list.map { CharacterListView(it.name, it.isVisible, it.addedOn, it.id!!) }, HttpStatus.OK)
+            ResponseEntity(list.map { CharacterListView(it.name, it.description, it.isVisible, it.addedOn, it.id!!) }, HttpStatus.OK)
         }
     }
 
@@ -171,6 +175,34 @@ class CampaignController(private val service: CampaignService) {
         val success = this.service.rotateInviteCode(auth.principal, id)
         return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
     }
+
+    @GetMapping("/{id}/note")
+    fun getNoteList(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID
+    ): ResponseEntity<List<NoteView>> {
+        val list = this.service.getNotes(auth.principal, id)
+        return returnNotes(list, auth.principal)
+    }
+
+    @GetMapping("/{id}/sharednotes")
+    fun getSharedNotes(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID
+    ): ResponseEntity<List<NoteView>> {
+        val list = this.service.getSharedNotes(auth.principal, id)
+        return returnNotes(list, auth.principal)
+    }
+
+    @PostMapping("/{id}/note")
+    fun createNote(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID,
+        @RequestBody dto: CreateNoteDto
+    ): ResponseEntity<Unit> {
+        val success = this.service.createNote(auth.principal, id, dto.contents, dto.visibility)
+        return ResponseEntity(if (success) HttpStatus.CREATED else HttpStatus.FORBIDDEN)
+    }
 }
 
 @Component
@@ -191,13 +223,14 @@ class CampaignService(private val repository: CampaignRepository) {
         return this.repository.save(newCampaign)
     }
 
-    fun updateCampaign(user: User, id: UUID, name: String): Boolean {
+    fun updateCampaign(user: User, id: UUID, name: String, autoAcceptProposedCharacter: Boolean): Boolean {
         val campaignQuery = repository.findById(id)
         if (!campaignQuery.isPresent || !campaignQuery.get().isOwnedBy(user)) {
             return false
         }
         val campaign = campaignQuery.get()
         campaign.name = name
+        campaign.autoAcceptProposedCharacter = autoAcceptProposedCharacter
         this.repository.save(campaign)
         return true
     }
@@ -296,8 +329,13 @@ class CampaignService(private val repository: CampaignRepository) {
             return false
         }
         val campaign = campaignQuery.get()
-        val newProposedCharacter = ProposedCharacter(name, description, campaign, user)
-        campaign.proposedCharacters.add(newProposedCharacter)
+        if (campaign.autoAcceptProposedCharacter) {
+            val newCharacter = Character(name, description, true, campaign)
+            campaign.characters.add(newCharacter)
+        } else {
+            val newProposedCharacter = ProposedCharacter(name, description, campaign, user)
+            campaign.proposedCharacters.add(newProposedCharacter)
+        }
         this.repository.save(campaign)
         return true
     }
@@ -309,5 +347,43 @@ class CampaignService(private val repository: CampaignRepository) {
         }
         val campaign = campaignQuery.get()
         return campaign.members.map { it to campaign.isOwnedBy(it) }.toMap()
+    }
+
+    fun getNotes(user: User, campaignId: UUID): List<CampaignNote>? {
+        val campaignQuery = repository.findById(campaignId)
+        if (!campaignQuery.isPresent || !(campaignQuery.get().members.contains(user))) {
+            return null
+        }
+        val campaign = campaignQuery.get()
+        return campaign.notes.filter { it.author == user }
+    }
+
+    fun getSharedNotes(user: User, campaignId: UUID): List<CampaignNote>? {
+        val campaignQuery = repository.findById(campaignId)
+        if (!campaignQuery.isPresent || !(campaignQuery.get().members.contains(user))) {
+            return null
+        }
+        val campaign = campaignQuery.get()
+        return if (campaign.isOwnedBy(user)) {
+            campaign.notes.filter {
+                it.author != user &&
+                        (it.visibility === NoteVisibility.DM_SHARED || it.visibility === NoteVisibility.PUBLIC)
+            }
+        } else {
+            campaign.notes.filter { it.author != user && it.visibility === NoteVisibility.PUBLIC }
+        }
+    }
+
+    fun createNote(user: User, id: UUID, contents: String, rawVisibility: String): Boolean {
+        val campaignQuery = repository.findById(id)
+        if (!campaignQuery.isPresent || !campaignQuery.get().members.contains(user)) {
+            return false
+        }
+        val visibility = try { NoteVisibility.valueOf(rawVisibility) } catch (e: IllegalArgumentException) { return false }
+        val campaign = campaignQuery.get()
+        val newNote = CampaignNote(contents, user, campaign, visibility)
+        campaign.notes.add(newNote)
+        this.repository.save(campaign)
+        return true
     }
 }

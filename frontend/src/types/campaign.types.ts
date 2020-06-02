@@ -1,8 +1,13 @@
+export interface CampaignSettings {
+    autoAcceptProposedCharacter: boolean;
+}
+
 export interface Campaign {
     id: string;
     name: string;
     owner: boolean;
     ownerName: string;
+    settings: CampaignSettings;
     inviteCode?: string;
 }
 
@@ -19,4 +24,5 @@ export interface CampaignMember {
 export interface CampaignEditPayload {
     id: string;
     name: string;
+    autoAcceptProposedCharacter: boolean;
 }

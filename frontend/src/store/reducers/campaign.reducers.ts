@@ -3,6 +3,7 @@ import { Campaign, CampaignMember } from '../../types/campaign.types';
 import { ListCharacter, ProposedCharacter } from '../../types/character.types';
 import { applicationActions, campaignActions } from '../actions';
 import { createReducer } from './base';
+import { Note } from '../../types/note.types';
 
 export interface CampaignState {
     loading: boolean;
@@ -15,6 +16,10 @@ export interface CampaignState {
     proposedCharacters: ProposedCharacter[];
     members: CampaignMember[];
     membersLoading: boolean;
+    notes: Note[];
+    notesLoading: boolean;
+    sharedNotes: Note[];
+    sharedNotesLoading: boolean;
 }
 
 const campaignReducers = combineReducers<CampaignState>({
@@ -43,7 +48,15 @@ const campaignReducers = combineReducers<CampaignState>({
         applicationActions.names.clearStore
     ),
     members: createReducer([], campaignActions.names.setMembers, applicationActions.names.clearStore),
-    membersLoading: createReducer(false, campaignActions.names.setMembersLoading, applicationActions.names.clearStore)
+    membersLoading: createReducer(false, campaignActions.names.setMembersLoading, applicationActions.names.clearStore),
+    notes: createReducer([], campaignActions.names.setNotes, applicationActions.names.clearStore),
+    notesLoading: createReducer(false, campaignActions.names.setNotesLoading, applicationActions.names.clearStore),
+    sharedNotes: createReducer([], campaignActions.names.setSharedNotes, applicationActions.names.clearStore),
+    sharedNotesLoading: createReducer(
+        false,
+        campaignActions.names.setSharedNotesLoading,
+        applicationActions.names.clearStore
+    )
 });
 
 export default campaignReducers;
