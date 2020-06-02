@@ -14,10 +14,10 @@ import { RootState } from '../../store/reducers';
 import { Campaign } from '../../types/campaign.types';
 import { CampaignHeader } from '../molecules/CampaignHeader';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-import { CampaignCharacters } from './CampaignCharacters';
-import { CampaignDetails } from './CampaignDetails';
+import { CampaignCharacters } from './campaignDetailComponents/CampaignCharacters';
+import { CampaignDetails } from './campaignDetailComponents/CampaignDetails';
 import { ListItemLink } from '../atoms/ListItemLink';
-import { CampaignNotes } from './CampaignNotes';
+import { CampaignNotes } from './campaignDetailComponents/CampaignNotes';
 
 const styles = (theme: Theme) => ({
     appBar: {
