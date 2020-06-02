@@ -1,5 +1,5 @@
 import { put, takeEvery } from 'redux-saga/effects';
-import { noteActions, characterActions } from '../actions';
+import { noteActions, characterActions, campaignActions } from '../actions';
 import * as note from '../../api/note.api';
 
 function* editCharacterNote(action: noteActions.specificTypes['editCharacterNote']) {
@@ -21,7 +21,28 @@ function* deleteCharacterNote(action: noteActions.specificTypes['deleteCharacter
     }
 }
 
+function* editCampaignNote(action: noteActions.specificTypes['editCampaignNote']) {
+    try {
+        yield note.editCampaignNote(action.payload);
+        yield put(campaignActions.actions.fetchNotes(String(action.payload.id)));
+        yield put(campaignActions.actions.fetchSharedNotes(String(action.payload.id)));
+    } catch (e) {
+        console.error('Unable to edit note. Please try again later.');
+    }
+}
+
+function* deleteCampaignNote(action: noteActions.specificTypes['deleteCampaignNote']) {
+    try {
+        yield note.deleteCampaignNote(action.payload.noteId);
+        yield put(campaignActions.actions.fetchNotes(String(action.payload.id)));
+    } catch (e) {
+        console.error('Unable to delete note. Please try again later.');
+    }
+}
+
 export default function* watcher() {
     yield takeEvery(noteActions.names.editCharacterNote, editCharacterNote);
     yield takeEvery(noteActions.names.deleteCharacterNote, deleteCharacterNote);
+    yield takeEvery(noteActions.names.editCampaignNote, editCampaignNote);
+    yield takeEvery(noteActions.names.deleteCampaignNote, deleteCampaignNote);
 }
