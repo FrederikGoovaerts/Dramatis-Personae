@@ -67,43 +67,25 @@ class CharacterController(private val service: CharacterService) {
     }
 
     @GetMapping("/{id}/note")
-    fun getCharacterNoteList(
+    fun getNoteList(
         auth: GoogleAuthentication,
         @PathVariable id: UUID
     ): ResponseEntity<List<NoteView>> {
-        val list = this.service.getCharacterNotes(auth.principal, id)
+        val list = this.service.getNotes(auth.principal, id)
         return returnNotes(list, auth.principal)
     }
 
     @GetMapping("/{id}/sharednotes")
-    fun getCharacterSharedNotes(
+    fun getSharedNotes(
         auth: GoogleAuthentication,
         @PathVariable id: UUID
     ): ResponseEntity<List<NoteView>> {
-        val list = this.service.getCharacterSharedNotes(auth.principal, id)
+        val list = this.service.getSharedNotes(auth.principal, id)
         return returnNotes(list, auth.principal)
     }
 
-    fun returnNotes(list: List<Note>?, user: User): ResponseEntity<List<NoteView>> {
-        return if (list === null) {
-            ResponseEntity(HttpStatus.FORBIDDEN)
-        } else {
-            ResponseEntity(list.map {
-                NoteView(
-                    it.contents,
-                    it.author.fullName,
-                    it.visibility,
-                    it.addedOn,
-                    it.editedOn,
-                    it.author == user,
-                    it.id!!
-                )
-            }, HttpStatus.OK)
-        }
-    }
-
     @PostMapping("/{id}/note")
-    fun createCharacterNote(
+    fun createNote(
         auth: GoogleAuthentication,
         @PathVariable id: UUID,
         @RequestBody dto: CreateNoteDto
@@ -157,7 +139,7 @@ class CharacterService(private val repository: CharacterRepository) {
         return true
     }
 
-    fun getCharacterNotes(user: User, characterId: UUID): List<Note>? {
+    fun getNotes(user: User, characterId: UUID): List<CharacterNote>? {
         val characterQuery = repository.findById(characterId)
         if (!characterQuery.isPresent || !(characterQuery.get().campaign.members.contains(user))) {
             return null
@@ -166,7 +148,7 @@ class CharacterService(private val repository: CharacterRepository) {
         return character.notes.filter { it.author == user }
     }
 
-    fun getCharacterSharedNotes(user: User, characterId: UUID): List<Note>? {
+    fun getSharedNotes(user: User, characterId: UUID): List<CharacterNote>? {
         val characterQuery = repository.findById(characterId)
         if (!characterQuery.isPresent || !(characterQuery.get().campaign.members.contains(user))) {
             return null
@@ -189,7 +171,7 @@ class CharacterService(private val repository: CharacterRepository) {
         }
         val visibility = try { NoteVisibility.valueOf(rawVisibility) } catch (e: IllegalArgumentException) { return false }
         val character = characterQuery.get()
-        val newNote = Note(contents, user, character, visibility)
+        val newNote = CharacterNote(contents, user, character, visibility)
         character.notes.add(newNote)
         this.repository.save(character)
         return true

@@ -13,19 +13,19 @@ export interface Note {
 }
 
 export interface CreateNotePayload {
-    characterId: string;
+    id: string;
     contents: string;
     visibility: NoteVisibility;
 }
 
 export interface EditNotePayload {
-    characterId: string;
+    id: string;
     noteId: string;
     contents: string;
     visibility: NoteVisibility;
 }
 
 export interface DeleteNotePayload {
-    characterId: string;
+    id: string;
     noteId: string;
 }
