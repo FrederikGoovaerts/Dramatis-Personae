@@ -13,7 +13,7 @@ import {
     Typography,
     Modal
 } from '@material-ui/core';
-import { Note } from '../../types/note.types';
+import { Note, NoteVisibility } from '../../types/note.types';
 import { VisibilityOff, Edit, Add } from '@material-ui/icons';
 import { NewNoteForm } from './NewNoteForm';
 import { EditNoteForm } from './EditNoteForm';
@@ -22,6 +22,9 @@ interface Props {
     campaignOwner: boolean;
     notes: Note[];
     sharedNotes: Note[];
+    createNote: (contents: string, visibility: NoteVisibility) => void;
+    editNote: (id: string, contents: string, visibility: NoteVisibility) => void;
+    deleteNote: (id: string) => void;
 }
 
 interface State {
@@ -29,7 +32,7 @@ interface State {
     editNote: Note | undefined;
 }
 
-class NotesRaw extends React.Component<Props, State> {
+export class Notes extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = { createOpen: false, editNote: undefined };
@@ -47,7 +50,7 @@ class NotesRaw extends React.Component<Props, State> {
         <NewNoteForm
             className="CharacterDetail__modalContainer"
             onSubmitComplete={this.closeCreate}
-            create={console.log}
+            create={this.props.createNote}
         />
     );
 
@@ -55,12 +58,16 @@ class NotesRaw extends React.Component<Props, State> {
         if (!this.state.editNote) {
             return <div />;
         }
+        const { editNote } = this.state;
+        const editRenderedNote = (contents: string, visibility: NoteVisibility) =>
+            this.props.editNote(editNote.id, contents, visibility);
+        const deleteRenderedNote = () => this.props.deleteNote(editNote.id);
         return (
             <EditNoteForm
                 note={this.state.editNote}
                 onSubmitComplete={this.closeEdit}
-                editCharacterNote={console.log}
-                deleteCharacterNote={console.log}
+                editNote={editRenderedNote}
+                deleteNote={deleteRenderedNote}
             />
         );
     };
@@ -151,5 +158,3 @@ class NotesRaw extends React.Component<Props, State> {
         );
     }
 }
-
-export const Notes = NotesRaw;

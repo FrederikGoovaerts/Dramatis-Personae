@@ -12,8 +12,8 @@ interface Props {
     note: Note;
     className?: string;
     onSubmitComplete?: () => void;
-    editCharacterNote: (contents: string, visibility: NoteVisibility) => void;
-    deleteCharacterNote: () => void;
+    editNote: (contents: string, visibility: NoteVisibility) => void;
+    deleteNote: () => void;
 }
 
 interface State {
@@ -36,7 +36,7 @@ export class EditNoteForm extends React.Component<Props, State> {
     };
 
     handleSubmit = () => {
-        this.props.editCharacterNote(this.state.contents, this.state.visibility);
+        this.props.editNote(this.state.contents, this.state.visibility);
         this.setState({ contents: '', visibility: 'PRIVATE' });
         if (this.props.onSubmitComplete) {
             this.props.onSubmitComplete();
@@ -44,7 +44,7 @@ export class EditNoteForm extends React.Component<Props, State> {
     };
 
     handleDelete = () => {
-        this.props.deleteCharacterNote();
+        this.props.deleteNote();
         if (this.props.onSubmitComplete) {
             this.props.onSubmitComplete();
         }
