@@ -11,11 +11,11 @@ import { match, Redirect } from 'react-router';
 
 import { routes } from '../../config/constants';
 import { EditCharacterForm } from '../molecules/EditCharacterForm';
-import { campaignActions, characterActions } from '../../store/actions';
+import { campaignActions, characterActions, noteActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
 import { Character, VisibilityUpdatePayload } from '../../types/character.types';
 import { Campaign } from '../../types/campaign.types';
-import { Note } from '../../types/note.types';
+import { Note, EditNotePayload, DeleteNotePayload, NoteVisibility, CreateNotePayload } from '../../types/note.types';
 import { IconButton, Modal, Box, FormControlLabel, Toolbar } from '@material-ui/core';
 import { Edit } from '@material-ui/icons';
 import { CharacterHeader } from '../molecules/CharacterHeader';
@@ -41,6 +41,9 @@ interface MapProps {
     fetchSharedNotes: (id: string) => void;
     fetchCampaign: (id: string) => void;
     setVisible: (payload: VisibilityUpdatePayload) => void;
+    createNote: (payload: CreateNotePayload) => void;
+    editCharacterNote: (payload: EditNotePayload) => void;
+    deleteCharacterNote: (payload: DeleteNotePayload) => void;
 }
 
 interface State {
@@ -134,6 +137,13 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
                         campaignOwner={this.props.campaign.owner}
                         notes={this.props.notes}
                         sharedNotes={this.props.sharedNotes}
+                        editNote={(noteId: string, contents: string, visibility: NoteVisibility) =>
+                            this.props.editCharacterNote({ id: character.id, noteId, contents, visibility })
+                        }
+                        deleteNote={(noteId: string) => this.props.deleteCharacterNote({ id: character.id, noteId })}
+                        createNote={(contents: string, visibility: NoteVisibility) =>
+                            this.props.createNote({ id: character.id, contents, visibility })
+                        }
                     />
                     <Modal open={this.state.editCharacterOpen} onClose={this.closeEditCharacter}>
                         <div className="modal">{this.renderEditCharacter()}</div>
@@ -169,5 +179,8 @@ export const CharacterDetailScreen = connect(mapStateToProps, {
     fetchNotes: characterActions.actions.fetchNotes,
     fetchSharedNotes: characterActions.actions.fetchSharedNotes,
     setVisible: characterActions.actions.setVisible,
-    deleteCharacter: characterActions.actions.deleteCharacter
+    deleteCharacter: characterActions.actions.deleteCharacter,
+    createNote: characterActions.actions.createNote,
+    editCharacterNote: noteActions.actions.editCharacterNote,
+    deleteCharacterNote: noteActions.actions.deleteCharacterNote
 })(CharacterDetailRaw);
