@@ -31,7 +31,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.8.6")
     implementation("org.flywaydb:flyway-core:6.2.4")
     implementation(group = "com.google.apis", name = "google-api-services-oauth2", version = "v2-rev151-1.25.0")
-    runtimeOnly("com.h2database:h2:1.3.176")
+    runtimeOnly("com.h2database:h2:1.4.200")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
