@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.*
 
 data class CreateCampaignDto(val name: String)
 data class UpdateCampaignDto(val name: String, val autoAcceptProposedCharacter: Boolean)
+data class CreateLabelDto(val name: String, val visible: Boolean)
 
 data class CampaignSettingsView(val autoAcceptProposedCharacter: Boolean)
 data class CampaignView(val name: String, val id: UUID, val owner: Boolean, val ownerName: String, val settings: CampaignSettingsView, val inviteCode: UUID?)
 data class CampaignMemberView(val name: String, val id: UUID, val owner: Boolean)
+data class LabelView(val name: String, val id: UUID, val visible: Boolean)
 
 @RestController
 @RequestMapping("/api/campaign")
@@ -133,7 +135,6 @@ class CampaignController(private val service: CampaignService) {
             ResponseEntity(HttpStatus.FORBIDDEN)
         } else {
             ResponseEntity(map
-                    .filter { it.key.id != null }
                     .map { CampaignMemberView(it.key.fullName, it.key.id!!, it.value) }
                     .toList(), HttpStatus.OK)
         }
@@ -202,6 +203,31 @@ class CampaignController(private val service: CampaignService) {
     ): ResponseEntity<Unit> {
         val success = this.service.createNote(auth.principal, id, dto.contents, dto.visibility)
         return ResponseEntity(if (success) HttpStatus.CREATED else HttpStatus.FORBIDDEN)
+    }
+
+    @PostMapping("/{id}/label")
+    fun createLabel(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID,
+        @RequestBody dto: CreateLabelDto
+    ): ResponseEntity<Unit> {
+        val success = this.service.createLabel(auth.principal, id, dto.name, dto.visible)
+        return ResponseEntity(if (success) HttpStatus.CREATED else HttpStatus.FORBIDDEN)
+    }
+
+    @GetMapping("/{id}/label")
+    fun getLabels(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID
+    ): ResponseEntity<List<LabelView>> {
+        val list = this.service.getLabels(auth.principal, id)
+        return if (list === null) {
+            ResponseEntity(HttpStatus.FORBIDDEN)
+        } else {
+            ResponseEntity(list
+                .map { LabelView(it.name, it.id!!, it.isVisible) }
+                .toList(), HttpStatus.OK)
+        }
     }
 }
 
@@ -385,5 +411,25 @@ class CampaignService(private val repository: CampaignRepository) {
         campaign.notes.add(newNote)
         this.repository.save(campaign)
         return true
+    }
+
+    fun createLabel(user: User, id: UUID, name: String, visible: Boolean): Boolean {
+        val campaignQuery = repository.findById(id)
+        if (!campaignQuery.isPresent || !campaignQuery.get().isOwnedBy(user)) {
+            return false
+        }
+        val campaign = campaignQuery.get()
+        val newLabel = Label(name, visible, campaign)
+        campaign.labels.add(newLabel)
+        this.repository.save(campaign)
+        return true
+    }
+
+    fun getLabels(user: User, id: UUID): List<Label>? {
+        val campaignQuery = repository.findById(id)
+        if (!campaignQuery.isPresent || !campaignQuery.get().members.contains(user)) {
+            return null
+        }
+        return campaignQuery.get().labels.filter { campaignQuery.get().isOwnedBy(user) || it.isVisible }
     }
 }
