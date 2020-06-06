@@ -12,6 +12,7 @@ data class Campaign(
     @OneToMany(mappedBy = "campaign", cascade = [CascadeType.ALL]) var characters: MutableList<Character> = mutableListOf(),
     @OneToMany(mappedBy = "campaign", cascade = [CascadeType.ALL]) var proposedCharacters: MutableList<ProposedCharacter> = mutableListOf(),
     @OneToMany(mappedBy = "campaign", cascade = [CascadeType.ALL]) var notes: MutableList<CampaignNote> = mutableListOf(),
+    @OneToMany(mappedBy = "campaign", cascade = [CascadeType.ALL]) var labels: MutableList<Label> = mutableListOf(),
     var inviteCode: UUID = UUID.randomUUID(),
     var autoAcceptProposedCharacter: Boolean = false,
     @Id @GeneratedValue var id: UUID? = null
