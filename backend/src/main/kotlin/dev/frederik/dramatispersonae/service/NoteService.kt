@@ -45,9 +45,9 @@ abstract class NoteController<T : Note>(private val service: NoteService<T>) {
 
     @PutMapping("/{id}")
     fun updateNote(
-            auth: GoogleAuthentication,
-            @PathVariable id: UUID,
-            @RequestBody note: CreateNoteDto
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID,
+        @RequestBody note: CreateNoteDto
     ): ResponseEntity<Unit> {
         val success = this.service.updateNote(auth.principal, id, note.contents, note.visibility)
         return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
