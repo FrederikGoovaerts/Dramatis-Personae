@@ -42,7 +42,9 @@ export class ReturningHeader extends React.Component<Props, State> {
                         </Button>
                         {this.props.title && (
                             <Box marginLeft="1em">
-                                <Typography variant="h5">{this.props.title}</Typography>
+                                <Typography variant="h5" noWrap={true}>
+                                    {this.props.title}{' '}
+                                </Typography>
                             </Box>
                         )}
                     </Box>
