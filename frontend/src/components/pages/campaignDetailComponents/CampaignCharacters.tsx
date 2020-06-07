@@ -9,7 +9,8 @@ import {
     ListItemText,
     ListItem,
     IconButton,
-    CircularProgress
+    CircularProgress,
+    Chip
 } from '@material-ui/core';
 import { Add, Visibility, Edit, CheckCircle, Cancel } from '@material-ui/icons';
 import { ListCharacter, ProposedCharacter } from '../../../types/character.types';
@@ -121,7 +122,19 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
 
     renderCharacter = (character: ListCharacter) => (
         <ListItemLink to={`${this.props.matchUrl}${routes.character}${character.id}`} key={character.id}>
-            <ListItemText primary={character.name} secondary={character.description} />
+            <ListItemText
+                primary={
+                    <Box display="flex" flexWrap="wrap" alignItems="center">
+                        <Typography>{character.name}</Typography>
+                        {character.labels.map((label: string) => (
+                            <Box marginLeft="0.5em" key={label}>
+                                <Chip label={label} size="small" />
+                            </Box>
+                        ))}
+                    </Box>
+                }
+                secondary={character.description}
+            />
             {this.props.owner && <Visibility color={character.visible ? 'primary' : 'disabled'} />}
         </ListItemLink>
     );
