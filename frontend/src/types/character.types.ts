@@ -4,15 +4,15 @@ export interface Character {
     id: string;
     name: string;
     description: string;
+    labels: string[];
     visible: boolean;
-    addedOn: Moment;
 }
 
 export interface ListCharacter {
     id: string;
     name: string;
     description: string;
-    addedOn: Moment;
+    labels: string[];
     visible: boolean;
 }
 

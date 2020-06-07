@@ -11,7 +11,7 @@ interface RawListCharacter {
     name: string;
     description: string;
     visible: boolean;
-    addedOn: string;
+    labels: string[];
     id: string;
 }
 
@@ -51,10 +51,7 @@ export async function deletePermanently(campaignId: string): Promise<void> {
 export async function getCharacters(id: string): Promise<Array<ListCharacter>> {
     const url = buildPath(`${api.CAMPAIGN.PATH}/${id}${api.CAMPAIGN.SUBPATH_CHARACTER}`);
     const data: Array<RawListCharacter> = (await axiosInstance.get(url)).data;
-    return data.map((char) => ({
-        ...char,
-        addedOn: moment(char.addedOn)
-    }));
+    return data;
 }
 
 export async function createCharacter(id: string, characterPrototype: CharacterPrototype): Promise<void> {

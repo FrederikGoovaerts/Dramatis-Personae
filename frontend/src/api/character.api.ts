@@ -10,17 +10,14 @@ interface RawCharacter {
     id: string;
     name: string;
     description: string;
+    labels: string[];
     visible: boolean;
-    addedOn: string;
 }
 
 export async function get(id: string): Promise<Character> {
     const url = buildPath(`${api.CHARACTER.PATH}/${id}`);
     const data: RawCharacter = (await axiosInstance.get(url)).data;
-    return {
-        ...data,
-        addedOn: moment(data.addedOn)
-    };
+    return data;
 }
 
 export async function update(id: string, name: string, description: string): Promise<void> {
