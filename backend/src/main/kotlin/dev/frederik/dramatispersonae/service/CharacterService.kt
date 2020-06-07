@@ -10,12 +10,18 @@ import org.springframework.web.bind.annotation.*
 
 data class CreateCharacterDto(val name: String, val description: String)
 
-data class CharacterListView(val name: String, val description: String, val visible: Boolean, val addedOn: Date, val id: UUID)
+data class CharacterListView(
+    val name: String,
+    val description: String,
+    val labels: List<String>,
+    val visible: Boolean,
+    val id: UUID
+)
 data class CharacterDetailView(
     val name: String,
     val description: String,
+    val labels: List<String>,
     val visible: Boolean,
-    val addedOn: Date,
     val id: UUID
 )
 
@@ -32,8 +38,8 @@ class CharacterController(private val service: CharacterService) {
             ResponseEntity(
                     CharacterDetailView(character.name,
                                         character.description,
+                                        character.labels.map { it.name },
                                         character.isVisible,
-                                        character.addedOn,
                                         character.id!!),
                     HttpStatus.OK
             )
