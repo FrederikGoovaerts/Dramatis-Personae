@@ -5,6 +5,7 @@ import moment from 'moment';
 import { Note, CreateNotePayload } from '../types/note.types';
 import { Character, VisibilityUpdatePayload } from '../types/character.types';
 import { RawNote } from './note.api';
+import { AddLabelPayload, RemoveLabelPayload } from '../types/label.types';
 
 interface RawCharacter {
     id: string;
@@ -58,4 +59,14 @@ export async function getSharedNotes(id: string): Promise<Array<Note>> {
 export async function createNote(payload: CreateNotePayload): Promise<void> {
     const url = buildPath(`${api.CHARACTER.PATH}/${payload.id}${api.CHARACTER.SUBPATH_NOTE}`);
     await axiosInstance.post(url, { contents: payload.contents, visibility: payload.visibility });
+}
+
+export async function addLabel(payload: AddLabelPayload): Promise<void> {
+    const url = buildPath(`${api.CHARACTER.PATH}/${payload.characterId}${api.CHARACTER.SUBPATH_LABEL}`);
+    await axiosInstance.post(url, `"${payload.labelId}"`, { headers: { 'Content-Type': 'application/json' } });
+}
+
+export async function removeLabel(payload: RemoveLabelPayload): Promise<void> {
+    const url = buildPath(`${api.CHARACTER.PATH}/${payload.characterId}${api.CHARACTER.SUBPATH_LABEL}`);
+    await axiosInstance.delete(url, { headers: { 'Content-Type': 'application/json' }, data: `"${payload.labelId}"` });
 }
