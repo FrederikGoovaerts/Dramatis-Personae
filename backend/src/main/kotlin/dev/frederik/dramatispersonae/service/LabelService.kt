@@ -39,7 +39,7 @@ class LabelService(private val repository: LabelRepository) {
             return false
         }
         val label = labelQuery.get()
-        if (!label.campaign.isOwnedBy(user)) {
+        if (!label.campaign.isOwnedBy(user) && !(label.campaign.isAccessibleBy(user) && label.campaign.allowPlayerLabelManagement)) {
             return false
         }
         label.name = name
@@ -50,7 +50,11 @@ class LabelService(private val repository: LabelRepository) {
 
     fun deleteLabel(user: User, id: UUID): Boolean {
         val labelQuery = repository.findById(id)
-        if (!labelQuery.isPresent || !labelQuery.get().campaign.isOwnedBy(user)) {
+        if (!labelQuery.isPresent) {
+            return false
+        }
+        val label = labelQuery.get()
+        if (!label.campaign.isOwnedBy(user) && !(label.campaign.isAccessibleBy(user) && label.campaign.allowPlayerLabelManagement)) {
             return false
         }
         repository.delete(labelQuery.get())

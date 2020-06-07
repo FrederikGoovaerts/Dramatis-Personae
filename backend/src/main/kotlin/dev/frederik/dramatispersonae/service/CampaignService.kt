@@ -437,10 +437,13 @@ class CampaignService(private val repository: CampaignRepository) {
 
     fun createLabel(user: User, id: UUID, name: String, visible: Boolean): Boolean {
         val campaignQuery = repository.findById(id)
-        if (!campaignQuery.isPresent || !campaignQuery.get().isOwnedBy(user)) {
+        if (!campaignQuery.isPresent) {
             return false
         }
         val campaign = campaignQuery.get()
+        if (!campaign.isOwnedBy(user) && !(campaign.isAccessibleBy(user) && campaign.allowPlayerLabelManagement)) {
+            return false
+        }
         val newLabel = Label(name, visible, campaign)
         campaign.labels.add(newLabel)
         this.repository.save(campaign)
