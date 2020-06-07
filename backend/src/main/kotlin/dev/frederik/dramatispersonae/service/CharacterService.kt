@@ -205,10 +205,13 @@ class CharacterService(private val repository: CharacterRepository, private val 
 
     fun addLabel(user: User, id: UUID, labelId: UUID): Boolean {
         val characterQuery = repository.findById(id)
-        if (!characterQuery.isPresent || !characterQuery.get().campaign.isOwnedBy(user)) {
+        if (!characterQuery.isPresent) {
             return false
         }
         val character = characterQuery.get()
+        if (!character.campaign.isOwnedBy(user) || !(character.campaign.isAccessibleBy(user) && character.campaign.allowPlayerCharacterLabelManagement)) {
+            return false;
+        }
         val labelQuery = labelRepository.findById(labelId)
         if (!labelQuery.isPresent || labelQuery.get().campaign != character.campaign) {
             return false
@@ -221,10 +224,13 @@ class CharacterService(private val repository: CharacterRepository, private val 
 
     fun removeLabel(user: User, id: UUID, labelId: UUID): Boolean {
         val characterQuery = repository.findById(id)
-        if (!characterQuery.isPresent || !characterQuery.get().campaign.isOwnedBy(user)) {
+        if (!characterQuery.isPresent) {
             return false
         }
         val character = characterQuery.get()
+        if (!character.campaign.isOwnedBy(user) || !(character.campaign.isAccessibleBy(user) && character.campaign.allowPlayerCharacterLabelManagement)) {
+            return false;
+        }
         val label = character.labels.find { it.id == labelId } ?: return false
         character.labels.remove(label)
         repository.save(character)
