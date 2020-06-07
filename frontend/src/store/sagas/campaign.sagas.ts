@@ -126,7 +126,11 @@ function* newCampaign(action: campaignActions.specificTypes['newCampaign']) {
 
 function* editCampaign(action: campaignActions.specificTypes['editCampaign']) {
     try {
-        yield campaign.update(action.payload.id, action.payload.name, action.payload.autoAcceptProposedCharacter);
+        yield campaign.update(action.payload.id, action.payload.name, {
+            autoAcceptProposedCharacter: action.payload.autoAcceptProposedCharacter,
+            allowPlayerLabelManagement: false,
+            allowPlayerCharacterLabelManagement: false
+        });
         yield put(campaignActions.actions.fetchCampaign(action.payload.id));
     } catch (e) {
         console.error('Unable to delete campaign. Please try again later.');

@@ -8,12 +8,24 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
 
+data class CampaignSettingsDto(
+    val autoAcceptProposedCharacter: Boolean,
+    val allowPlayerLabelManagement: Boolean,
+    val allowPlayerCharacterLabelManagement: Boolean
+)
+
 data class CreateCampaignDto(val name: String)
-data class UpdateCampaignDto(val name: String, val autoAcceptProposedCharacter: Boolean)
+data class UpdateCampaignDto(val name: String, val campaignSettings: CampaignSettingsDto)
 data class CreateLabelDto(val name: String, val visible: Boolean)
 
-data class CampaignSettingsView(val autoAcceptProposedCharacter: Boolean)
-data class CampaignView(val name: String, val id: UUID, val owner: Boolean, val ownerName: String, val settings: CampaignSettingsView, val inviteCode: UUID?)
+data class CampaignView(
+    val name: String,
+    val id: UUID,
+    val owner: Boolean,
+    val ownerName: String,
+    val settings: CampaignSettingsDto,
+    val inviteCode: UUID?
+)
 data class CampaignMemberView(val name: String, val id: UUID, val owner: Boolean)
 data class LabelView(val name: String, val id: UUID, val visible: Boolean)
 
@@ -29,7 +41,11 @@ class CampaignController(private val service: CampaignService) {
                     it.id!!,
                     it.isOwnedBy(auth.principal),
                     it.owner.fullName,
-                    CampaignSettingsView(it.autoAcceptProposedCharacter),
+                    CampaignSettingsDto(
+                        it.autoAcceptProposedCharacter,
+                        it.allowPlayerLabelManagement,
+                        it.allowPlayerCharacterLabelManagement
+                    ),
                     if (it.isOwnedBy(auth.principal)) it.inviteCode else null
                 )
             }
@@ -45,7 +61,11 @@ class CampaignController(private val service: CampaignService) {
                 campaign.id!!,
                 campaign.isOwnedBy(auth.principal),
                 campaign.owner.fullName,
-                CampaignSettingsView(campaign.autoAcceptProposedCharacter),
+                CampaignSettingsDto(
+                    campaign.autoAcceptProposedCharacter,
+                    campaign.allowPlayerLabelManagement,
+                    campaign.allowPlayerCharacterLabelManagement
+                ),
                 if (campaign.isOwnedBy(auth.principal)) campaign.inviteCode else null
             ), HttpStatus.OK)
         }
@@ -63,7 +83,7 @@ class CampaignController(private val service: CampaignService) {
         @PathVariable id: UUID,
         @RequestBody campaign: UpdateCampaignDto
     ): ResponseEntity<Unit> {
-        val success = this.service.updateCampaign(auth.principal, id, campaign.name, campaign.autoAcceptProposedCharacter)
+        val success = this.service.updateCampaign(auth.principal, id, campaign.name, campaign.campaignSettings)
         return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
     }
 
@@ -249,14 +269,16 @@ class CampaignService(private val repository: CampaignRepository) {
         return this.repository.save(newCampaign)
     }
 
-    fun updateCampaign(user: User, id: UUID, name: String, autoAcceptProposedCharacter: Boolean): Boolean {
+    fun updateCampaign(user: User, id: UUID, name: String, campaignSettings: CampaignSettingsDto): Boolean {
         val campaignQuery = repository.findById(id)
         if (!campaignQuery.isPresent || !campaignQuery.get().isOwnedBy(user)) {
             return false
         }
         val campaign = campaignQuery.get()
         campaign.name = name
-        campaign.autoAcceptProposedCharacter = autoAcceptProposedCharacter
+        campaign.autoAcceptProposedCharacter = campaignSettings.autoAcceptProposedCharacter
+        campaign.allowPlayerLabelManagement = campaignSettings.allowPlayerLabelManagement
+        campaign.allowPlayerCharacterLabelManagement = campaignSettings.allowPlayerCharacterLabelManagement
         this.repository.save(campaign)
         return true
     }
