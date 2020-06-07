@@ -93,10 +93,30 @@ class CharacterController(private val service: CharacterService) {
         val success = this.service.createNote(auth.principal, id, dto.contents, dto.visibility)
         return ResponseEntity(if (success) HttpStatus.CREATED else HttpStatus.FORBIDDEN)
     }
+
+    @PostMapping("/{id}/label")
+    fun addLabel(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID,
+        @RequestBody labelId: UUID
+    ): ResponseEntity<Unit> {
+        val success = this.service.addLabel(auth.principal, id, labelId)
+        return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
+    }
+
+    @DeleteMapping("/{id}/label")
+    fun removeLabel(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID,
+        @RequestBody labelId: UUID
+    ): ResponseEntity<Unit> {
+        val success = this.service.removeLabel(auth.principal, id, labelId)
+        return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
+    }
 }
 
 @Component
-class CharacterService(private val repository: CharacterRepository) {
+class CharacterService(private val repository: CharacterRepository, private val labelRepository: LabelRepository) {
 
     fun getCharacter(user: User, id: UUID): Character? {
         val characterQuery = this.repository.findById(id)
@@ -174,6 +194,34 @@ class CharacterService(private val repository: CharacterRepository) {
         val newNote = CharacterNote(contents, user, character, visibility)
         character.notes.add(newNote)
         this.repository.save(character)
+        return true
+    }
+
+    fun addLabel(user: User, id: UUID, labelId: UUID): Boolean {
+        val characterQuery = repository.findById(id)
+        if (!characterQuery.isPresent || !characterQuery.get().campaign.isOwnedBy(user)) {
+            return false
+        }
+        val character = characterQuery.get()
+        val labelQuery = labelRepository.findById(labelId)
+        if (!labelQuery.isPresent || labelQuery.get().campaign != character.campaign) {
+            return false
+        }
+        val label = labelQuery.get()
+        character.labels.add(label)
+        repository.save(character)
+        return true
+    }
+
+    fun removeLabel(user: User, id: UUID, labelId: UUID): Boolean {
+        val characterQuery = repository.findById(id)
+        if (!characterQuery.isPresent || !characterQuery.get().campaign.isOwnedBy(user)) {
+            return false
+        }
+        val character = characterQuery.get()
+        val label = character.labels.find { it.id == labelId } ?: return false
+        character.labels.remove(label)
+        repository.save(character)
         return true
     }
 }
