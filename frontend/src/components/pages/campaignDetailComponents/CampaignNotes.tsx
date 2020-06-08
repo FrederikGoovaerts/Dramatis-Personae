@@ -27,17 +27,13 @@ type AllProps = Props & MapProps;
 
 interface State {
     createOpen: boolean;
-    proposeOpen: boolean;
-    editProposedCharacter: ProposedCharacter | undefined;
 }
 
 class CampaignNotesRaw extends React.Component<AllProps, State> {
     constructor(props: AllProps) {
         super(props);
         this.state = {
-            createOpen: false,
-            proposeOpen: false,
-            editProposedCharacter: undefined
+            createOpen: false
         };
     }
 

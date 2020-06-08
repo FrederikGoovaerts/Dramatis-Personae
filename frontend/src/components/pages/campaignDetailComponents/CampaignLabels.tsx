@@ -9,14 +9,16 @@ import {
     ListItem,
     CircularProgress,
     ListItemIcon,
-    Modal
+    Modal,
+    IconButton
 } from '@material-ui/core';
-import { Add, Visibility } from '@material-ui/icons';
+import { Add, Visibility, Edit } from '@material-ui/icons';
 import { RootState } from '../../../store/reducers';
-import { campaignActions } from '../../../store/actions';
+import { campaignActions, labelActions } from '../../../store/actions';
 import { connect } from 'react-redux';
-import { Label } from '../../../types/label.types';
+import { Label, DeleteLabelPayload, EditLabelPayload } from '../../../types/label.types';
 import { CreateLabelForm } from '../../molecules/CreateLabelForm';
+import { EditLabelForm } from '../../molecules/EditLabelForm';
 
 interface Props {
     campaignId: string;
@@ -27,19 +29,23 @@ interface MapProps {
     labels: Label[];
     loading: boolean;
     fetchLabels: (campaignId: string) => void;
+    deleteLabel: (payload: DeleteLabelPayload) => void;
+    editLabel: (payload: EditLabelPayload) => void;
 }
 
 type AllProps = Props & MapProps;
 
 interface State {
     createOpen: boolean;
+    editLabel: Label | undefined;
 }
 
 class CampaignLabelsRaw extends React.Component<AllProps, State> {
     constructor(props: AllProps) {
         super(props);
         this.state = {
-            createOpen: false
+            createOpen: false,
+            editLabel: undefined
         };
     }
 
@@ -51,17 +57,46 @@ class CampaignLabelsRaw extends React.Component<AllProps, State> {
         this.setState({ createOpen: true });
     };
 
+    openEdit = (label: Label): void => {
+        this.setState({ editLabel: label });
+    };
+
     closeModals = (): void => {
-        this.setState({ createOpen: false });
+        this.setState({ createOpen: false, editLabel: undefined });
+    };
+
+    renderEditLabel = () => {
+        const label = this.state.editLabel!;
+
+        const editLabel = (name: string, visible: boolean) =>
+            this.props.editLabel({ campaignId: this.props.campaignId, labelId: label.id, name, visible });
+        const deleteLabel = () => this.props.deleteLabel({ campaignId: this.props.campaignId, labelId: label.id });
+
+        return (
+            <EditLabelForm
+                label={label}
+                deletable={this.props.owner}
+                editLabel={editLabel}
+                deleteLabel={deleteLabel}
+                onSubmitComplete={this.closeModals}
+            />
+        );
     };
 
     renderLabel = (label: Label) => (
         <ListItem>
             <ListItemText primary={label.name} />
             {this.props.owner && (
-                <ListItemIcon>
-                    <Visibility color={label.visible ? 'primary' : 'disabled'} />
-                </ListItemIcon>
+                <>
+                    <ListItemIcon>
+                        <IconButton onClick={() => this.openEdit(label)}>
+                            <Edit />
+                        </IconButton>
+                    </ListItemIcon>
+                    <ListItemIcon>
+                        <Visibility color={label.visible ? 'primary' : 'disabled'} />
+                    </ListItemIcon>
+                </>
             )}
         </ListItem>
     );
@@ -103,6 +138,9 @@ class CampaignLabelsRaw extends React.Component<AllProps, State> {
                         />
                     </div>
                 </Modal>
+                <Modal open={this.state.editLabel !== undefined} onClose={this.closeModals}>
+                    <div className="modal">{this.renderEditLabel()}</div>
+                </Modal>
             </Box>
         );
     }
@@ -114,5 +152,7 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 export const CampaignLabels = connect(mapStateToProps, {
-    fetchLabels: campaignActions.actions.fetchLabels
+    fetchLabels: campaignActions.actions.fetchLabels,
+    deleteLabel: labelActions.actions.deleteLabel,
+    editLabel: labelActions.actions.editLabel
 })(CampaignLabelsRaw);

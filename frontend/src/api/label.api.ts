@@ -3,7 +3,7 @@ import { api } from '../config/constants';
 import { buildPath } from './base.api';
 import { EditLabelPayload } from '../types/label.types';
 
-export async function updateLabel(payload: EditLabelPayload): Promise<void> {
+export async function editLabel(payload: EditLabelPayload): Promise<void> {
     const url = buildPath(`${api.LABEL.PATH}/${payload.labelId}`);
     await axiosInstance.put(url, { name: payload.name, visible: payload.visible });
 }
