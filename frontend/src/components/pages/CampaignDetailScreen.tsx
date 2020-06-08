@@ -18,6 +18,7 @@ import { CampaignCharacters } from './campaignDetailComponents/CampaignCharacter
 import { CampaignDetails } from './campaignDetailComponents/CampaignDetails';
 import { ListItemLink } from '../atoms/ListItemLink';
 import { CampaignNotes } from './campaignDetailComponents/CampaignNotes';
+import { CampaignLabels } from './campaignDetailComponents/CampaignLabels';
 
 const styles = (theme: Theme) => ({
     appBar: {
@@ -80,6 +81,7 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
 
         const characterUrl = `${url}${routes.campaign.subpathCharacters}`;
         const notesUrl = `${url}${routes.campaign.subpathNotes}`;
+        const labelsUrl = `${url}${routes.campaign.subpathLabels}`;
         const detailsUrl = `${url}${routes.campaign.subpathDetails}`;
 
         return (
@@ -97,6 +99,9 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                         </ListItemLink>
                         <ListItemLink selected={this.props.path === notesUrl} to={notesUrl}>
                             <ListItemText primary="Notes" />
+                        </ListItemLink>
+                        <ListItemLink selected={this.props.path === labelsUrl} to={labelsUrl}>
+                            <ListItemText primary="Labels" />
                         </ListItemLink>
                         <ListItemLink selected={this.props.path === detailsUrl} to={detailsUrl}>
                             <ListItemText primary="Details" />
@@ -121,16 +126,21 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                                 )}
                             />
                             <Route
+                                path={`${path}${routes.campaign.subpathNotes}`}
+                                exact
+                                render={() => <CampaignNotes owner={campaign.owner} campaignId={campaign.id} />}
+                            />
+                            <Route
+                                path={`${path}${routes.campaign.subpathLabels}`}
+                                exact
+                                render={() => <CampaignLabels owner={campaign.owner} campaignId={campaign.id} />}
+                            />
+                            <Route
                                 path={`${path}${routes.campaign.subpathDetails}`}
                                 exact
                                 render={() => (
                                     <CampaignDetails campaign={campaign} onInaccessible={this.makeInaccessible} />
                                 )}
-                            />
-                            <Route
-                                path={`${path}${routes.campaign.subpathNotes}`}
-                                exact
-                                render={() => <CampaignNotes owner={campaign.owner} campaignId={campaign.id} />}
                             />
                             <Redirect to={`${path}${routes.campaign.subpathCharacters}`} />
                         </Switch>
