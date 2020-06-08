@@ -126,7 +126,7 @@ export async function createNote(payload: CreateNotePayload): Promise<void> {
 
 export async function createLabel(payload: CreateLabelPayload): Promise<void> {
     const url = buildPath(`${api.CAMPAIGN.PATH}/${payload.id}${api.CAMPAIGN.SUBPATH_LABEL}`);
-    await axiosInstance.post(url, { name: payload.name, visibile: payload.visible });
+    await axiosInstance.post(url, { name: payload.name, visible: payload.visible });
 }
 
 export async function getLabels(id: string): Promise<Array<Label>> {
