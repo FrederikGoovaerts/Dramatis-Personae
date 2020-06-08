@@ -31,7 +31,7 @@ class LabelController(private val service: LabelService) {
 }
 
 @Component
-class LabelService(private val repository: LabelRepository) {
+class LabelService(private val repository: LabelRepository, private val characterRepository: CharacterRepository) {
 
     fun updateLabel(user: User, id: UUID, name: String, visible: Boolean): Boolean {
         val labelQuery = repository.findById(id)
@@ -56,6 +56,10 @@ class LabelService(private val repository: LabelRepository) {
         val label = labelQuery.get()
         if (!label.campaign.isOwnedBy(user) && !(label.campaign.isAccessibleBy(user) && label.campaign.allowPlayerLabelManagement)) {
             return false
+        }
+        label.characters.forEach {
+            it.labels.remove(label)
+            characterRepository.save(it)
         }
         repository.delete(labelQuery.get())
         return true
