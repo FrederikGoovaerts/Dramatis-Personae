@@ -7,7 +7,6 @@ import { NewCharacterForm } from './NewCharacterForm';
 
 interface Props {
     campaignId: string;
-    className?: string;
     onSubmitComplete?: () => void;
 }
 
@@ -35,7 +34,7 @@ class ProposeCharacterFormRaw extends React.Component<AllProps> {
         }
     };
 
-    render = () => <NewCharacterForm className={this.props.className} onSubmit={this.handleSubmit} />;
+    render = () => <NewCharacterForm onSubmit={this.handleSubmit} />;
 }
 
 export const ProposeCharacterForm = connect(null, { proposeCharacter: campaignActions.actions.proposeCharacter })(
