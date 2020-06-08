@@ -2,6 +2,7 @@ import { Campaign, CampaignEditPayload, CampaignMember } from '../../types/campa
 import { ActionTypeMapping, ActionUnion, createAction } from './base';
 import { CharacterPrototype, ListCharacter, ProposedCharacter } from '../../types/character.types';
 import { Note, CreateNotePayload } from '../../types/note.types';
+import { Label, CreateLabelPayload } from '../../types/label.types';
 
 export enum names {
     fetchCampaigns = 'FETCH_CAMPAIGNS',
@@ -34,7 +35,11 @@ export enum names {
     fetchSharedNotes = 'FETCH_SHARED_CAMPAIGN_NOTES',
     setSharedNotesLoading = 'SET_SHARED_CAMPAIGN_NOTES_LOADING',
     setSharedNotes = 'SET_SHARED_CAMPAIGN_NOTES',
-    createNote = 'CREATE_CAMPAIGN_NOTE'
+    createNote = 'CREATE_CAMPAIGN_NOTE',
+    fetchLabels = 'FETCH_LABELS',
+    setLabelsLoading = 'SET_LABELS_LOADING',
+    setLabels = 'SET_LABELS',
+    createLabel = 'CREATE_LABEL'
 }
 
 export const actions = {
@@ -70,7 +75,11 @@ export const actions = {
     fetchSharedNotes: (id: string) => createAction(names.fetchSharedNotes, id),
     setSharedNotesLoading: (p: boolean) => createAction(names.setSharedNotesLoading, p),
     setSharedNotes: (p: Note[]) => createAction(names.setSharedNotes, p),
-    createNote: (p: CreateNotePayload) => createAction(names.createNote, p)
+    createNote: (p: CreateNotePayload) => createAction(names.createNote, p),
+    fetchLabels: (id: string) => createAction(names.fetchLabels, id),
+    setLabelsLoading: (p: boolean) => createAction(names.setLabelsLoading, p),
+    setLabels: (p: Label[]) => createAction(names.setLabels, p),
+    createLabel: (p: CreateLabelPayload) => createAction(names.createLabel, p)
 };
 
 export type allTypes = ActionUnion<typeof actions>;
