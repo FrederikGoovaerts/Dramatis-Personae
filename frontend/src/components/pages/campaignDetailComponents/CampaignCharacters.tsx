@@ -83,24 +83,18 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
     };
 
     renderCreateCharacter = () => (
-        <Paper className="CampaignDetail__createPaper">
-            <Typography variant="h5">New character</Typography>
-            <CreateCharacterForm
-                campaignId={this.props.campaignId}
-                className="CampaignDetail__createContainer"
-                onSubmitComplete={this.closeModals}
-            />
+        <Paper className="modalPaper">
+            <div className="modalContainer">
+                <Typography variant="h5">New character</Typography>
+                <CreateCharacterForm campaignId={this.props.campaignId} onSubmitComplete={this.closeModals} />
+            </div>
         </Paper>
     );
 
     renderProposeCharacter = () => (
         <Paper className="CampaignDetail__createPaper">
             <Typography variant="h5">Propose character</Typography>
-            <ProposeCharacterForm
-                campaignId={this.props.campaignId}
-                className="CampaignDetail__createContainer"
-                onSubmitComplete={this.closeModals}
-            />
+            <ProposeCharacterForm campaignId={this.props.campaignId} onSubmitComplete={this.closeModals} />
         </Paper>
     );
 
