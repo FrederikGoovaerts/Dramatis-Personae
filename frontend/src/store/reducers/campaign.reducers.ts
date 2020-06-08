@@ -4,6 +4,7 @@ import { ListCharacter, ProposedCharacter } from '../../types/character.types';
 import { applicationActions, campaignActions } from '../actions';
 import { createReducer } from './base';
 import { Note } from '../../types/note.types';
+import { Label } from '../../types/label.types';
 
 export interface CampaignState {
     loading: boolean;
@@ -20,6 +21,8 @@ export interface CampaignState {
     notesLoading: boolean;
     sharedNotes: Note[];
     sharedNotesLoading: boolean;
+    labels: Label[];
+    labelsLoading: boolean;
 }
 
 const campaignReducers = combineReducers<CampaignState>({
@@ -56,7 +59,9 @@ const campaignReducers = combineReducers<CampaignState>({
         false,
         campaignActions.names.setSharedNotesLoading,
         applicationActions.names.clearStore
-    )
+    ),
+    labels: createReducer([], campaignActions.names.setLabels, applicationActions.names.clearStore),
+    labelsLoading: createReducer(false, campaignActions.names.setLabelsLoading, applicationActions.names.clearStore)
 });
 
 export default campaignReducers;
