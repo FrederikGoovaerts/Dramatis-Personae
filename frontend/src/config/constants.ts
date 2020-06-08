@@ -57,6 +57,7 @@ export const routes = {
         path: '/campaign/',
         subpathCharacters: '/characters',
         subpathNotes: '/notes',
+        subpathLabels: '/labels',
         subpathDetails: '/details'
     },
     root: '/'
