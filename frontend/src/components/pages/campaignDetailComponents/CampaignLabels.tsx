@@ -10,7 +10,8 @@ import {
     CircularProgress,
     ListItemIcon,
     Modal,
-    IconButton
+    IconButton,
+    Chip
 } from '@material-ui/core';
 import { Add, Visibility, Edit } from '@material-ui/icons';
 import { RootState } from '../../../store/reducers';
@@ -84,19 +85,19 @@ class CampaignLabelsRaw extends React.Component<AllProps, State> {
     };
 
     renderLabel = (label: Label) => (
-        <ListItem>
-            <ListItemText primary={label.name} />
+        <ListItem dense={true}>
+            <ListItemText primary={<Chip size="small" label={label.name} />} />
             {this.props.owner && (
-                <>
-                    <ListItemIcon>
-                        <IconButton onClick={() => this.openEdit(label)}>
-                            <Edit />
-                        </IconButton>
-                    </ListItemIcon>
-                    <ListItemIcon>
-                        <Visibility color={label.visible ? 'primary' : 'disabled'} />
-                    </ListItemIcon>
-                </>
+                <ListItemIcon>
+                    <Visibility color={label.visible ? 'primary' : 'disabled'} />
+                </ListItemIcon>
+            )}
+            {this.props.owner && (
+                <ListItemIcon>
+                    <IconButton onClick={() => this.openEdit(label)}>
+                        <Edit />
+                    </IconButton>
+                </ListItemIcon>
             )}
         </ListItem>
     );
