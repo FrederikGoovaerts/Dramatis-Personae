@@ -8,13 +8,15 @@ import {
     ListItemText,
     ListItem,
     CircularProgress,
-    ListItemIcon
+    ListItemIcon,
+    Modal
 } from '@material-ui/core';
 import { Add, Visibility } from '@material-ui/icons';
 import { RootState } from '../../../store/reducers';
 import { campaignActions } from '../../../store/actions';
 import { connect } from 'react-redux';
 import { Label } from '../../../types/label.types';
+import { CreateLabelForm } from '../../molecules/CreateLabelForm';
 
 interface Props {
     campaignId: string;
@@ -53,17 +55,6 @@ class CampaignLabelsRaw extends React.Component<AllProps, State> {
         this.setState({ createOpen: false });
     };
 
-    // renderCreateCharacter = () => (
-    //     <Paper className="CampaignDetail__createPaper">
-    //         <Typography variant="h5">New character</Typography>
-    //         <CreateCharacterForm
-    //             campaignId={this.props.campaignId}
-    //             className="CampaignDetail__createContainer"
-    //             onSubmitComplete={this.closeModals}
-    //         />
-    //     </Paper>
-    // );
-
     renderLabel = (label: Label) => (
         <ListItem>
             <ListItemText primary={label.name} />
@@ -97,9 +88,15 @@ class CampaignLabelsRaw extends React.Component<AllProps, State> {
                     </Fab>
                 )}
 
-                {/* <Modal open={this.state.createOpen} onClose={this.closeModals}>
-                    <div className="modal">{this.renderCreateCharacter()}</div>
-                </Modal> */}
+                <Modal open={this.state.createOpen} onClose={this.closeModals}>
+                    <div className="modal">
+                        <CreateLabelForm
+                            campaignId={this.props.campaignId}
+                            className="CampaignDetail__createContainer"
+                            onSubmitComplete={this.closeModals}
+                        />
+                    </div>
+                </Modal>
             </Box>
         );
     }
