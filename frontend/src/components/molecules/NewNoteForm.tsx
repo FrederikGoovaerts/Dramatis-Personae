@@ -74,4 +74,3 @@ export class NewNoteForm extends React.Component<Props, State> {
         );
     }
 }
-

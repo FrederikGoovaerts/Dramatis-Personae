@@ -67,7 +67,11 @@ class CampaignLabelsRaw extends React.Component<AllProps, State> {
     };
 
     renderEditLabel = () => {
-        const label = this.state.editLabel!;
+        if (!this.state.editLabel) {
+            return;
+        }
+
+        const label = this.state.editLabel;
 
         const editLabel = (name: string, visible: boolean) =>
             this.props.editLabel({ campaignId: this.props.campaignId, labelId: label.id, name, visible });
