@@ -13,7 +13,8 @@ import {
     MenuItem,
     Button,
     FormControl,
-    InputLabel
+    InputLabel,
+    Box
 } from '@material-ui/core';
 
 interface Props {
@@ -62,30 +63,40 @@ class AddCharacterLabelFormRaw extends React.Component<AllProps, State> {
         if (this.props.loading) {
             return <CircularProgress />;
         }
+        const characterLabelIds = this.props.character.labels.map((label) => label.id);
+        const filteredLabels = this.props.labels.filter((label: Label) => !characterLabelIds.includes(label.id));
         return (
             <Paper className="modalPaper">
                 <div className="modalContainer">
                     <div className="modalHeader">
                         <Typography variant="h5">Add label(s)</Typography>
                     </div>
-                    <FormControl>
-                        <InputLabel>Label</InputLabel>
-                        <Select value={this.state.selected} onChange={this.handleSelect}>
-                            {this.props.labels.map((label: Label) => (
-                                <MenuItem key={label.id} value={label.id}>
-                                    {label.name}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                    <Button
-                        onClick={this.handleSubmit}
-                        color="primary"
-                        variant="contained"
-                        disabled={this.state.selected === ''}
-                    >
-                        Add
-                    </Button>
+                    {filteredLabels.length > 0 ? (
+                        <FormControl margin="dense">
+                            <InputLabel>Label</InputLabel>
+                            <Select value={this.state.selected} onChange={this.handleSelect}>
+                                {filteredLabels.map((label: Label) => (
+                                    <MenuItem key={label.id} value={label.id}>
+                                        {label.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    ) : (
+                        <Box marginTop="1em">
+                            <Typography>There are no unapplied labels for this character.</Typography>
+                        </Box>
+                    )}
+                    <Box marginTop="1em" display="flex" flexDirection="column">
+                        <Button
+                            onClick={this.handleSubmit}
+                            color="primary"
+                            variant="contained"
+                            disabled={this.state.selected === ''}
+                        >
+                            Add
+                        </Button>
+                    </Box>
                 </div>
             </Paper>
         );
