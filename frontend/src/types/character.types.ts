@@ -1,10 +1,11 @@
 import { Moment } from 'moment';
+import { Label } from './label.types';
 
 export interface Character {
     id: string;
     name: string;
     description: string;
-    labels: string[];
+    labels: Label[];
     visible: boolean;
 }
 

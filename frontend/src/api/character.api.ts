@@ -5,13 +5,13 @@ import moment from 'moment';
 import { Note, CreateNotePayload } from '../types/note.types';
 import { Character, VisibilityUpdatePayload } from '../types/character.types';
 import { RawNote } from './note.api';
-import { AddLabelPayload, RemoveLabelPayload } from '../types/label.types';
+import { AddLabelPayload, RemoveLabelPayload, Label } from '../types/label.types';
 
 interface RawCharacter {
     id: string;
     name: string;
     description: string;
-    labels: string[];
+    labels: Label[];
     visible: boolean;
 }
 
