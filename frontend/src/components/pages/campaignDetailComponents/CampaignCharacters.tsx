@@ -122,7 +122,7 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
                         <Typography>{character.name}</Typography>
                         {character.labels.map((label: string) => (
                             <Box marginLeft="0.5em" key={label}>
-                                <Chip label={label} size="small" />
+                                <Chip color="primary" label={label} size="small" />
                             </Box>
                         ))}
                     </Box>
