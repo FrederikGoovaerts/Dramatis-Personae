@@ -112,7 +112,7 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
                     <Box marginY="1em">
                         <Typography variant="subtitle1">{character.description}</Typography>
                     </Box>
-                    <CharacterLabels character={character} canChange={campaign.owner} />
+                    <CharacterLabels character={character} canChange={campaign.owner} campaignId={campaign.id} />
                     {this.props.campaign.owner && (
                         <Paper className="CharacterDetail__adminControls">
                             <FormControlLabel
