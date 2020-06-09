@@ -4,6 +4,11 @@ export interface Label {
     visible: boolean;
 }
 
+export interface ListLabel {
+    name: string;
+    visible: boolean;
+}
+
 export interface CreateLabelPayload {
     id: string;
     name: string;

@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
 
+data class LabelListView(val name: String, val visible: Boolean)
+data class LabelView(val name: String, val id: UUID, val visible: Boolean)
+
 @RestController
 @RequestMapping("/api/label")
 class LabelController(private val service: LabelService) {

@@ -24,7 +24,7 @@ export interface CampaignMember {
 export interface CampaignEditPayload {
     id: string;
     name: string;
-    autoAcceptProposedCharacter: boolean;
+    campaignSettings: CampaignSettings;
 }
 
 export interface CampaignSettings {

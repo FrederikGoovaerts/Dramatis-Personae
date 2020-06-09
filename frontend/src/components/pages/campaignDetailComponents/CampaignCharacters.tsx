@@ -22,6 +22,7 @@ import { EditProposedCharacterForm } from '../../molecules/EditProposedCharacter
 import { RootState } from '../../../store/reducers';
 import { campaignActions, proposedCharacterActions } from '../../../store/actions';
 import { connect } from 'react-redux';
+import { ListLabel } from '../../../types/label.types';
 
 interface Props {
     campaignId: string;
@@ -120,9 +121,14 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
                 primary={
                     <Box display="flex" flexWrap="wrap" alignItems="center">
                         <Typography>{character.name}</Typography>
-                        {character.labels.map((label: string) => (
-                            <Box marginLeft="0.5em" key={label}>
-                                <Chip color="primary" label={label} size="small" />
+                        {character.labels.map((label: ListLabel) => (
+                            <Box marginLeft="0.5em" key={label.name}>
+                                <Chip
+                                    color="primary"
+                                    label={label.name}
+                                    variant={label.visible ? 'default' : 'outlined'}
+                                    size="small"
+                                />
                             </Box>
                         ))}
                     </Box>
