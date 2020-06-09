@@ -27,7 +27,6 @@ data class CampaignView(
     val inviteCode: UUID?
 )
 data class CampaignMemberView(val name: String, val id: UUID, val owner: Boolean)
-data class LabelView(val name: String, val id: UUID, val visible: Boolean)
 
 @RestController
 @RequestMapping("/api/campaign")
@@ -102,7 +101,7 @@ class CampaignController(private val service: CampaignService) {
         return if (list === null) {
             ResponseEntity(HttpStatus.FORBIDDEN)
         } else {
-            ResponseEntity(list.map { CharacterListView(it.name, it.description, it.labels.map { l -> l.name }, it.isVisible, it.id!!) }, HttpStatus.OK)
+            ResponseEntity(list.map { CharacterListView(it.name, it.description, it.labels.map { l -> LabelListView(l.name, l.isVisible) }, it.isVisible, it.id!!) }, HttpStatus.OK)
         }
     }
 

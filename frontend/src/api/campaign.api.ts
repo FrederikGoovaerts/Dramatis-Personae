@@ -6,13 +6,13 @@ import { Campaign, CampaignPrototype, CampaignMember, CampaignSettings } from '.
 import { ListCharacter, CharacterPrototype, ProposedCharacter } from '../types/character.types';
 import { RawNote } from './note.api';
 import { CreateNotePayload, Note } from '../types/note.types';
-import { CreateLabelPayload, Label } from '../types/label.types';
+import { CreateLabelPayload, Label, ListLabel } from '../types/label.types';
 
 interface RawListCharacter {
     name: string;
     description: string;
     visible: boolean;
-    labels: string[];
+    labels: ListLabel[];
     id: string;
 }
 

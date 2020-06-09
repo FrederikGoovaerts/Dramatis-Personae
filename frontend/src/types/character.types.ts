@@ -1,5 +1,5 @@
 import { Moment } from 'moment';
-import { Label } from './label.types';
+import { Label, ListLabel } from './label.types';
 
 export interface Character {
     id: string;
@@ -13,7 +13,7 @@ export interface ListCharacter {
     id: string;
     name: string;
     description: string;
-    labels: string[];
+    labels: ListLabel[];
     visible: boolean;
 }
 
