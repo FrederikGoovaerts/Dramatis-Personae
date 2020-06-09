@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { CircularProgress } from '@material-ui/core';
-import { ProposedCharacter } from '../../../types/character.types';
 import { RootState } from '../../../store/reducers';
 import { campaignActions, noteActions } from '../../../store/actions';
 import { connect } from 'react-redux';
