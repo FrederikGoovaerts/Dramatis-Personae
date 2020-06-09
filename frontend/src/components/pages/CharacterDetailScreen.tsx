@@ -20,6 +20,7 @@ import { IconButton, Modal, Box, FormControlLabel, Toolbar } from '@material-ui/
 import { Edit } from '@material-ui/icons';
 import { CharacterHeader } from '../molecules/CharacterHeader';
 import { Notes } from '../molecules/Notes';
+import { CharacterLabels } from './characterDetailComponents/CharacterLabels';
 
 export interface MatchParams {
     campaignId: string;
@@ -105,12 +106,13 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         if (!this.props.character || !this.props.campaign || this.props.loading) {
             contents = <CircularProgress />;
         } else {
-            const { character } = this.props;
+            const { character, campaign } = this.props;
             contents = (
                 <Box>
                     <Box marginY="1em">
                         <Typography variant="subtitle1">{character.description}</Typography>
                     </Box>
+                    <CharacterLabels character={character} canChange={campaign.owner} />
                     {this.props.campaign.owner && (
                         <Paper className="CharacterDetail__adminControls">
                             <FormControlLabel
