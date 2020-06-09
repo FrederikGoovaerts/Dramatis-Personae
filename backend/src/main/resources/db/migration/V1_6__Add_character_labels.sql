@@ -1,5 +1,5 @@
-create table if not exists label (id uuid not null, is_visible boolean not null, name varchar(255), campaign_id uuid, primary key (id))
-create table if not exists character_label (character_id uuid not null, label_id uuid not null)
+create table if not exists label (id uuid not null, is_visible boolean not null, name varchar(255), campaign_id uuid, primary key (id));
+create table if not exists character_label (character_id uuid not null, label_id uuid not null);
 
 alter table campaign add column allow_player_label_management boolean not null default false;
 alter table campaign add column allow_player_character_label_management boolean not null default false;
