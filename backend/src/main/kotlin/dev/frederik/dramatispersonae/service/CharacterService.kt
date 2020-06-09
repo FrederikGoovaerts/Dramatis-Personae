@@ -20,7 +20,7 @@ data class CharacterListView(
 data class CharacterDetailView(
     val name: String,
     val description: String,
-    val labels: List<String>,
+    val labels: List<LabelView>,
     val visible: Boolean,
     val id: UUID
 )
@@ -38,7 +38,7 @@ class CharacterController(private val service: CharacterService) {
             ResponseEntity(
                     CharacterDetailView(character.name,
                                         character.description,
-                                        character.labels.map { it.name },
+                                        character.labels.map { LabelView(it.name, it.id!!, it.isVisible) },
                                         character.isVisible,
                                         character.id!!),
                     HttpStatus.OK
