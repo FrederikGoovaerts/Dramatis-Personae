@@ -209,7 +209,7 @@ class CharacterService(private val repository: CharacterRepository, private val 
             return false
         }
         val character = characterQuery.get()
-        if (!character.campaign.isOwnedBy(user) || !(character.campaign.isAccessibleBy(user) && character.campaign.allowPlayerCharacterLabelManagement)) {
+        if (!character.campaign.isOwnedBy(user) && !(character.campaign.isAccessibleBy(user) && character.campaign.allowPlayerCharacterLabelManagement)) {
             return false;
         }
         val labelQuery = labelRepository.findById(labelId)
@@ -228,7 +228,7 @@ class CharacterService(private val repository: CharacterRepository, private val 
             return false
         }
         val character = characterQuery.get()
-        if (!character.campaign.isOwnedBy(user) || !(character.campaign.isAccessibleBy(user) && character.campaign.allowPlayerCharacterLabelManagement)) {
+        if (!character.campaign.isOwnedBy(user) && !(character.campaign.isAccessibleBy(user) && character.campaign.allowPlayerCharacterLabelManagement)) {
             return false;
         }
         val label = character.labels.find { it.id == labelId } ?: return false
