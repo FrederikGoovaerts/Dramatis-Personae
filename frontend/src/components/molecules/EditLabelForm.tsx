@@ -10,7 +10,7 @@ import { Label } from '../../types/label.types';
 interface Props {
     label: Label;
     className?: string;
-    deletable: boolean;
+    owner: boolean;
     onSubmitComplete?: () => void;
     editLabel: (name: string, visible: boolean) => void;
     deleteLabel: () => void;
@@ -55,7 +55,7 @@ export class EditLabelForm extends React.Component<Props, State> {
                 <div className="modalContainer">
                     <div className="modalHeader">
                         <Typography variant="h5">Update label</Typography>
-                        {this.props.deletable && <DeleteButton onConfirm={this.handleDelete} />}
+                        <DeleteButton onConfirm={this.handleDelete} />
                     </div>
                     <TextField
                         variant="outlined"
@@ -65,16 +65,18 @@ export class EditLabelForm extends React.Component<Props, State> {
                         onChange={this.handleChangeName}
                         margin="normal"
                     />
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={this.state.visible}
-                                onChange={this.handleChangeVisible}
-                                color="primary"
-                            />
-                        }
-                        label="Visible"
-                    />
+                    {this.props.owner && (
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={this.state.visible}
+                                    onChange={this.handleChangeVisible}
+                                    color="primary"
+                                />
+                            }
+                            label="Visible"
+                        />
+                    )}
                     <Button variant="contained" color="primary" onClick={this.handleSubmit} disabled={!this.state.name}>
                         Update
                     </Button>

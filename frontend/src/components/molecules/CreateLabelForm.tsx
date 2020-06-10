@@ -6,6 +6,7 @@ import { campaignActions } from '../../store/actions';
 import { Paper, Typography, TextField, Checkbox, FormControlLabel, Button } from '@material-ui/core';
 
 interface Props {
+    owner: boolean;
     campaignId: string;
     className?: string;
     onSubmitComplete?: () => void;
@@ -60,12 +61,18 @@ class CreateLabelFormRaw extends React.Component<AllProps, State> {
                     onChange={this.handleChangeName}
                     margin="normal"
                 />
-                <FormControlLabel
-                    control={
-                        <Checkbox checked={this.state.visible} onChange={this.handleChangeVisible} color="primary" />
-                    }
-                    label="Visible"
-                />
+                {this.props.owner && (
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={this.state.visible}
+                                onChange={this.handleChangeVisible}
+                                color="primary"
+                            />
+                        }
+                        label="Visible"
+                    />
+                )}
                 <Button variant="contained" color="primary" onClick={this.handleSubmit} disabled={!this.state.name}>
                     Create
                 </Button>

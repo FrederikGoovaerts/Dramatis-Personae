@@ -136,6 +136,7 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                                 render={() => (
                                     <CampaignLabels
                                         canManage={campaign.owner || campaign.settings.allowPlayerLabelManagement}
+                                        owner={campaign.owner}
                                         campaignId={campaign.id}
                                     />
                                 )}
