@@ -2,15 +2,17 @@ import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { ChangeEvent } from 'react';
-import { Paper, Typography, FormControlLabel, Checkbox } from '@material-ui/core';
+import { Paper, Typography, FormControlLabel, Checkbox, Box } from '@material-ui/core';
 
 import { DeleteButton } from '../atoms/DeleteButton';
 import { Label } from '../../types/label.types';
+import { AlertBox } from '../atoms/AlertBox';
 
 interface Props {
     label: Label;
     className?: string;
     owner: boolean;
+    labelOverlaps: (name: string, visible: boolean, id: string) => boolean;
     onSubmitComplete?: () => void;
     editLabel: (name: string, visible: boolean) => void;
     deleteLabel: () => void;
@@ -50,6 +52,7 @@ export class EditLabelForm extends React.Component<Props, State> {
     };
 
     render() {
+        const overlap = this.props.labelOverlaps(this.state.name, this.state.visible, this.props.label.id);
         return (
             <Paper className="modalPaper">
                 <div className="modalContainer">
@@ -77,7 +80,17 @@ export class EditLabelForm extends React.Component<Props, State> {
                             label="Visible"
                         />
                     )}
-                    <Button variant="contained" color="primary" onClick={this.handleSubmit} disabled={!this.state.name}>
+                    {overlap && (
+                        <Box marginY="0.5em">
+                            <AlertBox text="This label overlaps with an existing label." />
+                        </Box>
+                    )}
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={this.handleSubmit}
+                        disabled={!this.state.name || overlap}
+                    >
                         Update
                     </Button>
                 </div>
