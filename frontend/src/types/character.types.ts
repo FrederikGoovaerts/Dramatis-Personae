@@ -1,18 +1,19 @@
 import { Moment } from 'moment';
+import { Label, ListLabel } from './label.types';
 
 export interface Character {
     id: string;
     name: string;
     description: string;
+    labels: Label[];
     visible: boolean;
-    addedOn: Moment;
 }
 
 export interface ListCharacter {
     id: string;
     name: string;
     description: string;
-    addedOn: Moment;
+    labels: ListLabel[];
     visible: boolean;
 }
 

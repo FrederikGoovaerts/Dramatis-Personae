@@ -9,7 +9,8 @@ import {
     ListItemText,
     ListItem,
     IconButton,
-    CircularProgress
+    CircularProgress,
+    Chip
 } from '@material-ui/core';
 import { Add, Visibility, Edit, CheckCircle, Cancel } from '@material-ui/icons';
 import { ListCharacter, ProposedCharacter } from '../../../types/character.types';
@@ -21,6 +22,7 @@ import { EditProposedCharacterForm } from '../../molecules/EditProposedCharacter
 import { RootState } from '../../../store/reducers';
 import { campaignActions, proposedCharacterActions } from '../../../store/actions';
 import { connect } from 'react-redux';
+import { ListLabel } from '../../../types/label.types';
 
 interface Props {
     campaignId: string;
@@ -82,24 +84,18 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
     };
 
     renderCreateCharacter = () => (
-        <Paper className="CampaignDetail__createPaper">
-            <Typography variant="h5">New character</Typography>
-            <CreateCharacterForm
-                campaignId={this.props.campaignId}
-                className="CampaignDetail__createContainer"
-                onSubmitComplete={this.closeModals}
-            />
+        <Paper className="modalPaper">
+            <div className="modalContainer">
+                <Typography variant="h5">New character</Typography>
+                <CreateCharacterForm campaignId={this.props.campaignId} onSubmitComplete={this.closeModals} />
+            </div>
         </Paper>
     );
 
     renderProposeCharacter = () => (
         <Paper className="CampaignDetail__createPaper">
             <Typography variant="h5">Propose character</Typography>
-            <ProposeCharacterForm
-                campaignId={this.props.campaignId}
-                className="CampaignDetail__createContainer"
-                onSubmitComplete={this.closeModals}
-            />
+            <ProposeCharacterForm campaignId={this.props.campaignId} onSubmitComplete={this.closeModals} />
         </Paper>
     );
 
@@ -121,7 +117,24 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
 
     renderCharacter = (character: ListCharacter) => (
         <ListItemLink to={`${this.props.matchUrl}${routes.character}${character.id}`} key={character.id}>
-            <ListItemText primary={character.name} secondary={character.description} />
+            <ListItemText
+                primary={
+                    <Box display="flex" flexWrap="wrap" alignItems="center">
+                        <Typography>{character.name}</Typography>
+                        {character.labels.map((label: ListLabel) => (
+                            <Box marginLeft="0.5em" key={label.name}>
+                                <Chip
+                                    color="primary"
+                                    label={label.name}
+                                    variant={label.visible ? 'default' : 'outlined'}
+                                    size="small"
+                                />
+                            </Box>
+                        ))}
+                    </Box>
+                }
+                secondary={character.description}
+            />
             {this.props.owner && <Visibility color={character.visible ? 'primary' : 'disabled'} />}
         </ListItemLink>
     );

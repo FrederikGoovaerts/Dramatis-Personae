@@ -126,7 +126,7 @@ function* newCampaign(action: campaignActions.specificTypes['newCampaign']) {
 
 function* editCampaign(action: campaignActions.specificTypes['editCampaign']) {
     try {
-        yield campaign.update(action.payload.id, action.payload.name, action.payload.autoAcceptProposedCharacter);
+        yield campaign.update(action.payload.id, action.payload.name, action.payload.campaignSettings);
         yield put(campaignActions.actions.fetchCampaign(action.payload.id));
     } catch (e) {
         console.error('Unable to delete campaign. Please try again later.');
@@ -167,10 +167,30 @@ function* fetchSharedNotes(action: campaignActions.specificTypes['fetchSharedNot
 function* createNote(action: campaignActions.specificTypes['createNote']) {
     try {
         yield campaign.createNote(action.payload);
-        yield put(campaignActions.actions.fetchNotes(String(action.payload.id)));
+        yield put(campaignActions.actions.fetchNotes(action.payload.id));
     } catch (e) {
         console.error('Unable to create note. Please try again later.');
     }
+}
+
+function* createLabel(action: campaignActions.specificTypes['createLabel']) {
+    try {
+        yield campaign.createLabel(action.payload);
+        yield put(campaignActions.actions.fetchLabels(action.payload.id));
+    } catch (e) {
+        console.error('Unable to create label. Please try again later.');
+    }
+}
+
+function* fetchLabels(action: campaignActions.specificTypes['fetchLabels']) {
+    yield put(campaignActions.actions.setLabelsLoading(true));
+    try {
+        const result = yield campaign.getLabels(action.payload);
+        yield put(campaignActions.actions.setLabels(result));
+    } catch (e) {
+        console.error('Unable to fetch labels. Please try again later.');
+    }
+    yield put(campaignActions.actions.setLabelsLoading(false));
 }
 
 export default function* watcher() {
@@ -191,4 +211,6 @@ export default function* watcher() {
     yield takeEvery(campaignActions.names.fetchNotes, fetchNotes);
     yield takeEvery(campaignActions.names.fetchSharedNotes, fetchSharedNotes);
     yield takeEvery(campaignActions.names.createNote, createNote);
+    yield takeEvery(campaignActions.names.fetchLabels, fetchLabels);
+    yield takeEvery(campaignActions.names.createLabel, createLabel);
 }
