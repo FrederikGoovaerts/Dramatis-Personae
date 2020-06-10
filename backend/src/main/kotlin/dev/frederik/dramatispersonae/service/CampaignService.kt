@@ -346,7 +346,7 @@ class CampaignService(private val repository: CampaignRepository, private val la
             return null
         }
         val campaign = campaignQuery.get()
-        return campaign.characters.filter { campaign.isOwnedBy(user) || it.isVisible }
+        return campaign.characters.filter { campaign.isOwnedBy(user) || it.isVisible }.map { it.copy (labels = it.labels.filter { l -> l.isVisible || campaign.isOwnedBy(user) }.toMutableList())}
     }
 
     fun createCharacter(user: User, id: UUID, name: String, description: String): Boolean {
