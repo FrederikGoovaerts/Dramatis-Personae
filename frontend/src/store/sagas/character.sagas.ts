@@ -38,7 +38,7 @@ function* fetchSharedNotes(action: characterActions.specificTypes['fetchSharedNo
 function* createNote(action: characterActions.specificTypes['createNote']) {
     try {
         yield character.createNote(action.payload);
-        yield put(characterActions.actions.fetchNotes(String(action.payload.id)));
+        yield put(characterActions.actions.fetchNotes(action.payload.id));
     } catch (e) {
         console.error('Unable to create note. Please try again later.');
     }
@@ -64,9 +64,27 @@ function* deleteCharacter(action: characterActions.specificTypes['deleteCharacte
 function* setVisibility(action: characterActions.specificTypes['setVisible']) {
     try {
         yield character.setVisible(action.payload);
-        yield put(characterActions.actions.fetchCharacter(String(action.payload.characterId)));
+        yield put(characterActions.actions.fetchCharacter(action.payload.characterId));
     } catch (e) {
         console.error('Unable to update note. Please try again later.');
+    }
+}
+
+function* addLabel(action: characterActions.specificTypes['addLabel']) {
+    try {
+        yield character.addLabel(action.payload);
+        yield put(characterActions.actions.fetchCharacter(action.payload.characterId));
+    } catch (e) {
+        console.error('Unable to add label. Please try again later.');
+    }
+}
+
+function* removeLabel(action: characterActions.specificTypes['removeLabel']) {
+    try {
+        yield character.removeLabel(action.payload);
+        yield put(characterActions.actions.fetchCharacter(action.payload.characterId));
+    } catch (e) {
+        console.error('Unable to remove label. Please try again later.');
     }
 }
 
@@ -78,4 +96,6 @@ export default function* watcher() {
     yield takeEvery(characterActions.names.editCharacter, editCharacter);
     yield takeEvery(characterActions.names.deleteCharacter, deleteCharacter);
     yield takeEvery(characterActions.names.setVisibility, setVisibility);
+    yield takeEvery(characterActions.names.addLabel, addLabel);
+    yield takeEvery(characterActions.names.removeLabel, removeLabel);
 }

@@ -74,5 +74,3 @@ export class NewNoteForm extends React.Component<Props, State> {
         );
     }
 }
-
-// export const NewNoteForm = connect(null, { createNote: characterActions.actions.createNote })(NewNoteFormRaw);

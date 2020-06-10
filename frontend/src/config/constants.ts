@@ -26,13 +26,15 @@ export const api = {
         SUBPATH_MEMBERS: '/members',
         SUBPATH_PROPOSED_CHARACTER: '/proposedcharacter',
         SUBPATH_NOTE: '/note',
-        SUBPATH_SHARED_NOTES: '/sharednotes'
+        SUBPATH_SHARED_NOTES: '/sharednotes',
+        SUBPATH_LABEL: '/label'
     },
     CHARACTER: {
         PATH: '/character',
         SUBPATH_NOTE: '/note',
         SUBPATH_SHARED_NOTES: '/sharednotes',
-        SUBPATH_VISIBLE: '/visible'
+        SUBPATH_VISIBLE: '/visible',
+        SUBPATH_LABEL: '/label'
     },
     PROPOSED_CHARACTER: {
         PATH: '/proposedcharacter',
@@ -43,6 +45,9 @@ export const api = {
     },
     CAMPAIGN_NOTE: {
         PATH: '/campaignnote'
+    },
+    LABEL: {
+        PATH: '/label'
     }
 };
 
@@ -52,6 +57,7 @@ export const routes = {
         path: '/campaign/',
         subpathCharacters: '/characters',
         subpathNotes: '/notes',
+        subpathLabels: '/labels',
         subpathDetails: '/details'
     },
     root: '/'

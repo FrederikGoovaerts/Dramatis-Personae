@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/characternote")
-class CharacterNoteController(service: CharacterNoteService): NoteController<CharacterNote>(service)
+class CharacterNoteController(service: CharacterNoteService) : NoteController<CharacterNote>(service)
 
 @Component
 class CharacterNoteService(repository: CharacterNoteRepository) : NoteService<CharacterNote>(repository) {
