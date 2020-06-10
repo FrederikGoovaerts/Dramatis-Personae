@@ -3,11 +3,13 @@ import { ChangeEvent } from 'react';
 import { connect } from 'react-redux';
 
 import { campaignActions } from '../../store/actions';
-import { Paper, Typography, TextField, Checkbox, FormControlLabel, Button } from '@material-ui/core';
+import { Paper, Typography, TextField, Checkbox, FormControlLabel, Button, Box } from '@material-ui/core';
+import { AlertBox } from '../atoms/AlertBox';
 
 interface Props {
     owner: boolean;
     campaignId: string;
+    labelOverlaps: (name: string, visible: boolean) => boolean;
     className?: string;
     onSubmitComplete?: () => void;
 }
@@ -49,36 +51,49 @@ class CreateLabelFormRaw extends React.Component<AllProps, State> {
         this.setState({ visible: checked });
     };
 
-    render = () => (
-        <Paper className="modalPaper">
-            <div className="modalContainer">
-                <Typography variant="h5">New label</Typography>
-                <TextField
-                    variant="outlined"
-                    label="Name"
-                    helperText="The name of the label, which will be shown when applied to characters."
-                    value={this.state.name}
-                    onChange={this.handleChangeName}
-                    margin="normal"
-                />
-                {this.props.owner && (
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={this.state.visible}
-                                onChange={this.handleChangeVisible}
-                                color="primary"
-                            />
-                        }
-                        label="Visible"
+    render() {
+        const overlap = this.props.labelOverlaps(this.state.name, this.state.visible);
+        return (
+            <Paper className="modalPaper">
+                <div className="modalContainer">
+                    <Typography variant="h5">New label</Typography>
+                    <TextField
+                        variant="outlined"
+                        label="Name"
+                        helperText="The name of the label, which will be shown when applied to characters."
+                        value={this.state.name}
+                        onChange={this.handleChangeName}
+                        margin="normal"
                     />
-                )}
-                <Button variant="contained" color="primary" onClick={this.handleSubmit} disabled={!this.state.name}>
-                    Create
-                </Button>
-            </div>
-        </Paper>
-    );
+                    {this.props.owner && (
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={this.state.visible}
+                                    onChange={this.handleChangeVisible}
+                                    color="primary"
+                                />
+                            }
+                            label="Visible"
+                        />
+                    )}
+                    {overlap && (
+                        <Box marginY="0.5em">
+                            <AlertBox text="This label overlaps with an existing label." />
+                        </Box>
+                    )}
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={this.handleSubmit}
+                        disabled={!this.state.name || overlap}
+                    >
+                        Create
+                    </Button>
+                </div>
+            </Paper>
+        );
+    }
 }
 
 export const CreateLabelForm = connect(null, { createLabel: campaignActions.actions.createLabel })(CreateLabelFormRaw);
