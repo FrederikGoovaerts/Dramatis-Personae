@@ -251,7 +251,7 @@ class CampaignController(private val service: CampaignService) {
 }
 
 @Component
-class CampaignService(private val repository: CampaignRepository) {
+class CampaignService(private val repository: CampaignRepository, private val labelRepository: LabelRepository) {
 
     fun getCampaignsForUser(user: User): List<Campaign> = repository.findAll().filter { it.isAccessibleBy(user) }
 
@@ -346,7 +346,7 @@ class CampaignService(private val repository: CampaignRepository) {
             return null
         }
         val campaign = campaignQuery.get()
-        return campaign.characters.filter { campaign.isOwnedBy(user) || it.isVisible }
+        return campaign.characters.filter { campaign.isOwnedBy(user) || it.isVisible }.map { it.copy (labels = it.labels.filter { l -> l.isVisible || campaign.isOwnedBy(user) }.toMutableList())}
     }
 
     fun createCharacter(user: User, id: UUID, name: String, description: String): Boolean {
@@ -441,6 +441,14 @@ class CampaignService(private val repository: CampaignRepository) {
         }
         val campaign = campaignQuery.get()
         if (!campaign.isOwnedBy(user) && !(campaign.isAccessibleBy(user) && campaign.allowPlayerLabelManagement)) {
+            return false
+        }
+        // Only owner can create invisible labels
+        if (!campaign.isOwnedBy(user) && !visible) {
+            return false
+        }
+        // Only allow one copy of a label with a certain name and visibility combination
+        if (labelRepository.findAll().any { it.isVisible == visible && it.name == name }) {
             return false
         }
         val newLabel = Label(name, visible, campaign)
