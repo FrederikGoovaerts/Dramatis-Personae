@@ -15,6 +15,7 @@ import {
     InputLabel,
     Box
 } from '@material-ui/core';
+import { VisibilityOff } from '@material-ui/icons';
 
 interface Props {
     campaignId: string;
@@ -76,7 +77,14 @@ class AddCharacterLabelFormRaw extends React.Component<AllProps, State> {
                             <Select value={this.state.selected} onChange={this.handleSelect}>
                                 {filteredLabels.map((label: Label) => (
                                     <MenuItem key={label.id} value={label.id}>
-                                        {label.name}
+                                        <Box display="flex">
+                                            <Typography>{label.name}</Typography>
+                                            {!label.visible && (
+                                                <Box marginLeft="0.5em" display="flex" alignItems="center">
+                                                    <VisibilityOff />
+                                                </Box>
+                                            )}
+                                        </Box>
                                     </MenuItem>
                                 ))}
                             </Select>
