@@ -10,8 +10,7 @@ import {
     CircularProgress,
     ListItemIcon,
     Modal,
-    IconButton,
-    Chip
+    IconButton
 } from '@material-ui/core';
 import { Add, Visibility, Edit } from '@material-ui/icons';
 import { RootState } from '../../../store/reducers';
