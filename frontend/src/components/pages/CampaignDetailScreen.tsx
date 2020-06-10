@@ -133,7 +133,12 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                             <Route
                                 path={`${path}${routes.campaign.subpathLabels}`}
                                 exact
-                                render={() => <CampaignLabels owner={campaign.owner} campaignId={campaign.id} />}
+                                render={() => (
+                                    <CampaignLabels
+                                        canManage={campaign.owner || campaign.settings.allowPlayerLabelManagement}
+                                        campaignId={campaign.id}
+                                    />
+                                )}
                             />
                             <Route
                                 path={`${path}${routes.campaign.subpathDetails}`}

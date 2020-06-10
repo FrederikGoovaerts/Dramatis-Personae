@@ -57,7 +57,9 @@ class CharacterLabelsRaw extends React.Component<AllProps, State> {
                     />
                 </Box>
             ))}
-            <Chip avatar={<Add />} label="Add label" onClick={this.onAdd} variant="outlined" />
+            {this.props.canChange && (
+                <Chip avatar={<Add />} label="Add label" onClick={this.onAdd} variant="outlined" />
+            )}
             <Modal open={this.state.addOpen} onClose={this.closeAdd}>
                 <div className="modal">
                     <AddCharacterLabelForm

@@ -23,7 +23,7 @@ import { EditLabelForm } from '../../molecules/EditLabelForm';
 
 interface Props {
     campaignId: string;
-    owner: boolean;
+    canManage: boolean;
 }
 
 interface MapProps {
@@ -80,7 +80,7 @@ class CampaignLabelsRaw extends React.Component<AllProps, State> {
         return (
             <EditLabelForm
                 label={label}
-                deletable={this.props.owner}
+                deletable={this.props.canManage}
                 editLabel={editLabel}
                 deleteLabel={deleteLabel}
                 onSubmitComplete={this.closeModals}
@@ -91,12 +91,12 @@ class CampaignLabelsRaw extends React.Component<AllProps, State> {
     renderLabel = (label: Label) => (
         <ListItem dense={true}>
             <ListItemText primary={<Chip size="small" label={label.name} />} />
-            {this.props.owner && (
+            {this.props.canManage && (
                 <ListItemIcon>
                     <Visibility color={label.visible ? 'primary' : 'disabled'} />
                 </ListItemIcon>
             )}
-            {this.props.owner && (
+            {this.props.canManage && (
                 <ListItemIcon>
                     <IconButton onClick={() => this.openEdit(label)}>
                         <Edit />
@@ -128,7 +128,7 @@ class CampaignLabelsRaw extends React.Component<AllProps, State> {
                         </Paper>
                     )}
                 </Box>
-                {this.props.owner && (
+                {this.props.canManage && (
                     <Fab className="CampaignDetail__createFab" color="primary" onClick={this.openCreate}>
                         <Add />
                     </Fab>
