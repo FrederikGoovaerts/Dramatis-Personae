@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { ChangeEvent } from 'react';
 import { Paper, Typography } from '@material-ui/core';
 
 import { DeleteButton } from '../atoms/DeleteButton';
