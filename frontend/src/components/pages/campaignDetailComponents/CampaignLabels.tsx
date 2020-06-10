@@ -23,6 +23,7 @@ import { EditLabelForm } from '../../molecules/EditLabelForm';
 interface Props {
     campaignId: string;
     canManage: boolean;
+    owner: boolean;
 }
 
 interface MapProps {
@@ -65,6 +66,12 @@ class CampaignLabelsRaw extends React.Component<AllProps, State> {
         this.setState({ createOpen: false, editLabel: undefined });
     };
 
+    labelOverlaps = (name: string, visible: boolean, id?: string): boolean => {
+        return !!this.props.labels.find(
+            (label: Label) => label.name === name && label.visible === visible && label.id !== id
+        );
+    };
+
     renderEditLabel = () => {
         if (!this.state.editLabel) {
             return;
@@ -79,7 +86,8 @@ class CampaignLabelsRaw extends React.Component<AllProps, State> {
         return (
             <EditLabelForm
                 label={label}
-                deletable={this.props.canManage}
+                owner={this.props.owner}
+                labelOverlaps={this.labelOverlaps}
                 editLabel={editLabel}
                 deleteLabel={deleteLabel}
                 onSubmitComplete={this.closeModals}
@@ -137,6 +145,8 @@ class CampaignLabelsRaw extends React.Component<AllProps, State> {
                     <div className="modal">
                         <CreateLabelForm
                             campaignId={this.props.campaignId}
+                            owner={this.props.owner}
+                            labelOverlaps={this.labelOverlaps}
                             className="CampaignDetail__createContainer"
                             onSubmitComplete={this.closeModals}
                         />

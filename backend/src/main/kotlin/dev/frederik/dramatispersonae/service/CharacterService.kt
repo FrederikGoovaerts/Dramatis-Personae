@@ -129,7 +129,9 @@ class CharacterService(private val repository: CharacterRepository, private val 
         return if (!characterQuery.isPresent || !characterQuery.get().campaign.isAccessibleBy(user)) {
             null
         } else {
-            characterQuery.get()
+            val filteredCharacter = characterQuery.get()
+            filteredCharacter.labels = filteredCharacter.labels.filter { it.isVisible || filteredCharacter.campaign.isAccessibleBy(user) }.toMutableList()
+            return filteredCharacter
         }
     }
 
