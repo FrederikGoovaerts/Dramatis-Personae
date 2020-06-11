@@ -16,10 +16,9 @@ import {
     InputLabel,
     Select,
     MenuItem,
-    InputAdornment,
     Button
 } from '@material-ui/core';
-import { Add, Visibility, Edit, CheckCircle, Cancel, VisibilityOff, Search } from '@material-ui/icons';
+import { Add, Visibility, Edit, CheckCircle, Cancel, VisibilityOff } from '@material-ui/icons';
 import { ListCharacter, ProposedCharacter } from '../../../types/character.types';
 import { ListItemLink } from '../../atoms/ListItemLink';
 import { routes } from '../../../config/constants';
