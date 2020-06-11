@@ -9,8 +9,10 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
 
-data class LabelListView(val name: String, val visible: Boolean)
+data class LabelListView(val name: String, val id: UUID, val visible: Boolean)
 data class LabelView(val name: String, val id: UUID, val visible: Boolean)
+
+fun sortLabels(list: List<Label>) = list.sortedBy { label -> label.name.toLowerCase() }
 
 @RestController
 @RequestMapping("/api/label")
@@ -43,6 +45,10 @@ class LabelService(private val repository: LabelRepository, private val characte
         }
         val label = labelQuery.get()
         if (!label.campaign.isOwnedBy(user) && !(label.campaign.isAccessibleBy(user) && label.campaign.allowPlayerLabelManagement)) {
+            return false
+        }
+        // A player is never allow to edit an invisible label
+        if (!label.campaign.isOwnedBy(user) && (!label.isVisible || !visible)) {
             return false
         }
         label.name = name
