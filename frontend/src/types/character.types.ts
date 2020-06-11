@@ -25,6 +25,10 @@ export interface ProposedCharacter {
     proposedBy: string;
 }
 
+export function isProposedCharacter(character: ListCharacter | ProposedCharacter): character is ProposedCharacter {
+    return (character as ProposedCharacter).proposedBy !== undefined;
+}
+
 export interface CharacterPrototype {
     name: string;
     description: string;

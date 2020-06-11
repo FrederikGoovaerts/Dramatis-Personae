@@ -10,9 +10,16 @@ import {
     ListItem,
     IconButton,
     CircularProgress,
-    Chip
+    Chip,
+    TextField,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    InputAdornment,
+    Button
 } from '@material-ui/core';
-import { Add, Visibility, Edit, CheckCircle, Cancel } from '@material-ui/icons';
+import { Add, Visibility, Edit, CheckCircle, Cancel, VisibilityOff, Search } from '@material-ui/icons';
 import { ListCharacter, ProposedCharacter } from '../../../types/character.types';
 import { ListItemLink } from '../../atoms/ListItemLink';
 import { routes } from '../../../config/constants';
@@ -22,7 +29,7 @@ import { EditProposedCharacterForm } from '../../molecules/EditProposedCharacter
 import { RootState } from '../../../store/reducers';
 import { campaignActions, proposedCharacterActions } from '../../../store/actions';
 import { connect } from 'react-redux';
-import { ListLabel } from '../../../types/label.types';
+import { ListLabel, Label } from '../../../types/label.types';
 
 interface Props {
     campaignId: string;
@@ -33,8 +40,10 @@ interface Props {
 interface MapProps {
     characters: ListCharacter[];
     proposedCharacters: ProposedCharacter[];
+    labels: Label[];
     loading: boolean;
     fetchCharacters: (campaignId: string) => void;
+    fetchLabels: (campaignId: string) => void;
     fetchProposedCharacters: (campaignId: string) => void;
     acceptProposedCharacter: (p: { campaignId: string; characterId: string }) => void;
     deleteProposedCharacter: (p: { campaignId: string; characterId: string }) => void;
@@ -43,6 +52,8 @@ interface MapProps {
 type AllProps = Props & MapProps;
 
 interface State {
+    filterName: string;
+    filterLabelId: string;
     createOpen: boolean;
     proposeOpen: boolean;
     editProposedCharacter: ProposedCharacter | undefined;
@@ -54,12 +65,15 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
         this.state = {
             createOpen: false,
             proposeOpen: false,
-            editProposedCharacter: undefined
+            editProposedCharacter: undefined,
+            filterName: '',
+            filterLabelId: ''
         };
     }
 
     componentDidMount() {
         this.props.fetchCharacters(this.props.campaignId);
+        this.props.fetchLabels(this.props.campaignId);
         this.props.fetchProposedCharacters(this.props.campaignId);
     }
 
@@ -82,6 +96,89 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
             editProposedCharacter: undefined
         });
     };
+
+    clearFilters = () => {
+        this.setState({ filterLabelId: '', filterName: '' });
+    };
+
+    handleChangeNameFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({ filterName: event.target.value });
+    };
+
+    handleChangeLabelFilter = (event: React.ChangeEvent<{ value: string }>) => {
+        this.setState({ filterLabelId: event.target.value });
+    };
+
+    filteredCharacters = () => {
+        const { filterName: filterString, filterLabelId } = this.state;
+        let filteredCharacters = [...this.props.characters];
+        if (filterString !== '') {
+            filteredCharacters = filteredCharacters.filter((character) =>
+                character.name.toLowerCase().includes(filterString.toLowerCase())
+            );
+        }
+        if (filterLabelId !== '') {
+            filteredCharacters = filteredCharacters.filter((character) =>
+                character.labels.find((label) => label.id === filterLabelId)
+            );
+        }
+        return filteredCharacters;
+    };
+
+    filteredProposedCharacters = () => {
+        const { filterName: filterString, filterLabelId } = this.state;
+        if (filterLabelId !== '') {
+            return [];
+        }
+        let filteredCharacters = [...this.props.proposedCharacters];
+        if (filterString !== '') {
+            filteredCharacters = filteredCharacters.filter((character) =>
+                character.name.toLowerCase().includes(filterString.toLowerCase())
+            );
+        }
+        return filteredCharacters;
+    };
+
+    renderCharacterFilters = () => (
+        <Box display="flex" flexWrap="wrap" alignItems="end" flexDirection="row">
+            <Box minWidth="15em" display="flex" flexDirection="column" margin="0.5em">
+                <TextField
+                    label="Character name filter"
+                    value={this.state.filterName}
+                    onChange={this.handleChangeNameFilter}
+                />
+            </Box>
+            <Box minWidth="15em" display="flex" flexDirection="column" margin="0.5em">
+                <FormControl>
+                    <InputLabel>Character label filter</InputLabel>
+                    <Select value={this.state.filterLabelId} onChange={this.handleChangeLabelFilter}>
+                        <MenuItem value="">None</MenuItem>
+                        {this.props.labels.map((label: Label) => (
+                            <MenuItem key={label.id} value={label.id}>
+                                <Box display="flex">
+                                    {label.name}
+                                    {!label.visible && (
+                                        <Box marginLeft="0.5em" marginY="-0.5em" display="flex" alignItems="center">
+                                            <VisibilityOff />
+                                        </Box>
+                                    )}
+                                </Box>
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            </Box>
+            <Box margin="0.5em">
+                <Button
+                    variant="outlined"
+                    disabled={!(this.state.filterLabelId || this.state.filterName)}
+                    onClick={this.clearFilters}
+                >
+                    Clear filters
+                </Button>
+            </Box>
+        </Box>
+    );
 
     renderCreateCharacter = () => (
         <Paper className="modalPaper">
@@ -182,28 +279,30 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
     };
 
     render() {
-        const { characters, proposedCharacters, loading } = this.props;
-        if (loading) {
+        const filteredCharacters = this.filteredCharacters();
+        const filteredProposedCharacters = this.filteredProposedCharacters();
+        if (this.props.loading) {
             return <CircularProgress />;
         }
         return (
             <Box>
+                {this.renderCharacterFilters()}
                 <Box marginBottom="1em">
-                    {characters.length === 0 ? (
-                        <Typography variant="body1">This campaign does not have any characters yet.</Typography>
+                    {filteredCharacters.length === 0 ? (
+                        <Typography variant="body1">No characters found.</Typography>
                     ) : (
                         <Paper elevation={3}>
-                            <List>{characters.map(this.renderCharacter)}</List>
+                            <List>{filteredCharacters.map(this.renderCharacter)}</List>
                         </Paper>
                     )}
                 </Box>
-                {proposedCharacters.length > 0 && (
+                {filteredProposedCharacters.length > 0 && (
                     <Box marginBottom="1em">
                         <Box marginBottom="1em">
                             <Typography variant="h5">Proposed characters</Typography>
                         </Box>
                         <Paper elevation={3}>
-                            <List>{proposedCharacters.map(this.renderProposedCharacter)}</List>
+                            <List>{filteredProposedCharacters.map(this.renderProposedCharacter)}</List>
                         </Paper>
                     </Box>
                 )}
@@ -231,13 +330,16 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
 
 const mapStateToProps = (state: RootState) => ({
     characters: state.campaign.characters,
+    labels: state.campaign.labels,
     proposedCharacters: state.campaign.proposedCharacters,
-    loading: state.campaign.charactersLoading || state.campaign.proposedCharactersLoading
+    loading:
+        state.campaign.charactersLoading || state.campaign.proposedCharactersLoading || state.campaign.labelsLoading
 });
 
 export const CampaignCharacters = connect(mapStateToProps, {
     fetchCharacters: campaignActions.actions.fetchCharacters,
     fetchProposedCharacters: campaignActions.actions.fetchProposedCharacters,
+    fetchLabels: campaignActions.actions.fetchLabels,
     acceptProposedCharacter: proposedCharacterActions.actions.acceptProposedCharacter,
     deleteProposedCharacter: proposedCharacterActions.actions.deleteProposedCharacter
 })(CampaignCharactersRaw);
