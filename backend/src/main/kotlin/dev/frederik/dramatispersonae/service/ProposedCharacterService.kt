@@ -16,6 +16,8 @@ data class ProposedCharacterView(
     val id: UUID
 )
 
+fun sortProposedCharacters(list: List<ProposedCharacter>) = list.sortedBy { character -> character.name.toLowerCase() }
+
 @RestController
 @RequestMapping("/api/proposedcharacter")
 class ProposedCharacterController(private val service: ProposedCharacterService) {

@@ -28,6 +28,8 @@ data class CampaignView(
 )
 data class CampaignMemberView(val name: String, val id: UUID, val owner: Boolean)
 
+fun sortCampaigns(list: List<Campaign>) = list.sortedBy { campaign -> campaign.name.toLowerCase() }
+
 @RestController
 @RequestMapping("/api/campaign")
 class CampaignController(private val service: CampaignService) {
@@ -197,7 +199,7 @@ class CampaignController(private val service: CampaignService) {
     }
 
     @GetMapping("/{id}/note")
-    fun getNoteList(
+    fun getNotes(
         auth: GoogleAuthentication,
         @PathVariable id: UUID
     ): ResponseEntity<List<NoteView>> {
@@ -253,7 +255,7 @@ class CampaignController(private val service: CampaignService) {
 @Component
 class CampaignService(private val repository: CampaignRepository, private val labelRepository: LabelRepository) {
 
-    fun getCampaignsForUser(user: User): List<Campaign> = repository.findAll().filter { it.isAccessibleBy(user) }
+    fun getCampaignsForUser(user: User): List<Campaign> = sortCampaigns(repository.findAll().filter { it.isAccessibleBy(user) })
 
     fun getCampaign(user: User, id: UUID): Campaign? {
         val campaignQuery = repository.findById(id)
@@ -346,7 +348,8 @@ class CampaignService(private val repository: CampaignRepository, private val la
             return null
         }
         val campaign = campaignQuery.get()
-        return campaign.characters.filter { campaign.isOwnedBy(user) || it.isVisible }.map { it.copy (labels = it.labels.filter { l -> l.isVisible || campaign.isOwnedBy(user) }.toMutableList())}
+        val characters = campaign.characters.filter { campaign.isOwnedBy(user) || it.isVisible }.map { it.copy (labels = it.labels.filter { l -> l.isVisible || campaign.isOwnedBy(user) }.toMutableList())}
+        return sortCharacters(characters)
     }
 
     fun createCharacter(user: User, id: UUID, name: String, description: String): Boolean {
@@ -367,7 +370,8 @@ class CampaignService(private val repository: CampaignRepository, private val la
             return null
         }
         val campaign = campaignQuery.get()
-        return campaign.proposedCharacters.filter { campaign.isOwnedBy(user) || it.proposedBy == user }
+        val characters = campaign.proposedCharacters.filter { campaign.isOwnedBy(user) || it.proposedBy == user }
+        return sortProposedCharacters(characters)
     }
 
     fun proposeCharacter(user: User, id: UUID, name: String, description: String): Boolean {
@@ -402,7 +406,7 @@ class CampaignService(private val repository: CampaignRepository, private val la
             return null
         }
         val campaign = campaignQuery.get()
-        return campaign.notes.filter { it.author == user }
+        return sortNotes(campaign.notes.filter { it.author == user })
     }
 
     fun getSharedNotes(user: User, campaignId: UUID): List<CampaignNote>? {
@@ -411,14 +415,14 @@ class CampaignService(private val repository: CampaignRepository, private val la
             return null
         }
         val campaign = campaignQuery.get()
-        return if (campaign.isOwnedBy(user)) {
+        return sortNotes(if (campaign.isOwnedBy(user)) {
             campaign.notes.filter {
                 it.author != user &&
                         (it.visibility === NoteVisibility.DM_SHARED || it.visibility === NoteVisibility.PUBLIC)
             }
         } else {
             campaign.notes.filter { it.author != user && it.visibility === NoteVisibility.PUBLIC }
-        }
+        })
     }
 
     fun createNote(user: User, id: UUID, contents: String, rawVisibility: String): Boolean {
@@ -462,6 +466,7 @@ class CampaignService(private val repository: CampaignRepository, private val la
         if (!campaignQuery.isPresent || !campaignQuery.get().members.contains(user)) {
             return null
         }
-        return campaignQuery.get().labels.filter { campaignQuery.get().isOwnedBy(user) || it.isVisible }
+        val labels = campaignQuery.get().labels.filter { campaignQuery.get().isOwnedBy(user) || it.isVisible }
+        return sortLabels(labels)
     }
 }

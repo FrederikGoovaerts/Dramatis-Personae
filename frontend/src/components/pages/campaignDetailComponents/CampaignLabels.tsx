@@ -124,15 +124,7 @@ class CampaignLabelsRaw extends React.Component<AllProps, State> {
                     {labels.length === 0 ? (
                         <Typography variant="body1">This campaign does not have any labels yet.</Typography>
                     ) : (
-                        <Paper elevation={3}>
-                            {
-                                <List>
-                                    {labels
-                                        .sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1))
-                                        .map(this.renderLabel)}
-                                </List>
-                            }
-                        </Paper>
+                        <Paper elevation={3}>{<List>{labels.map(this.renderLabel)}</List>}</Paper>
                     )}
                 </Box>
                 {this.props.canManage && (

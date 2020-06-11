@@ -41,6 +41,8 @@ fun returnNotes(list: List<Note>?, user: User): ResponseEntity<List<NoteView>> {
     }
 }
 
+fun <T : Note> sortNotes(list: List<T>) = list.sortedByDescending { note -> note.addedOn }
+
 abstract class NoteController<T : Note>(private val service: NoteService<T>) {
 
     @PutMapping("/{id}")

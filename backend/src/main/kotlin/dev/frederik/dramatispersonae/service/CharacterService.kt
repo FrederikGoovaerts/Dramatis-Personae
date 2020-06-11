@@ -25,6 +25,8 @@ data class CharacterDetailView(
     val id: UUID
 )
 
+fun sortCharacters(list: List<Character>) = list.sortedBy { character -> character.name.toLowerCase() }
+
 @RestController
 @RequestMapping("/api/character")
 class CharacterController(private val service: CharacterService) {
@@ -173,7 +175,8 @@ class CharacterService(private val repository: CharacterRepository, private val 
             return null
         }
         val character = characterQuery.get()
-        return character.notes.filter { it.author == user }
+        val notes = character.notes.filter { it.author == user }
+        return sortNotes(notes)
     }
 
     fun getSharedNotes(user: User, characterId: UUID): List<CharacterNote>? {
@@ -182,14 +185,14 @@ class CharacterService(private val repository: CharacterRepository, private val 
             return null
         }
         val character = characterQuery.get()
-        return if (character.campaign.isOwnedBy(user)) {
+        return sortNotes(if (character.campaign.isOwnedBy(user)) {
             character.notes.filter {
                 it.author != user &&
                         (it.visibility === NoteVisibility.DM_SHARED || it.visibility === NoteVisibility.PUBLIC)
             }
         } else {
             character.notes.filter { it.author != user && it.visibility === NoteVisibility.PUBLIC }
-        }
+        })
     }
 
     fun createNote(user: User, id: UUID, contents: String, rawVisibility: String): Boolean {
