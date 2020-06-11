@@ -5,6 +5,7 @@ export interface Label {
 }
 
 export interface ListLabel {
+    id: string;
     name: string;
     visible: boolean;
 }
