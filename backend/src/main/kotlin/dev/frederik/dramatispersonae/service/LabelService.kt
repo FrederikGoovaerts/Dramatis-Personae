@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*
 data class LabelListView(val name: String, val visible: Boolean)
 data class LabelView(val name: String, val id: UUID, val visible: Boolean)
 
+fun sortLabels(list: List<Label>) = list.sortedBy { label -> label.name.toLowerCase() }
+
 @RestController
 @RequestMapping("/api/label")
 class LabelController(private val service: LabelService) {
