@@ -190,8 +190,10 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
 
     renderProposeCharacter = () => (
         <Paper className="CampaignDetail__createPaper">
-            <Typography variant="h5">Propose character</Typography>
-            <ProposeCharacterForm campaignId={this.props.campaignId} onSubmitComplete={this.closeModals} />
+            <div className="modalContainer">
+                <Typography variant="h5">Propose character</Typography>
+                <ProposeCharacterForm campaignId={this.props.campaignId} onSubmitComplete={this.closeModals} />
+            </div>
         </Paper>
     );
 
