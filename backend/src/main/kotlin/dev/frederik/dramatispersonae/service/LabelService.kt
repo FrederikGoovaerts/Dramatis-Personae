@@ -47,6 +47,10 @@ class LabelService(private val repository: LabelRepository, private val characte
         if (!label.campaign.isOwnedBy(user) && !(label.campaign.isAccessibleBy(user) && label.campaign.allowPlayerLabelManagement)) {
             return false
         }
+        // A player is never allow to edit an invisible label
+        if (!label.campaign.isOwnedBy(user) && (!label.isVisible || !visible)) {
+            return false
+        }
         label.name = name
         label.isVisible = visible
         this.repository.save(label)
