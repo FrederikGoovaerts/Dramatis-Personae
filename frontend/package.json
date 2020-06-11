@@ -1,6 +1,6 @@
 {
     "name": "dramatis-personae-frontend",
-    "version": "0.6.0",
+    "version": "0.7.0",
     "description": "Frontend for the Dramatis Personae project",
     "repository": {
         "type": "git",
