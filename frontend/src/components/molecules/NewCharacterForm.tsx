@@ -4,7 +4,6 @@ import { ChangeEvent } from 'react';
 import * as React from 'react';
 
 interface Props {
-    className?: string;
     onSubmit: (name: string, description: string) => void;
 }
 
@@ -34,7 +33,7 @@ export class NewCharacterForm extends React.Component<Props, State> {
 
     render() {
         return (
-            <div className={this.props.className}>
+            <>
                 <TextField
                     label="Name"
                     required
@@ -56,7 +55,7 @@ export class NewCharacterForm extends React.Component<Props, State> {
                 <Button variant="contained" color="primary" onClick={this.handleSubmit} disabled={!this.state.name}>
                     Create
                 </Button>
-            </div>
+            </>
         );
     }
 }

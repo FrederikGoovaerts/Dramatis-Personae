@@ -7,7 +7,7 @@ import { Paper, Typography, Box, FormControlLabel, Checkbox } from '@material-ui
 
 import { campaignActions } from '../../store/actions';
 import { DeleteButton } from '../atoms/DeleteButton';
-import { CampaignSettings } from '../../types/campaign.types';
+import { CampaignSettings, CampaignEditPayload } from '../../types/campaign.types';
 
 interface Props {
     id: string;
@@ -18,7 +18,7 @@ interface Props {
 }
 
 interface MapProps {
-    editCampaign: (payload: { id: string; name: string; autoAcceptProposedCharacter: boolean }) => void;
+    editCampaign: (payload: CampaignEditPayload) => void;
     deleteCampaign: (params: string) => void;
 }
 
@@ -27,12 +27,19 @@ type AllProps = Props & MapProps;
 interface State {
     name: string;
     autoAcceptProposedCharacter: boolean;
+    allowPlayerLabelManagement: boolean;
+    allowPlayerCharacterLabelManagement: boolean;
 }
 
 class EditCampaignFormRaw extends React.Component<AllProps, State> {
     constructor(props: AllProps) {
         super(props);
-        this.state = { name: props.name, autoAcceptProposedCharacter: props.settings.autoAcceptProposedCharacter };
+        this.state = {
+            name: props.name,
+            autoAcceptProposedCharacter: props.settings.autoAcceptProposedCharacter,
+            allowPlayerLabelManagement: props.settings.allowPlayerLabelManagement,
+            allowPlayerCharacterLabelManagement: props.settings.allowPlayerCharacterLabelManagement
+        };
     }
 
     handleChangeName = (event: ChangeEvent<HTMLInputElement>) => {
@@ -40,10 +47,19 @@ class EditCampaignFormRaw extends React.Component<AllProps, State> {
     };
 
     handleSubmit = () => {
+        const {
+            autoAcceptProposedCharacter,
+            allowPlayerLabelManagement,
+            allowPlayerCharacterLabelManagement
+        } = this.state;
         this.props.editCampaign({
             id: this.props.id,
             name: this.state.name,
-            autoAcceptProposedCharacter: this.state.autoAcceptProposedCharacter
+            campaignSettings: {
+                autoAcceptProposedCharacter,
+                allowPlayerLabelManagement,
+                allowPlayerCharacterLabelManagement
+            }
         });
         if (this.props.onSubmitComplete) {
             this.props.onSubmitComplete();
@@ -59,6 +75,14 @@ class EditCampaignFormRaw extends React.Component<AllProps, State> {
 
     handleChangeAutoAcceptProposedCharacter = (event: ChangeEvent<HTMLInputElement>) => {
         this.setState({ autoAcceptProposedCharacter: event.target.checked });
+    };
+
+    handleChangeAllowPlayerLabelManagement = (event: ChangeEvent<HTMLInputElement>) => {
+        this.setState({ allowPlayerLabelManagement: event.target.checked });
+    };
+
+    handleChangeAllowPlayerCharacterLabelManagement = (event: ChangeEvent<HTMLInputElement>) => {
+        this.setState({ allowPlayerCharacterLabelManagement: event.target.checked });
     };
 
     render() {
@@ -82,6 +106,28 @@ class EditCampaignFormRaw extends React.Component<AllProps, State> {
                                 />
                             }
                             label="Auto accept proposed characters"
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={this.state.allowPlayerLabelManagement}
+                                    onChange={this.handleChangeAllowPlayerLabelManagement}
+                                    name="allowPlayerLabelManagement"
+                                    color="primary"
+                                />
+                            }
+                            label="Allow players to manage campaign labels"
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={this.state.allowPlayerCharacterLabelManagement}
+                                    onChange={this.handleChangeAllowPlayerCharacterLabelManagement}
+                                    name="allowPlayerCharacterLabelManagement"
+                                    color="primary"
+                                />
+                            }
+                            label="Allow players to apply and remove labels on characters"
                         />
                     </Box>
                     <Button variant="contained" color="primary" onClick={this.handleSubmit} disabled={!this.state.name}>

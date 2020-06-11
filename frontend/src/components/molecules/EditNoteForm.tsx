@@ -100,8 +100,3 @@ export class EditNoteForm extends React.Component<Props, State> {
         );
     }
 }
-
-// export const EditNoteForm = connect(null, {
-//     editCharacterNote: noteActions.actions.editCharacterNote,
-//     deleteCharacterNote: noteActions.actions.deleteCharacterNote
-// })(EditNoteFormRaw);

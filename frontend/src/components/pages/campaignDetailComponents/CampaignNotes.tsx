@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { CircularProgress } from '@material-ui/core';
-import { ProposedCharacter } from '../../../types/character.types';
 import { RootState } from '../../../store/reducers';
 import { campaignActions, noteActions } from '../../../store/actions';
 import { connect } from 'react-redux';
@@ -27,17 +26,13 @@ type AllProps = Props & MapProps;
 
 interface State {
     createOpen: boolean;
-    proposeOpen: boolean;
-    editProposedCharacter: ProposedCharacter | undefined;
 }
 
 class CampaignNotesRaw extends React.Component<AllProps, State> {
     constructor(props: AllProps) {
         super(props);
         this.state = {
-            createOpen: false,
-            proposeOpen: false,
-            editProposedCharacter: undefined
+            createOpen: false
         };
     }
 

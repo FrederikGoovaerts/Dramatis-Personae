@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/campaignnote")
-class CampaignNoteController(service: CampaignNoteService): NoteController<CampaignNote>(service)
+class CampaignNoteController(service: CampaignNoteService) : NoteController<CampaignNote>(service)
 
 @Component
 class CampaignNoteService(repository: CampaignNoteRepository) : NoteService<CampaignNote>(repository) {

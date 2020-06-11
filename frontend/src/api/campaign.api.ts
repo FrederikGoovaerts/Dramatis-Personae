@@ -2,16 +2,17 @@ import { axiosInstance } from '../config/axios';
 import { api } from '../config/constants';
 import { buildPath } from './base.api';
 import moment from 'moment';
-import { Campaign, CampaignPrototype, CampaignMember } from '../types/campaign.types';
+import { Campaign, CampaignPrototype, CampaignMember, CampaignSettings } from '../types/campaign.types';
 import { ListCharacter, CharacterPrototype, ProposedCharacter } from '../types/character.types';
 import { RawNote } from './note.api';
 import { CreateNotePayload, Note } from '../types/note.types';
+import { CreateLabelPayload, Label, ListLabel } from '../types/label.types';
 
 interface RawListCharacter {
     name: string;
     description: string;
     visible: boolean;
-    addedOn: string;
+    labels: ListLabel[];
     id: string;
 }
 
@@ -38,9 +39,9 @@ export async function create(campaignPrototype: CampaignPrototype): Promise<void
     await axiosInstance.post(url, campaignPrototype);
 }
 
-export async function update(id: string, name: string, autoAcceptProposedCharacter: boolean): Promise<void> {
+export async function update(id: string, name: string, campaignSettings: CampaignSettings): Promise<void> {
     const url = buildPath(`${api.CAMPAIGN.PATH}/${id}`);
-    await axiosInstance.put(url, { name, autoAcceptProposedCharacter });
+    await axiosInstance.put(url, { name, campaignSettings });
 }
 
 export async function deletePermanently(campaignId: string): Promise<void> {
@@ -51,10 +52,7 @@ export async function deletePermanently(campaignId: string): Promise<void> {
 export async function getCharacters(id: string): Promise<Array<ListCharacter>> {
     const url = buildPath(`${api.CAMPAIGN.PATH}/${id}${api.CAMPAIGN.SUBPATH_CHARACTER}`);
     const data: Array<RawListCharacter> = (await axiosInstance.get(url)).data;
-    return data.map((char) => ({
-        ...char,
-        addedOn: moment(char.addedOn)
-    }));
+    return data;
 }
 
 export async function createCharacter(id: string, characterPrototype: CharacterPrototype): Promise<void> {
@@ -124,4 +122,14 @@ export async function getSharedNotes(id: string): Promise<Array<Note>> {
 export async function createNote(payload: CreateNotePayload): Promise<void> {
     const url = buildPath(`${api.CAMPAIGN.PATH}/${payload.id}${api.CAMPAIGN.SUBPATH_NOTE}`);
     await axiosInstance.post(url, { contents: payload.contents, visibility: payload.visibility });
+}
+
+export async function createLabel(payload: CreateLabelPayload): Promise<void> {
+    const url = buildPath(`${api.CAMPAIGN.PATH}/${payload.id}${api.CAMPAIGN.SUBPATH_LABEL}`);
+    await axiosInstance.post(url, { name: payload.name, visible: payload.visible });
+}
+
+export async function getLabels(id: string): Promise<Array<Label>> {
+    const url = buildPath(`${api.CAMPAIGN.PATH}/${id}${api.CAMPAIGN.SUBPATH_LABEL}`);
+    return (await axiosInstance.get(url)).data;
 }

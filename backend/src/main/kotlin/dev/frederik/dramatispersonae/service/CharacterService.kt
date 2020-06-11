@@ -10,14 +10,22 @@ import org.springframework.web.bind.annotation.*
 
 data class CreateCharacterDto(val name: String, val description: String)
 
-data class CharacterListView(val name: String, val description: String, val visible: Boolean, val addedOn: Date, val id: UUID)
+data class CharacterListView(
+    val name: String,
+    val description: String,
+    val labels: List<LabelListView>,
+    val visible: Boolean,
+    val id: UUID
+)
 data class CharacterDetailView(
     val name: String,
     val description: String,
+    val labels: List<LabelView>,
     val visible: Boolean,
-    val addedOn: Date,
     val id: UUID
 )
+
+fun sortCharacters(list: List<Character>) = list.sortedBy { character -> character.name.toLowerCase() }
 
 @RestController
 @RequestMapping("/api/character")
@@ -32,8 +40,8 @@ class CharacterController(private val service: CharacterService) {
             ResponseEntity(
                     CharacterDetailView(character.name,
                                         character.description,
+                                        character.labels.map { LabelView(it.name, it.id!!, it.isVisible) },
                                         character.isVisible,
-                                        character.addedOn,
                                         character.id!!),
                     HttpStatus.OK
             )
@@ -93,17 +101,39 @@ class CharacterController(private val service: CharacterService) {
         val success = this.service.createNote(auth.principal, id, dto.contents, dto.visibility)
         return ResponseEntity(if (success) HttpStatus.CREATED else HttpStatus.FORBIDDEN)
     }
+
+    @PostMapping("/{id}/label")
+    fun addLabel(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID,
+        @RequestBody labelId: UUID
+    ): ResponseEntity<Unit> {
+        val success = this.service.addLabel(auth.principal, id, labelId)
+        return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
+    }
+
+    @DeleteMapping("/{id}/label")
+    fun removeLabel(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID,
+        @RequestBody labelId: UUID
+    ): ResponseEntity<Unit> {
+        val success = this.service.removeLabel(auth.principal, id, labelId)
+        return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
+    }
 }
 
 @Component
-class CharacterService(private val repository: CharacterRepository) {
+class CharacterService(private val repository: CharacterRepository, private val labelRepository: LabelRepository) {
 
     fun getCharacter(user: User, id: UUID): Character? {
         val characterQuery = this.repository.findById(id)
         return if (!characterQuery.isPresent || !characterQuery.get().campaign.isAccessibleBy(user)) {
             null
         } else {
-            characterQuery.get()
+            val filteredCharacter = characterQuery.get()
+            filteredCharacter.labels = filteredCharacter.labels.filter { it.isVisible || filteredCharacter.campaign.isAccessibleBy(user) }.toMutableList()
+            return filteredCharacter
         }
     }
 
@@ -145,7 +175,8 @@ class CharacterService(private val repository: CharacterRepository) {
             return null
         }
         val character = characterQuery.get()
-        return character.notes.filter { it.author == user }
+        val notes = character.notes.filter { it.author == user }
+        return sortNotes(notes)
     }
 
     fun getSharedNotes(user: User, characterId: UUID): List<CharacterNote>? {
@@ -154,14 +185,14 @@ class CharacterService(private val repository: CharacterRepository) {
             return null
         }
         val character = characterQuery.get()
-        return if (character.campaign.isOwnedBy(user)) {
+        return sortNotes(if (character.campaign.isOwnedBy(user)) {
             character.notes.filter {
                 it.author != user &&
                         (it.visibility === NoteVisibility.DM_SHARED || it.visibility === NoteVisibility.PUBLIC)
             }
         } else {
             character.notes.filter { it.author != user && it.visibility === NoteVisibility.PUBLIC }
-        }
+        })
     }
 
     fun createNote(user: User, id: UUID, contents: String, rawVisibility: String): Boolean {
@@ -174,6 +205,43 @@ class CharacterService(private val repository: CharacterRepository) {
         val newNote = CharacterNote(contents, user, character, visibility)
         character.notes.add(newNote)
         this.repository.save(character)
+        return true
+    }
+
+    fun addLabel(user: User, id: UUID, labelId: UUID): Boolean {
+        val characterQuery = repository.findById(id)
+        if (!characterQuery.isPresent) {
+            return false
+        }
+        val character = characterQuery.get()
+        if (character.labels.any { it.id == labelId }) {
+            return false
+        }
+        if (!character.campaign.isOwnedBy(user) && !(character.campaign.isAccessibleBy(user) && character.campaign.allowPlayerCharacterLabelManagement)) {
+            return false
+        }
+        val labelQuery = labelRepository.findById(labelId)
+        if (!labelQuery.isPresent || labelQuery.get().campaign != character.campaign) {
+            return false
+        }
+        val label = labelQuery.get()
+        character.labels.add(label)
+        repository.save(character)
+        return true
+    }
+
+    fun removeLabel(user: User, id: UUID, labelId: UUID): Boolean {
+        val characterQuery = repository.findById(id)
+        if (!characterQuery.isPresent) {
+            return false
+        }
+        val character = characterQuery.get()
+        if (!character.campaign.isOwnedBy(user) && !(character.campaign.isAccessibleBy(user) && character.campaign.allowPlayerCharacterLabelManagement)) {
+            return false
+        }
+        val label = character.labels.find { it.id == labelId } ?: return false
+        character.labels.remove(label)
+        repository.save(character)
         return true
     }
 }
