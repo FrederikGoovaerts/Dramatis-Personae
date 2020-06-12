@@ -132,7 +132,7 @@ class CharacterService(private val repository: CharacterRepository, private val 
             null
         } else {
             val filteredCharacter = characterQuery.get()
-            filteredCharacter.labels = filteredCharacter.labels.filter { it.isVisible || filteredCharacter.campaign.isAccessibleBy(user) }.toMutableList()
+            filteredCharacter.labels = filteredCharacter.labels.filter { it.isVisible || filteredCharacter.campaign.isOwnedBy(user) }.toMutableList()
             return filteredCharacter
         }
     }
