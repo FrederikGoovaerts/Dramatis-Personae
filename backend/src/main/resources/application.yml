@@ -51,3 +51,13 @@ spring:
   googleAuth:
     clientId: dummy
     clientSecret: dummy
+
+---
+
+spring:
+  profiles: test
+  flyway:
+    enabled: false
+  googleAuth:
+    clientId: dummy
+    clientSecret: dummy
