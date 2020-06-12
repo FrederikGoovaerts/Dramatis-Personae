@@ -19,6 +19,3 @@ jobs:
       - name: Build project
         run: ./gradlew build
         working-directory: ${{env.workdir}}
-      - name: Test project
-        run: ./gradlew test
-        working-directory: ${{env.workdir}}
