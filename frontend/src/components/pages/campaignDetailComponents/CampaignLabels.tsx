@@ -98,7 +98,7 @@ class CampaignLabelsRaw extends React.Component<AllProps, State> {
     renderLabel = (label: Label) => (
         <ListItem dense={true}>
             <ListItemText primary={<Typography>{label.name}</Typography>} />
-            {this.props.canManage && (
+            {this.props.owner && (
                 <ListItemIcon>
                     <Visibility color={label.visible ? 'primary' : 'disabled'} />
                 </ListItemIcon>
