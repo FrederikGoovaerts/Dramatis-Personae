@@ -15,6 +15,11 @@ fun getTestCharacter(name: String = "testCharacter",
                      isVisible: Boolean = true,
                      campaign: Campaign = getTestCampaign()): Character = Character(name, description, isVisible, campaign)
 
+fun getTestProposedCharacter(name: String = "testProposedCharacter",
+                             description: String = "test description",
+                             campaign: Campaign = getTestCampaign(),
+                             proposedBy: User = getTestUser()): ProposedCharacter = ProposedCharacter(name, description, campaign, proposedBy)
+
 fun getTestCharacterNote(contents: String = "test note",
                          user: User = getTestUser(),
                          character: Character = getTestCharacter(),
