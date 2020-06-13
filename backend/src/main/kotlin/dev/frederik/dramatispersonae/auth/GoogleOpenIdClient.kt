@@ -9,7 +9,7 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.nio.charset.StandardCharsets
 
-public const val DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
+const val DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
 
 class GoogleOpenIdClient(private val authenticationConfig: AuthenticationConfig,
                          private val httpClient: HttpClient = HttpClient.newBuilder().build(),
