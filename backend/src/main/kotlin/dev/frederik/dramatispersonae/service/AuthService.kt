@@ -15,8 +15,7 @@ data class RefreshTokenDto(val token: String)
 
 @RestController
 @RequestMapping("/api/auth")
-class AuthenticationController @Autowired constructor(authenticationConfig: AuthenticationConfig) {
-    private val googleOpenIdClient: GoogleOpenIdClient = GoogleOpenIdClient(authenticationConfig)
+class AuthenticationController @Autowired constructor(private val googleOpenIdClient: GoogleOpenIdClient) {
 
     @PostMapping("/code")
     fun getTokenSet(@Validated @RequestBody dto: AuthenticationCodeDto): TokenSet {
