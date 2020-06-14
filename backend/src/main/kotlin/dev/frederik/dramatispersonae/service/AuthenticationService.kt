@@ -1,6 +1,5 @@
 package dev.frederik.dramatispersonae.service
 
-import dev.frederik.dramatispersonae.AuthenticationConfig
 import dev.frederik.dramatispersonae.auth.GoogleOpenIdClient
 import dev.frederik.dramatispersonae.auth.TokenSet
 import org.springframework.beans.factory.annotation.Autowired
