@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test
 
-class AuthenticationServiceTests {
+class AuthenticationControllerTests {
 
     private val tokenSet = TokenSet("1", "2", "3", 4)
     private val refreshedTokenSet = tokenSet.copy(accessToken = "refreshed")

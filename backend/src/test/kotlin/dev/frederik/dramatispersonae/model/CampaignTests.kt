@@ -17,11 +17,14 @@ class CampaignTests constructor(@Autowired val userRepository: UserRepository,
                                 @Autowired val labelRepository: LabelRepository,
                                 @Autowired val campaignNoteRepository: CampaignNoteRepository) {
 
-    var campaign: Campaign = getTestCampaign()
-    var player = getTestUser()
+    lateinit var player: User
+    lateinit var campaign: Campaign
 
     @BeforeEach
     fun beforeEach() {
+        player = userRepository.save(getTestUser())
+        val owner = userRepository.save(getTestUser())
+        campaign = getTestCampaign(owner = owner)
         campaign.members.add(player)
         campaign.characters.addAll(listOf(getTestCharacter(campaign = campaign), getTestCharacter(campaign = campaign)))
         campaign.proposedCharacters.addAll(listOf(
@@ -33,8 +36,6 @@ class CampaignTests constructor(@Autowired val userRepository: UserRepository,
             getTestCampaignNote(campaign = campaign, user = player)
         ))
         campaign.labels.addAll(listOf(getTestLabel(campaign = campaign), getTestLabel(campaign = campaign)))
-        userRepository.save(campaign.owner)
-        player = userRepository.save(player)
         campaign = campaignRepository.save(campaign)
     }
 

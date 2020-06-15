@@ -1,8 +1,6 @@
 package dev.frederik.dramatispersonae.model
 
-import dev.frederik.dramatispersonae.fixtures.getTestCharacter
-import dev.frederik.dramatispersonae.fixtures.getTestCharacterNote
-import dev.frederik.dramatispersonae.fixtures.getTestLabel
+import dev.frederik.dramatispersonae.fixtures.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -18,13 +16,13 @@ class CharacterTests constructor(@Autowired val userRepository: UserRepository,
                                  @Autowired val labelRepository: LabelRepository,
                                  @Autowired val noteRepository: CharacterNoteRepository) {
 
-    var character: Character = getTestCharacter()
+    lateinit var character: Character
 
     @BeforeEach
     fun beforeEach() {
-        userRepository.save(character.campaign.owner)
-        campaignRepository.save(character.campaign)
-        characterRepository.save(character)
+        val owner = userRepository.save(getTestUser())
+        val campaign = campaignRepository.save(getTestCampaign(owner = owner))
+        character = characterRepository.save(getTestCharacter(campaign = campaign))
     }
 
     @Test
@@ -53,8 +51,7 @@ class CharacterTests constructor(@Autowired val userRepository: UserRepository,
 
     @Test
     fun `deleting a character should not delete a contained label`() {
-        val label = getTestLabel(campaign = character.campaign)
-        labelRepository.save(label)
+        val label = labelRepository.save(getTestLabel(campaign = character.campaign))
         character.labels.add(label)
         characterRepository.save(character)
         assertThat(characterRepository.findAll().count()).isEqualTo(1)
