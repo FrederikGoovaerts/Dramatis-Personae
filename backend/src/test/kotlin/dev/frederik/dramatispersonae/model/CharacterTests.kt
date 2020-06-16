@@ -1,7 +1,7 @@
 package dev.frederik.dramatispersonae.model
 
 import dev.frederik.dramatispersonae.fixtures.*
-import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,26 +27,26 @@ class CharacterTests constructor(@Autowired val userRepository: UserRepository,
 
     @Test
     fun `deleting a character should not delete its campaign`() {
-        assertThat(campaignRepository.findAll().count()).isEqualTo(1)
-        assertThat(characterRepository.findAll().count()).isEqualTo(1)
+        Assertions.assertEquals(1, campaignRepository.findAll().count())
+        Assertions.assertEquals(1, characterRepository.findAll().count())
 
         characterRepository.delete(character)
 
-        assertThat(campaignRepository.findAll().count()).isEqualTo(1)
-        assertThat(characterRepository.findAll().count()).isEqualTo(0)
+        Assertions.assertEquals(1, campaignRepository.findAll().count())
+        Assertions.assertEquals(0, characterRepository.findAll().count())
     }
 
     @Test
     fun `deleting a character should delete a contained note`() {
         character.notes.add(getTestCharacterNote(user = character.campaign.owner, character = character))
         characterRepository.save(character)
-        assertThat(characterRepository.findAll().count()).isEqualTo(1)
-        assertThat(noteRepository.findAll().count()).isEqualTo(1)
+        Assertions.assertEquals(1, characterRepository.findAll().count())
+        Assertions.assertEquals(1, noteRepository.findAll().count())
 
         characterRepository.delete(character)
 
-        assertThat(characterRepository.findAll().count()).isEqualTo(0)
-        assertThat(noteRepository.findAll().count()).isEqualTo(0)
+        Assertions.assertEquals(0, characterRepository.findAll().count())
+        Assertions.assertEquals(0, noteRepository.findAll().count())
     }
 
     @Test
@@ -54,13 +54,13 @@ class CharacterTests constructor(@Autowired val userRepository: UserRepository,
         val label = labelRepository.save(getTestLabel(campaign = character.campaign))
         character.labels.add(label)
         characterRepository.save(character)
-        assertThat(characterRepository.findAll().count()).isEqualTo(1)
-        assertThat(labelRepository.findAll().count()).isEqualTo(1)
+        Assertions.assertEquals(1, characterRepository.findAll().count())
+        Assertions.assertEquals(1, labelRepository.findAll().count())
 
         characterRepository.delete(character)
 
-        assertThat(characterRepository.findAll().count()).isEqualTo(0)
-        assertThat(labelRepository.findAll().count()).isEqualTo(1)
+        Assertions.assertEquals(0, characterRepository.findAll().count())
+        Assertions.assertEquals(1, labelRepository.findAll().count())
     }
 
 }

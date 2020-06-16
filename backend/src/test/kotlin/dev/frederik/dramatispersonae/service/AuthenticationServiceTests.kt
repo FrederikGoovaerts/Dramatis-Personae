@@ -37,10 +37,10 @@ class AuthenticationControllerTests {
     @Test
     fun `requesting a token set should return the result of the code exchange`() {
         val result = this.authenticationController.getTokenSet(AuthenticationCodeDto("a", "b"))
-        Assertions.assertEquals(result.accessToken, tokenSet.accessToken)
-        Assertions.assertEquals(result.idToken, tokenSet.idToken)
-        Assertions.assertEquals(result.expiresIn, tokenSet.expiresIn)
-        Assertions.assertEquals(result.refreshToken, tokenSet.refreshToken)
+        Assertions.assertEquals(tokenSet.accessToken, result.accessToken)
+        Assertions.assertEquals(tokenSet.idToken, result.idToken)
+        Assertions.assertEquals(tokenSet.expiresIn, result.expiresIn)
+        Assertions.assertEquals(tokenSet.refreshToken, result.refreshToken)
     }
 
     @Test
@@ -52,10 +52,10 @@ class AuthenticationControllerTests {
     @Test
     fun `refreshing a token should return the result of the code exchange`() {
         val result = this.authenticationController.refreshTokenSet(RefreshTokenDto("test"))
-        Assertions.assertEquals(result.accessToken, refreshedTokenSet.accessToken)
-        Assertions.assertEquals(result.idToken, refreshedTokenSet.idToken)
-        Assertions.assertEquals(result.expiresIn, refreshedTokenSet.expiresIn)
-        Assertions.assertEquals(result.refreshToken, refreshedTokenSet.refreshToken)
+        Assertions.assertEquals(refreshedTokenSet.accessToken, result.accessToken)
+        Assertions.assertEquals(refreshedTokenSet.idToken, result.idToken)
+        Assertions.assertEquals(refreshedTokenSet.expiresIn, result.expiresIn)
+        Assertions.assertEquals(refreshedTokenSet.refreshToken, result.refreshToken)
     }
 
 }

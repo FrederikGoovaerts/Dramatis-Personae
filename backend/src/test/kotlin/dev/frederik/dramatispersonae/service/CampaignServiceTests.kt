@@ -41,11 +41,11 @@ class CampaignControllerTests {
         val campaign2 = getTestCampaign(name = "campaign2")
         every { campaignService.getCampaignsForUser(user) } returns mutableListOf(campaign1, campaign2)
         val campaigns = campaignController.getCampaigns(googleAuthentication)
-        Assertions.assertEquals(campaigns.size, 2)
-        Assertions.assertEquals(campaigns[0].name, "campaign1")
-        Assertions.assertEquals(campaigns[0].owner, true)
-        Assertions.assertEquals(campaigns[1].name, "campaign2")
-        Assertions.assertEquals(campaigns[1].owner, false)
+        Assertions.assertEquals(2, campaigns.size)
+        Assertions.assertEquals( "campaign1", campaigns[0].name)
+        Assertions.assertTrue(campaigns[0].owner)
+        Assertions.assertEquals("campaign2", campaigns[1].name)
+        Assertions.assertFalse(campaigns[1].owner)
     }
 
     @Test
@@ -53,17 +53,17 @@ class CampaignControllerTests {
         val campaign1 = getTestCampaign(name = "campaign1", owner = user)
         every { campaignService.getCampaign(user, any()) } returns campaign1
         val campaign = campaignController.getCampaign(googleAuthentication, UUID.randomUUID())
-        Assertions.assertEquals(campaign.statusCode, HttpStatus.OK)
-        Assertions.assertEquals(campaign.body?.name, "campaign1")
-        Assertions.assertEquals(campaign.body?.owner, true)
+        Assertions.assertEquals(HttpStatus.OK, campaign.statusCode)
+        Assertions.assertEquals("campaign1", campaign.body?.name)
+        Assertions.assertTrue(campaign.body!!.owner)
     }
 
     @Test
     fun `getting an inaccessible campaign should return forbidden`() {
         every { campaignService.getCampaign(user, any()) } returns null
         val campaign = campaignController.getCampaign(googleAuthentication, UUID.randomUUID())
-        Assertions.assertEquals(campaign.statusCode, HttpStatus.FORBIDDEN)
-        Assertions.assertEquals(campaign.body, null)
+        Assertions.assertEquals(HttpStatus.FORBIDDEN, campaign.statusCode)
+        Assertions.assertNull(campaign.body)
     }
 }
 
@@ -93,7 +93,7 @@ class CampaignServiceTests {
         every { camp2.isAccessibleBy(any()) } returns true
         every { campaignRepository.findAll() } returns mutableListOf(camp1, camp2)
         val result = campaignService.getCampaignsForUser(user)
-        Assertions.assertEquals(result, mutableListOf(camp2, camp1))
+        Assertions.assertEquals(mutableListOf(camp2, camp1), result)
     }
 
     @Test
@@ -107,7 +107,7 @@ class CampaignServiceTests {
         every { camp2.isAccessibleBy(any()) } returns true
         every { campaignRepository.findAll() } returns mutableListOf(camp1, camp2)
         val result = campaignService.getCampaignsForUser(user)
-        Assertions.assertEquals(result, mutableListOf(camp2))
+        Assertions.assertEquals(mutableListOf(camp2), result)
     }
 
     @Test
@@ -284,7 +284,7 @@ class CampaignServiceTests {
         every { camp.isOwnedBy(any()) } returns false
         every { campaignRepository.findById(any()) } returns Optional.of(camp)
         val result = campaignService.getCampaignCharacters(user, UUID.randomUUID())
-        Assertions.assertEquals(result, mutableListOf(char2))
+        Assertions.assertEquals(mutableListOf(char2), result)
     }
 
     @Test
@@ -298,7 +298,7 @@ class CampaignServiceTests {
         every { camp.isOwnedBy(any()) } returns true
         every { campaignRepository.findById(any()) } returns Optional.of(camp)
         val result = campaignService.getCampaignCharacters(user, UUID.randomUUID())
-        Assertions.assertEquals(result, mutableListOf(char1, char2))
+        Assertions.assertEquals(mutableListOf(char1, char2), result)
     }
 
     @Test
@@ -316,8 +316,8 @@ class CampaignServiceTests {
         every { camp.isOwnedBy(any()) } returns false
         every { campaignRepository.findById(any()) } returns Optional.of(camp)
         val result = campaignService.getCampaignCharacters(user, UUID.randomUUID())
-        Assertions.assertEquals(result?.size, 1)
-        Assertions.assertEquals(result?.get(0)?.labels, mutableListOf(label2))
+        Assertions.assertEquals(1, result?.size)
+        Assertions.assertEquals(mutableListOf(label2), result?.get(0)?.labels)
     }
 
     @Test
@@ -335,6 +335,6 @@ class CampaignServiceTests {
         every { camp.isOwnedBy(any()) } returns true
         every { campaignRepository.findById(any()) } returns Optional.of(camp)
         val result = campaignService.getCampaignCharacters(user, UUID.randomUUID())
-        Assertions.assertEquals(result?.get(0)?.labels, mutableListOf(label1, label2))
+        Assertions.assertEquals(mutableListOf(label1, label2), result?.get(0)?.labels)
     }
 }

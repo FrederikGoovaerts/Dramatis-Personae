@@ -53,8 +53,8 @@ class GoogleOpenIdClientTests {
 
     @Test
     fun `construction should request the discovery document`() {
-        Assertions.assertEquals(httpRequestCaptor.size, 1)
-        Assertions.assertEquals(httpRequestCaptor[0].uri().toString(), DISCOVERY_URL)
+        Assertions.assertEquals(1, httpRequestCaptor.size)
+        Assertions.assertEquals(DISCOVERY_URL, httpRequestCaptor[0].uri().toString())
     }
 
     @Test
@@ -63,8 +63,8 @@ class GoogleOpenIdClientTests {
         val code = "testCode"
         val redirectUri = "testUri"
         googleOpenIdClient.exchangeCodeForTokenSet(code, redirectUri)
-        Assertions.assertEquals(httpRequestCaptor.size, 2)
-        Assertions.assertEquals(httpRequestCaptor[1].uri().toString(), token_endpoint)
+        Assertions.assertEquals(2, httpRequestCaptor.size)
+        Assertions.assertEquals(token_endpoint, httpRequestCaptor[1].uri().toString())
     }
     
     @Test
@@ -73,10 +73,10 @@ class GoogleOpenIdClientTests {
         val code = "testCode"
         val redirectUri = "testUri"
         val (accessToken, idToken, refreshToken, expiresIn) = googleOpenIdClient.exchangeCodeForTokenSet(code, redirectUri)
-        Assertions.assertEquals(accessToken, access_token)
-        Assertions.assertEquals(idToken, id_token)
-        Assertions.assertEquals(expiresIn, expires_in)
-        Assertions.assertEquals(refreshToken, refresh_token)
+        Assertions.assertEquals(access_token, accessToken)
+        Assertions.assertEquals(id_token, idToken)
+        Assertions.assertEquals(expires_in, expiresIn)
+        Assertions.assertEquals(refresh_token, refreshToken)
     }
 
     @Test
@@ -84,19 +84,19 @@ class GoogleOpenIdClientTests {
         every { mockHttpResponse.body() } returns tokenJson
         val refreshToken = "testRefresh"
         googleOpenIdClient.refreshTokenSet(refreshToken)
-        Assertions.assertEquals(httpRequestCaptor.size, 2)
-        Assertions.assertEquals(httpRequestCaptor[1].uri().toString(), token_endpoint)
+        Assertions.assertEquals(2, httpRequestCaptor.size)
+        Assertions.assertEquals(token_endpoint, httpRequestCaptor[1].uri().toString())
     }
 
     @Test
     fun `token refresh should correctly return the token set`() {
         every { mockHttpResponse.body() } returns tokenJson
-        val refreshToken = "testRefresh"
-        val (accessToken, idToken, refreshToken1, expiresIn) = googleOpenIdClient.refreshTokenSet(refreshToken)
-        Assertions.assertEquals(accessToken, access_token)
-        Assertions.assertEquals(idToken, id_token)
-        Assertions.assertEquals(expiresIn, expires_in)
-        Assertions.assertEquals(refreshToken1, refreshToken)
+        val token = "testRefresh"
+        val (accessToken, idToken, refreshToken, expiresIn) = googleOpenIdClient.refreshTokenSet(token)
+        Assertions.assertEquals(access_token, accessToken)
+        Assertions.assertEquals(id_token, idToken)
+        Assertions.assertEquals(expires_in, expiresIn)
+        Assertions.assertEquals(token, refreshToken)
     }
 
 }

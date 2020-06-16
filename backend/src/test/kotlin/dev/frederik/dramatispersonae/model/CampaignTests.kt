@@ -1,7 +1,7 @@
 package dev.frederik.dramatispersonae.model
 
 import dev.frederik.dramatispersonae.fixtures.*
-import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -41,95 +41,95 @@ class CampaignTests constructor(@Autowired val userRepository: UserRepository,
 
     @Test
     fun `deleting a campaign should not delete the owner`() {
-        assertThat(campaignRepository.findAll().count()).isEqualTo(1)
-        assertThat(userRepository.findAll().count()).isEqualTo(2)
+        Assertions.assertEquals(1, campaignRepository.findAll().count())
+        Assertions.assertEquals(2, userRepository.findAll().count())
 
         campaignRepository.delete(campaign)
 
-        assertThat(campaignRepository.findAll().count()).isEqualTo(0)
-        assertThat(userRepository.findAll().count()).isEqualTo(2)
+        Assertions.assertEquals(0, campaignRepository.findAll().count())
+        Assertions.assertEquals(2, userRepository.findAll().count())
     }
 
     @Test
     fun `deleting a campaign should not delete any member`() {
-        assertThat(campaignRepository.findAll().count()).isEqualTo(1)
-        assertThat(userRepository.findAll().count()).isEqualTo(2)
+        Assertions.assertEquals(1, campaignRepository.findAll().count())
+        Assertions.assertEquals(2, userRepository.findAll().count())
 
         campaignRepository.delete(campaign)
 
-        assertThat(campaignRepository.findAll().count()).isEqualTo(0)
-        assertThat(userRepository.findAll().count()).isEqualTo(2)
+        Assertions.assertEquals(0, campaignRepository.findAll().count())
+        Assertions.assertEquals(2, userRepository.findAll().count())
     }
 
     @Test
     fun `deleting a campaign should delete its characters`() {
-        assertThat(campaignRepository.findAll().count()).isEqualTo(1)
-        assertThat(characterRepository.findAll().count()).isEqualTo(2)
+        Assertions.assertEquals(1, campaignRepository.findAll().count())
+        Assertions.assertEquals(2, characterRepository.findAll().count())
 
         campaignRepository.delete(campaign)
 
-        assertThat(campaignRepository.findAll().count()).isEqualTo(0)
-        assertThat(characterRepository.findAll().count()).isEqualTo(0)
+        Assertions.assertEquals(0, campaignRepository.findAll().count())
+        Assertions.assertEquals(0, characterRepository.findAll().count())
     }
 
     @Test
     fun `deleting a campaign should delete its proposed characters`() {
-        assertThat(campaignRepository.findAll().count()).isEqualTo(1)
-        assertThat(proposedCharacterRepository.findAll().count()).isEqualTo(2)
+        Assertions.assertEquals(1, campaignRepository.findAll().count())
+        Assertions.assertEquals(2, proposedCharacterRepository.findAll().count())
 
         campaignRepository.delete(campaign)
 
-        assertThat(campaignRepository.findAll().count()).isEqualTo(0)
-        assertThat(proposedCharacterRepository.findAll().count()).isEqualTo(0)
+        Assertions.assertEquals(0, campaignRepository.findAll().count())
+        Assertions.assertEquals(0, proposedCharacterRepository.findAll().count())
     }
 
     @Test
     fun `deleting a campaign should delete its notes`() {
-        assertThat(campaignRepository.findAll().count()).isEqualTo(1)
-        assertThat(campaignNoteRepository.findAll().count()).isEqualTo(2)
+        Assertions.assertEquals(1, campaignRepository.findAll().count())
+        Assertions.assertEquals(2, campaignNoteRepository.findAll().count())
 
         campaignRepository.delete(campaign)
 
-        assertThat(campaignRepository.findAll().count()).isEqualTo(0)
-        assertThat(campaignNoteRepository.findAll().count()).isEqualTo(0)
+        Assertions.assertEquals(0, campaignRepository.findAll().count())
+        Assertions.assertEquals(0, campaignNoteRepository.findAll().count())
     }
 
     @Test
     fun `deleting a campaign should delete its labels`() {
-        assertThat(campaignRepository.findAll().count()).isEqualTo(1)
-        assertThat(labelRepository.findAll().count()).isEqualTo(2)
+        Assertions.assertEquals(1, campaignRepository.findAll().count())
+        Assertions.assertEquals(2, labelRepository.findAll().count())
 
         campaignRepository.delete(campaign)
 
-        assertThat(campaignRepository.findAll().count()).isEqualTo(0)
-        assertThat(labelRepository.findAll().count()).isEqualTo(0)
+        Assertions.assertEquals(0, campaignRepository.findAll().count())
+        Assertions.assertEquals(0, labelRepository.findAll().count())
     }
 
     @Test
     fun `isAccessibleBy should return true for a member`() {
         for (member in campaign.members) {
-            assertThat(campaign.isAccessibleBy(member)).isEqualTo(true)
+            Assertions.assertEquals(true, campaign.isAccessibleBy(member))
         }
     }
 
     @Test
     fun `isAccessibleBy should return false for a non-member`() {
-        assertThat(campaign.isAccessibleBy(getTestUser())).isEqualTo(false)
+        Assertions.assertEquals(false, campaign.isAccessibleBy(getTestUser()))
     }
 
     @Test
     fun `isOwnedBy should return true for the owner`() {
-        assertThat(campaign.isOwnedBy(campaign.owner)).isEqualTo(true)
+        Assertions.assertEquals(true, campaign.isOwnedBy(campaign.owner))
     }
 
     @Test
     fun `isOwnedBy should return false for a non-owner`() {
         for (member in campaign.members) {
             if (member != campaign.owner) {
-                assertThat(campaign.isOwnedBy(member)).isEqualTo(false)
+                Assertions.assertEquals(false, campaign.isOwnedBy(member))
             }
         }
-        assertThat(campaign.isOwnedBy(getTestUser())).isEqualTo(false)
+        Assertions.assertEquals(false, campaign.isOwnedBy(getTestUser()))
     }
 
 }

@@ -38,9 +38,9 @@ class CampaignNoteServiceTests {
         val note = getTestCampaignNote(visibility = NoteVisibility.PRIVATE)
         note.campaign.owner = campaignOwner
         note.campaign.members.add(campaignMember)
-        Assertions.assertEquals(campaignNoteService.editAllowed(note, campaignOwner), false)
-        Assertions.assertEquals(campaignNoteService.editAllowed(note, campaignMember), false)
-        Assertions.assertEquals(campaignNoteService.editAllowed(note, unrelatedUser), false)
+        Assertions.assertEquals(false, campaignNoteService.editAllowed(note, campaignOwner))
+        Assertions.assertEquals(false, campaignNoteService.editAllowed(note, campaignMember))
+        Assertions.assertEquals(false, campaignNoteService.editAllowed(note, unrelatedUser))
     }
 
     @Test
@@ -48,7 +48,7 @@ class CampaignNoteServiceTests {
         val campaignOwner = getTestUser(name = "campaignOwner")
         val note = getTestCampaignNote(visibility = NoteVisibility.PUBLIC)
         note.campaign.owner = campaignOwner
-        Assertions.assertEquals(campaignNoteService.editAllowed(note, campaignOwner), true)
+        Assertions.assertEquals(true, campaignNoteService.editAllowed(note, campaignOwner))
     }
 
     @Test
@@ -56,6 +56,6 @@ class CampaignNoteServiceTests {
         val campaignOwner = getTestUser(name = "campaignOwner")
         val note = getTestCampaignNote(visibility = NoteVisibility.DM_SHARED)
         note.campaign.owner = campaignOwner
-        Assertions.assertEquals(campaignNoteService.editAllowed(note, campaignOwner), true)
+        Assertions.assertEquals(true, campaignNoteService.editAllowed(note, campaignOwner))
     }
 }
