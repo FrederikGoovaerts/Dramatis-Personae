@@ -4,11 +4,7 @@ import dev.frederik.dramatispersonae.auth.GoogleAuthentication
 import dev.frederik.dramatispersonae.fixtures.getTestCampaign
 import dev.frederik.dramatispersonae.fixtures.getTestCharacter
 import dev.frederik.dramatispersonae.fixtures.getTestUser
-import dev.frederik.dramatispersonae.model.Campaign
-import dev.frederik.dramatispersonae.model.CampaignRepository
-import dev.frederik.dramatispersonae.model.Character
-import dev.frederik.dramatispersonae.model.LabelRepository
-import dev.frederik.dramatispersonae.model.User
+import dev.frederik.dramatispersonae.model.*
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -277,7 +273,7 @@ class CampaignServiceTests {
     }
 
     @Test
-    fun `getCharacter should not return invisible characters for non-owner`() {
+    fun `getCampaignCharacters should not return invisible characters for non-owner`() {
         val user = mockkClass(User::class)
         val char1 = mockkClass(Character::class, relaxUnitFun = true)
         every { char1.isVisible } returns false
@@ -292,7 +288,7 @@ class CampaignServiceTests {
     }
 
     @Test
-    fun `getCharacter should return invisible characters for owner`() {
+    fun `getCampaignCharacters should return invisible characters for owner`() {
         val user = mockkClass(User::class)
         val char1 = getTestCharacter(isVisible = true)
         val char2 = getTestCharacter(isVisible = true)
@@ -303,5 +299,42 @@ class CampaignServiceTests {
         every { campaignRepository.findById(any()) } returns Optional.of(camp)
         val result = campaignService.getCampaignCharacters(user, UUID.randomUUID())
         Assertions.assertEquals(result, mutableListOf(char1, char2))
+    }
+
+    @Test
+    fun `getCampaignCharacters should not return invisible labels for non-owner`() {
+        val user = mockkClass(User::class)
+        val label1 = mockkClass(Label::class)
+        every { label1.isVisible } returns false
+        val label2 = mockkClass(Label::class)
+        every { label2.isVisible } returns true
+        val char = getTestCharacter(isVisible = true)
+        char.labels =  mutableListOf(label1, label2)
+        val camp = mockkClass(Campaign::class)
+        every { camp.characters } returns mutableListOf(char)
+        every { camp.members } returns mutableListOf(user)
+        every { camp.isOwnedBy(any()) } returns false
+        every { campaignRepository.findById(any()) } returns Optional.of(camp)
+        val result = campaignService.getCampaignCharacters(user, UUID.randomUUID())
+        Assertions.assertEquals(result?.size, 1)
+        Assertions.assertEquals(result?.get(0)?.labels, mutableListOf(label2))
+    }
+
+    @Test
+    fun `getCampaignCharacters should return invisible labels for owner`() {
+        val user = mockkClass(User::class)
+        val label1 = mockkClass(Label::class)
+        every { label1.isVisible } returns false
+        val label2 = mockkClass(Label::class)
+        every { label2.isVisible } returns true
+        val char = getTestCharacter(isVisible = true)
+        char.labels =  mutableListOf(label1, label2)
+        val camp = mockkClass(Campaign::class)
+        every { camp.characters } returns mutableListOf(char)
+        every { camp.members } returns mutableListOf(user)
+        every { camp.isOwnedBy(any()) } returns true
+        every { campaignRepository.findById(any()) } returns Optional.of(camp)
+        val result = campaignService.getCampaignCharacters(user, UUID.randomUUID())
+        Assertions.assertEquals(result?.get(0)?.labels, mutableListOf(label1, label2))
     }
 }
