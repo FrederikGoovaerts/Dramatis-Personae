@@ -27,7 +27,7 @@ class CampaignNoteServiceTests {
     fun `editAllowed should return true for the owner of the note`() {
         val noteOwner = getTestUser(name = "noteOwner")
         val note = getTestCampaignNote(user = noteOwner)
-        Assertions.assertEquals(campaignNoteService.editAllowed(note, noteOwner), true)
+        Assertions.assertTrue(campaignNoteService.editAllowed(note, noteOwner))
     }
 
     @Test
@@ -38,9 +38,9 @@ class CampaignNoteServiceTests {
         val note = getTestCampaignNote(visibility = NoteVisibility.PRIVATE)
         note.campaign.owner = campaignOwner
         note.campaign.members.add(campaignMember)
-        Assertions.assertEquals(false, campaignNoteService.editAllowed(note, campaignOwner))
-        Assertions.assertEquals(false, campaignNoteService.editAllowed(note, campaignMember))
-        Assertions.assertEquals(false, campaignNoteService.editAllowed(note, unrelatedUser))
+        Assertions.assertFalse(campaignNoteService.editAllowed(note, campaignOwner))
+        Assertions.assertFalse(campaignNoteService.editAllowed(note, campaignMember))
+        Assertions.assertFalse(campaignNoteService.editAllowed(note, unrelatedUser))
     }
 
     @Test
@@ -48,7 +48,7 @@ class CampaignNoteServiceTests {
         val campaignOwner = getTestUser(name = "campaignOwner")
         val note = getTestCampaignNote(visibility = NoteVisibility.PUBLIC)
         note.campaign.owner = campaignOwner
-        Assertions.assertEquals(true, campaignNoteService.editAllowed(note, campaignOwner))
+        Assertions.assertTrue(campaignNoteService.editAllowed(note, campaignOwner))
     }
 
     @Test
@@ -56,6 +56,6 @@ class CampaignNoteServiceTests {
         val campaignOwner = getTestUser(name = "campaignOwner")
         val note = getTestCampaignNote(visibility = NoteVisibility.DM_SHARED)
         note.campaign.owner = campaignOwner
-        Assertions.assertEquals(true, campaignNoteService.editAllowed(note, campaignOwner))
+        Assertions.assertTrue(campaignNoteService.editAllowed(note, campaignOwner))
     }
 }
