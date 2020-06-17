@@ -337,4 +337,142 @@ class CampaignServiceTests {
         val result = campaignService.getCampaignCharacters(user, UUID.randomUUID())
         Assertions.assertEquals(mutableListOf(label1, label2), result?.get(0)?.labels)
     }
+
+
+    @Test
+    fun `getProposedCharacters should not return character proposed by other players for non-owner`() {
+        val user = mockkClass(User::class)
+        val otherUser = mockkClass(User::class)
+        val char1 = mockkClass(ProposedCharacter::class, relaxUnitFun = true)
+        every { char1.proposedBy } returns otherUser
+        val char2 = mockkClass(ProposedCharacter::class, relaxUnitFun = true)
+        every { char2.proposedBy } returns user
+        val camp = mockkClass(Campaign::class)
+        every { camp.proposedCharacters } returns mutableListOf(char1, char2)
+        every { camp.members } returns mutableListOf(user, otherUser)
+        every { camp.isOwnedBy(any()) } returns false
+        every { campaignRepository.findById(any()) } returns Optional.of(camp)
+        val result = campaignService.getProposedCharacters(user, UUID.randomUUID())
+        Assertions.assertEquals(mutableListOf(char2), result)
+    }
+
+    @Test
+    fun `getProposedCharacters should return all proposed characters for owner`() {
+        val user = mockkClass(User::class)
+        val otherUser = mockkClass(User::class)
+        val char1 = mockkClass(ProposedCharacter::class, relaxUnitFun = true)
+        every { char1.proposedBy } returns otherUser
+        every { char1.name } returns "a"
+        val char2 = mockkClass(ProposedCharacter::class, relaxUnitFun = true)
+        every { char2.proposedBy } returns user
+        every { char2.name } returns "a"
+        val camp = mockkClass(Campaign::class)
+        every { camp.proposedCharacters } returns mutableListOf(char1, char2)
+        every { camp.members } returns mutableListOf(user, otherUser)
+        every { camp.isOwnedBy(any()) } returns true
+        every { campaignRepository.findById(any()) } returns Optional.of(camp)
+        val result = campaignService.getProposedCharacters(user, UUID.randomUUID())
+        Assertions.assertEquals(mutableListOf(char1, char2), result)
+    }
+
+    @Test
+    fun `getProposedCharacters should return proposed characters sorted on name`() {
+        val user = mockkClass(User::class)
+        val otherUser = mockkClass(User::class)
+        val char1 = mockkClass(ProposedCharacter::class, relaxUnitFun = true)
+        every { char1.proposedBy } returns otherUser
+        every { char1.name } returns "b"
+        val char2 = mockkClass(ProposedCharacter::class, relaxUnitFun = true)
+        every { char2.proposedBy } returns user
+        every { char2.name } returns "a"
+        val char3 = mockkClass(ProposedCharacter::class, relaxUnitFun = true)
+        every { char3.proposedBy } returns user
+        every { char3.name } returns "c"
+        val camp = mockkClass(Campaign::class)
+        every { camp.proposedCharacters } returns mutableListOf(char1, char2, char3)
+        every { camp.members } returns mutableListOf(user, otherUser)
+        every { camp.isOwnedBy(any()) } returns true
+        every { campaignRepository.findById(any()) } returns Optional.of(camp)
+        val result = campaignService.getProposedCharacters(user, UUID.randomUUID())
+        Assertions.assertEquals(mutableListOf(char2, char1, char3), result)
+    }
+
+    @Test
+    fun `getSharedNotes should not return private or dm-shared notes by other players for non-owner`() {
+        val user = mockkClass(User::class)
+        val otherUser = mockkClass(User::class)
+        val note1 = mockkClass(CampaignNote::class, relaxUnitFun = true)
+        every { note1.author } returns otherUser
+        every { note1.visibility } returns NoteVisibility.PRIVATE
+        val note2 = mockkClass(CampaignNote::class, relaxUnitFun = true)
+        every { note2.author } returns otherUser
+        every { note2.visibility } returns NoteVisibility.DM_SHARED
+        val note3 = mockkClass(CampaignNote::class, relaxUnitFun = true)
+        every { note3.author } returns otherUser
+        every { note3.visibility } returns NoteVisibility.PUBLIC
+        val camp = mockkClass(Campaign::class)
+        every { camp.notes } returns mutableListOf(note1, note2, note3)
+        every { camp.members } returns mutableListOf(user, otherUser)
+        every { camp.isOwnedBy(any()) } returns false
+        every { campaignRepository.findById(any()) } returns Optional.of(camp)
+        val result = campaignService.getSharedNotes(user, UUID.randomUUID())
+        Assertions.assertEquals(mutableListOf(note3), result)
+    }
+
+    @Test
+    fun `getSharedNotes should not return private notes by other players for owner`() {
+        val user = mockkClass(User::class)
+        val otherUser = mockkClass(User::class)
+        val note1 = mockkClass(CampaignNote::class, relaxUnitFun = true)
+        every { note1.author } returns otherUser
+        every { note1.visibility } returns NoteVisibility.PRIVATE
+        val note2 = mockkClass(CampaignNote::class, relaxUnitFun = true)
+        every { note2.author } returns otherUser
+        every { note2.visibility } returns NoteVisibility.DM_SHARED
+        every { note2.addedOn } returns Date(2)
+        val note3 = mockkClass(CampaignNote::class, relaxUnitFun = true)
+        every { note3.author } returns otherUser
+        every { note3.visibility } returns NoteVisibility.PUBLIC
+        every { note3.addedOn } returns Date(1)
+        val camp = mockkClass(Campaign::class)
+        every { camp.notes } returns mutableListOf(note1, note2, note3)
+        every { camp.members } returns mutableListOf(user, otherUser)
+        every { camp.isOwnedBy(eq(user)) } returns true
+        every { campaignRepository.findById(any()) } returns Optional.of(camp)
+        val result = campaignService.getSharedNotes(user, UUID.randomUUID())
+        Assertions.assertEquals(mutableListOf(note2, note3), result)
+    }
+
+    @Test
+    fun `getSharedNotes should not return notes by the user`() {
+        val user = mockkClass(User::class)
+        val note1 = mockkClass(CampaignNote::class, relaxUnitFun = true)
+        every { note1.author } returns user
+        every { note1.visibility } returns NoteVisibility.PUBLIC
+        val camp = mockkClass(Campaign::class)
+        every { camp.notes } returns mutableListOf(note1)
+        every { camp.members } returns mutableListOf(user)
+        every { camp.isOwnedBy(any()) } returns false
+        every { campaignRepository.findById(any()) } returns Optional.of(camp)
+        val result = campaignService.getSharedNotes(user, UUID.randomUUID())
+        Assertions.assertEquals(mutableListOf<CharacterNote>(), result)
+    }
+
+
+    @Test
+    fun `getSharedNotes should not return invisible labels for non-owner`() {
+        val user = mockkClass(User::class)
+        val otherUser = mockkClass(User::class)
+        val label1 = mockkClass(Label::class, relaxUnitFun = true)
+        every { label1.isVisible } returns false
+        val label2 = mockkClass(Label::class, relaxUnitFun = true)
+        every { label2.isVisible } returns true
+        val camp = mockkClass(Campaign::class)
+        every { camp.labels } returns mutableListOf(label1, label2)
+        every { camp.members } returns mutableListOf(user, otherUser)
+        every { camp.isOwnedBy(any()) } returns false
+        every { campaignRepository.findById(any()) } returns Optional.of(camp)
+        val result = campaignService.getLabels(user, UUID.randomUUID())
+        Assertions.assertEquals(mutableListOf(label2), result)
+    }
 }
