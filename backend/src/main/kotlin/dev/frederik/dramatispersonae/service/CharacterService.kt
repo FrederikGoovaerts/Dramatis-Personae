@@ -139,10 +139,13 @@ class CharacterService(private val repository: CharacterRepository, private val 
 
     fun updateCharacter(user: User, id: UUID, name: String, description: String): Boolean {
         val characterQuery = repository.findById(id)
-        if (!characterQuery.isPresent || !characterQuery.get().campaign.isOwnedBy(user)) {
+        if (!characterQuery.isPresent) {
             return false
         }
         val character = characterQuery.get()
+        if (!character.campaign.isOwnedBy(user) && !(character.campaign.allowPlayerCharacterManagement && character.campaign.isAccessibleBy(user))) {
+            return false
+        }
         character.name = name
         character.description = description
         this.repository.save(character)
@@ -162,7 +165,11 @@ class CharacterService(private val repository: CharacterRepository, private val 
 
     fun deleteCharacter(user: User, id: UUID): Boolean {
         val characterQuery = repository.findById(id)
-        if (!characterQuery.isPresent || !characterQuery.get().campaign.isOwnedBy(user)) {
+        if (!characterQuery.isPresent) {
+            return false
+        }
+        val character = characterQuery.get()
+        if (!character.campaign.isOwnedBy(user) && !(character.campaign.allowPlayerCharacterManagement && character.campaign.isAccessibleBy(user))) {
             return false
         }
         repository.delete(characterQuery.get())

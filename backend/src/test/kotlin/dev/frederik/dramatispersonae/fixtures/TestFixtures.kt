@@ -19,12 +19,6 @@ fun getTestCharacter(id: UUID = UUID.randomUUID(),
                      isVisible: Boolean = true,
                      campaign: Campaign = getTestCampaign()): Character = Character(name, description, isVisible, campaign, id = id)
 
-fun getTestProposedCharacter(id: UUID = UUID.randomUUID(),
-                             name: String = "testProposedCharacter",
-                             description: String = "test description",
-                             campaign: Campaign = getTestCampaign(),
-                             proposedBy: User = getTestUser()): ProposedCharacter = ProposedCharacter(name, description, campaign, proposedBy, id = id)
-
 fun getTestCharacterNote(id: UUID = UUID.randomUUID(),
                          contents: String = "test note",
                          user: User = getTestUser(),

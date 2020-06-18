@@ -13,7 +13,6 @@ import org.springframework.test.context.ActiveProfiles
 class CampaignTests constructor(@Autowired val userRepository: UserRepository,
                                 @Autowired val campaignRepository: CampaignRepository,
                                 @Autowired val characterRepository: CharacterRepository,
-                                @Autowired val proposedCharacterRepository: ProposedCharacterRepository,
                                 @Autowired val labelRepository: LabelRepository,
                                 @Autowired val campaignNoteRepository: CampaignNoteRepository) {
 
@@ -27,10 +26,6 @@ class CampaignTests constructor(@Autowired val userRepository: UserRepository,
         campaign = getTestCampaign(owner = owner)
         campaign.members.add(player)
         campaign.characters.addAll(listOf(getTestCharacter(campaign = campaign), getTestCharacter(campaign = campaign)))
-        campaign.proposedCharacters.addAll(listOf(
-            getTestProposedCharacter(campaign = campaign, proposedBy = player),
-            getTestProposedCharacter(campaign = campaign, proposedBy = player)
-        ))
         campaign.notes.addAll(listOf(
             getTestCampaignNote(campaign = campaign, user = player),
             getTestCampaignNote(campaign = campaign, user = player)
@@ -70,17 +65,6 @@ class CampaignTests constructor(@Autowired val userRepository: UserRepository,
 
         Assertions.assertEquals(0, campaignRepository.findAll().count())
         Assertions.assertEquals(0, characterRepository.findAll().count())
-    }
-
-    @Test
-    fun `deleting a campaign should delete its proposed characters`() {
-        Assertions.assertEquals(1, campaignRepository.findAll().count())
-        Assertions.assertEquals(2, proposedCharacterRepository.findAll().count())
-
-        campaignRepository.delete(campaign)
-
-        Assertions.assertEquals(0, campaignRepository.findAll().count())
-        Assertions.assertEquals(0, proposedCharacterRepository.findAll().count())
     }
 
     @Test

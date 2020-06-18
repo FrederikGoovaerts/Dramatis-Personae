@@ -332,10 +332,13 @@ class CampaignService(private val repository: CampaignRepository, private val la
 
     fun createCharacter(user: User, id: UUID, name: String, description: String): Boolean {
         val campaignQuery = repository.findById(id)
-        if (!campaignQuery.isPresent || !campaignQuery.get().isOwnedBy(user)) {
+        if (!campaignQuery.isPresent) {
             return false
         }
         val campaign = campaignQuery.get()
+        if (!campaign.isOwnedBy(user) && !(campaign.allowPlayerCharacterManagement && campaign.isAccessibleBy(user))) {
+            return false
+        }
         val newCharacter = Character(name, description, false, campaign, mutableListOf())
         campaign.characters.add(newCharacter)
         this.repository.save(campaign)
