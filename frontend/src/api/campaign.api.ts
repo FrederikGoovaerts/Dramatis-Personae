@@ -3,7 +3,7 @@ import { api } from '../config/constants';
 import { buildPath } from './base.api';
 import moment from 'moment';
 import { Campaign, CampaignPrototype, CampaignMember, CampaignSettings } from '../types/campaign.types';
-import { ListCharacter, CharacterPrototype, ProposedCharacter } from '../types/character.types';
+import { ListCharacter, CharacterPrototype } from '../types/character.types';
 import { RawNote } from './note.api';
 import { CreateNotePayload, Note } from '../types/note.types';
 import { CreateLabelPayload, Label, ListLabel } from '../types/label.types';
@@ -14,14 +14,6 @@ interface RawListCharacter {
     visible: boolean;
     labels: ListLabel[];
     id: string;
-}
-
-interface RawProposedCharacter {
-    id: string;
-    name: string;
-    description: string;
-    proposedOn: string;
-    proposedBy: string;
 }
 
 export async function getAll(): Promise<Array<Campaign>> {
@@ -57,20 +49,6 @@ export async function getCharacters(id: string): Promise<Array<ListCharacter>> {
 
 export async function createCharacter(id: string, characterPrototype: CharacterPrototype): Promise<void> {
     const url = buildPath(`${api.CAMPAIGN.PATH}/${id}${api.CAMPAIGN.SUBPATH_CHARACTER}`);
-    await axiosInstance.post(url, characterPrototype);
-}
-
-export async function getProposedCharacters(id: string): Promise<Array<ProposedCharacter>> {
-    const url = buildPath(`${api.CAMPAIGN.PATH}/${id}${api.CAMPAIGN.SUBPATH_PROPOSED_CHARACTER}`);
-    const data: Array<RawProposedCharacter> = (await axiosInstance.get(url)).data;
-    return data.map((char) => ({
-        ...char,
-        proposedOn: moment(char.proposedOn)
-    }));
-}
-
-export async function proposeCharacter(id: string, characterPrototype: CharacterPrototype): Promise<void> {
-    const url = buildPath(`${api.CAMPAIGN.PATH}/${id}${api.CAMPAIGN.SUBPATH_PROPOSED_CHARACTER}`);
     await axiosInstance.post(url, characterPrototype);
 }
 
