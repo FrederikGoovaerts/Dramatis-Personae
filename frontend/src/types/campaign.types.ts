@@ -1,7 +1,3 @@
-export interface CampaignSettings {
-    autoAcceptProposedCharacter: boolean;
-}
-
 export interface Campaign {
     id: string;
     name: string;
@@ -28,7 +24,7 @@ export interface CampaignEditPayload {
 }
 
 export interface CampaignSettings {
-    autoAcceptProposedCharacter: boolean;
+    allowPlayerCharacterManagement: boolean;
     allowPlayerLabelManagement: boolean;
     allowPlayerCharacterLabelManagement: boolean;
 }
