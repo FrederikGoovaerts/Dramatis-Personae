@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
 
 data class CampaignSettingsDto(
-    val autoAcceptProposedCharacter: Boolean,
+    val allowPlayerCharacterManagement: Boolean,
     val allowPlayerLabelManagement: Boolean,
     val allowPlayerCharacterLabelManagement: Boolean
 )
@@ -43,7 +43,7 @@ class CampaignController(private val service: CampaignService) {
                     it.isOwnedBy(auth.principal),
                     it.owner.fullName,
                     CampaignSettingsDto(
-                        it.autoAcceptProposedCharacter,
+                        it.allowPlayerCharacterManagement,
                         it.allowPlayerLabelManagement,
                         it.allowPlayerCharacterLabelManagement
                     ),
@@ -63,7 +63,7 @@ class CampaignController(private val service: CampaignService) {
                 campaign.isOwnedBy(auth.principal),
                 campaign.owner.fullName,
                 CampaignSettingsDto(
-                    campaign.autoAcceptProposedCharacter,
+                    campaign.allowPlayerCharacterManagement,
                     campaign.allowPlayerLabelManagement,
                     campaign.allowPlayerCharacterLabelManagement
                 ),
@@ -120,36 +120,7 @@ class CampaignController(private val service: CampaignService) {
         @PathVariable id: UUID,
         @RequestBody dto: CreateCharacterDto
     ): ResponseEntity<Unit> {
-        val success = this.service.createCharacter(auth.principal, id, dto.name, dto.description)
-        return ResponseEntity(if (success) HttpStatus.CREATED else HttpStatus.FORBIDDEN)
-    }
-
-    @GetMapping("/{id}/proposedcharacter")
-    fun getProposedCharacters(
-        auth: GoogleAuthentication,
-        @PathVariable id: UUID
-    ): ResponseEntity<List<ProposedCharacterView>> {
-        val list = this.service.getProposedCharacters(auth.principal, id)
-        return if (list === null) {
-            ResponseEntity(HttpStatus.FORBIDDEN)
-        } else {
-            ResponseEntity(list.map { ProposedCharacterView(
-                    it.name,
-                    it.description,
-                    it.proposedOn,
-                    it.proposedBy.fullName,
-                    it.id!!
-            ) }, HttpStatus.OK)
-        }
-    }
-
-    @PostMapping("/{id}/proposedcharacter")
-    fun proposeCharacter(
-        auth: GoogleAuthentication,
-        @PathVariable id: UUID,
-        @RequestBody dto: CreateCharacterDto
-    ): ResponseEntity<Unit> {
-        val success = this.service.proposeCharacter(auth.principal, id, dto.name, dto.description)
+        val success = this.service.createCharacter(auth.principal, id, dto.name, dto.description, dto.visible)
         return ResponseEntity(if (success) HttpStatus.CREATED else HttpStatus.FORBIDDEN)
     }
 
@@ -284,7 +255,7 @@ class CampaignService(private val repository: CampaignRepository, private val la
         }
         val campaign = campaignQuery.get()
         campaign.name = name
-        campaign.autoAcceptProposedCharacter = campaignSettings.autoAcceptProposedCharacter
+        campaign.allowPlayerCharacterManagement = campaignSettings.allowPlayerCharacterManagement
         campaign.allowPlayerLabelManagement = campaignSettings.allowPlayerLabelManagement
         campaign.allowPlayerCharacterLabelManagement = campaignSettings.allowPlayerCharacterLabelManagement
         this.repository.save(campaign)
@@ -359,41 +330,17 @@ class CampaignService(private val repository: CampaignRepository, private val la
         return sortCharacters(characters)
     }
 
-    fun createCharacter(user: User, id: UUID, name: String, description: String): Boolean {
+    fun createCharacter(user: User, id: UUID, name: String, description: String, visible: Boolean): Boolean {
         val campaignQuery = repository.findById(id)
-        if (!campaignQuery.isPresent || !campaignQuery.get().isOwnedBy(user)) {
+        if (!campaignQuery.isPresent) {
             return false
         }
         val campaign = campaignQuery.get()
-        val newCharacter = Character(name, description, false, campaign, mutableListOf())
+        if (!campaign.isOwnedBy(user) && !(campaign.allowPlayerCharacterManagement && campaign.isAccessibleBy(user))) {
+            return false
+        }
+        val newCharacter = Character(name, description, visible, campaign, mutableListOf())
         campaign.characters.add(newCharacter)
-        this.repository.save(campaign)
-        return true
-    }
-
-    fun getProposedCharacters(user: User, id: UUID): List<ProposedCharacter>? {
-        val campaignQuery = repository.findById(id)
-        if (!campaignQuery.isPresent || !campaignQuery.get().members.contains(user)) {
-            return null
-        }
-        val campaign = campaignQuery.get()
-        val characters = campaign.proposedCharacters.filter { campaign.isOwnedBy(user) || it.proposedBy == user }
-        return sortProposedCharacters(characters)
-    }
-
-    fun proposeCharacter(user: User, id: UUID, name: String, description: String): Boolean {
-        val campaignQuery = repository.findById(id)
-        if (!campaignQuery.isPresent || !campaignQuery.get().members.contains(user)) {
-            return false
-        }
-        val campaign = campaignQuery.get()
-        if (campaign.autoAcceptProposedCharacter) {
-            val newCharacter = Character(name, description, true, campaign)
-            campaign.characters.add(newCharacter)
-        } else {
-            val newProposedCharacter = ProposedCharacter(name, description, campaign, user)
-            campaign.proposedCharacters.add(newProposedCharacter)
-        }
         this.repository.save(campaign)
         return true
     }

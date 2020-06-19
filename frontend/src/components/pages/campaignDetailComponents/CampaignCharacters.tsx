@@ -7,8 +7,6 @@ import {
     Fab,
     Modal,
     ListItemText,
-    ListItem,
-    IconButton,
     CircularProgress,
     Chip,
     TextField,
@@ -18,34 +16,29 @@ import {
     MenuItem,
     Button
 } from '@material-ui/core';
-import { Add, Visibility, Edit, CheckCircle, Cancel, VisibilityOff } from '@material-ui/icons';
-import { ListCharacter, ProposedCharacter } from '../../../types/character.types';
+import { Add, Visibility, VisibilityOff } from '@material-ui/icons';
+import { ListCharacter } from '../../../types/character.types';
 import { ListItemLink } from '../../atoms/ListItemLink';
 import { routes } from '../../../config/constants';
 import { CreateCharacterForm } from '../../molecules/CreateCharacterForm';
-import { ProposeCharacterForm } from '../../molecules/ProposeCharacterForm';
-import { EditProposedCharacterForm } from '../../molecules/EditProposedCharacterForm';
 import { RootState } from '../../../store/reducers';
-import { campaignActions, proposedCharacterActions } from '../../../store/actions';
+import { campaignActions } from '../../../store/actions';
 import { connect } from 'react-redux';
 import { ListLabel, Label } from '../../../types/label.types';
 
 interface Props {
     campaignId: string;
     owner: boolean;
+    canManage: boolean;
     matchUrl: string;
 }
 
 interface MapProps {
     characters: ListCharacter[];
-    proposedCharacters: ProposedCharacter[];
     labels: Label[];
     loading: boolean;
     fetchCharacters: (campaignId: string) => void;
     fetchLabels: (campaignId: string) => void;
-    fetchProposedCharacters: (campaignId: string) => void;
-    acceptProposedCharacter: (p: { campaignId: string; characterId: string }) => void;
-    deleteProposedCharacter: (p: { campaignId: string; characterId: string }) => void;
 }
 
 type AllProps = Props & MapProps;
@@ -54,8 +47,6 @@ interface State {
     filterName: string;
     filterLabelId: string;
     createOpen: boolean;
-    proposeOpen: boolean;
-    editProposedCharacter: ProposedCharacter | undefined;
 }
 
 class CampaignCharactersRaw extends React.Component<AllProps, State> {
@@ -63,8 +54,6 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
         super(props);
         this.state = {
             createOpen: false,
-            proposeOpen: false,
-            editProposedCharacter: undefined,
             filterName: '',
             filterLabelId: ''
         };
@@ -73,27 +62,14 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
     componentDidMount() {
         this.props.fetchCharacters(this.props.campaignId);
         this.props.fetchLabels(this.props.campaignId);
-        this.props.fetchProposedCharacters(this.props.campaignId);
     }
 
     openCreate = (): void => {
         this.setState({ createOpen: true });
     };
 
-    openPropose = (): void => {
-        this.setState({ proposeOpen: true });
-    };
-
-    openEditProposedCharacter = (proposedCharacter: ProposedCharacter): void => {
-        this.setState({ editProposedCharacter: proposedCharacter });
-    };
-
-    closeModals = (): void => {
-        this.setState({
-            createOpen: false,
-            proposeOpen: false,
-            editProposedCharacter: undefined
-        });
+    closeCreate = (): void => {
+        this.setState({ createOpen: false });
     };
 
     clearFilters = () => {
@@ -119,20 +95,6 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
         if (filterLabelId !== '') {
             filteredCharacters = filteredCharacters.filter((character) =>
                 character.labels.find((label) => label.id === filterLabelId)
-            );
-        }
-        return filteredCharacters;
-    };
-
-    filteredProposedCharacters = () => {
-        const { filterName: filterString, filterLabelId } = this.state;
-        if (filterLabelId !== '') {
-            return [];
-        }
-        let filteredCharacters = [...this.props.proposedCharacters];
-        if (filterString !== '') {
-            filteredCharacters = filteredCharacters.filter((character) =>
-                character.name.toLowerCase().includes(filterString.toLowerCase())
             );
         }
         return filteredCharacters;
@@ -183,35 +145,14 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
         <Paper className="modalPaper">
             <div className="modalContainer">
                 <Typography variant="h5">New character</Typography>
-                <CreateCharacterForm campaignId={this.props.campaignId} onSubmitComplete={this.closeModals} />
+                <CreateCharacterForm
+                    campaignId={this.props.campaignId}
+                    onSubmitComplete={this.closeCreate}
+                    owner={this.props.owner}
+                />
             </div>
         </Paper>
     );
-
-    renderProposeCharacter = () => (
-        <Paper className="CampaignDetail__createPaper">
-            <div className="modalContainer">
-                <Typography variant="h5">Propose character</Typography>
-                <ProposeCharacterForm campaignId={this.props.campaignId} onSubmitComplete={this.closeModals} />
-            </div>
-        </Paper>
-    );
-
-    renderEditProposedCharacter = () => {
-        if (!this.state.editProposedCharacter) {
-            return undefined;
-        }
-        const character = this.state.editProposedCharacter;
-        return (
-            <EditProposedCharacterForm
-                campaignId={this.props.campaignId}
-                characterId={character.id}
-                initialName={character.name}
-                initialDescription={character.description}
-                onSubmitComplete={this.closeModals}
-            />
-        );
-    };
 
     renderCharacter = (character: ListCharacter) => (
         <ListItemLink to={`${this.props.matchUrl}${routes.character}${character.id}`} key={character.id}>
@@ -237,51 +178,8 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
         </ListItemLink>
     );
 
-    renderProposedCharacter = (character: ProposedCharacter) => {
-        return (
-            <ListItem key={character.id}>
-                <ListItemText
-                    primary={
-                        character.name +
-                        (this.props.owner
-                            ? ` (Proposed ${character.proposedOn.fromNow()}
-                      by ${character.proposedBy})`
-                            : '')
-                    }
-                    secondary={character.description}
-                />
-                <IconButton onClick={() => this.openEditProposedCharacter(character)}>
-                    <Edit />
-                </IconButton>
-                {this.props.owner && (
-                    <IconButton
-                        onClick={() =>
-                            this.props.acceptProposedCharacter({
-                                campaignId: this.props.campaignId,
-                                characterId: character.id
-                            })
-                        }
-                    >
-                        <CheckCircle />
-                    </IconButton>
-                )}
-                <IconButton
-                    onClick={() =>
-                        this.props.deleteProposedCharacter({
-                            campaignId: this.props.campaignId,
-                            characterId: character.id
-                        })
-                    }
-                >
-                    <Cancel />
-                </IconButton>
-            </ListItem>
-        );
-    };
-
     render() {
         const filteredCharacters = this.filteredCharacters();
-        const filteredProposedCharacters = this.filteredProposedCharacters();
         if (this.props.loading) {
             return <CircularProgress />;
         }
@@ -297,32 +195,13 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
                         </Paper>
                     )}
                 </Box>
-                {filteredProposedCharacters.length > 0 && (
-                    <Box marginBottom="1em">
-                        <Box marginBottom="1em">
-                            <Typography variant="h5">Proposed characters</Typography>
-                        </Box>
-                        <Paper elevation={3}>
-                            <List>{filteredProposedCharacters.map(this.renderProposedCharacter)}</List>
-                        </Paper>
-                    </Box>
+                {this.props.canManage && (
+                    <Fab className="CampaignDetail__createFab" color="primary" onClick={this.openCreate}>
+                        <Add />
+                    </Fab>
                 )}
-                <Fab
-                    className="CampaignDetail__createFab"
-                    color="primary"
-                    onClick={this.props.owner ? this.openCreate : this.openPropose}
-                >
-                    <Add />
-                </Fab>
-
-                <Modal open={this.state.createOpen} onClose={this.closeModals}>
+                <Modal open={this.state.createOpen} onClose={this.closeCreate}>
                     <div className="modal">{this.renderCreateCharacter()}</div>
-                </Modal>
-                <Modal open={this.state.proposeOpen} onClose={this.closeModals}>
-                    <div className="modal">{this.renderProposeCharacter()}</div>
-                </Modal>
-                <Modal open={!!this.state.editProposedCharacter} onClose={this.closeModals}>
-                    <div className="modal">{this.renderEditProposedCharacter()}</div>
                 </Modal>
             </Box>
         );
@@ -332,15 +211,10 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
 const mapStateToProps = (state: RootState) => ({
     characters: state.campaign.characters,
     labels: state.campaign.labels,
-    proposedCharacters: state.campaign.proposedCharacters,
-    loading:
-        state.campaign.charactersLoading || state.campaign.proposedCharactersLoading || state.campaign.labelsLoading
+    loading: state.campaign.charactersLoading || state.campaign.labelsLoading
 });
 
 export const CampaignCharacters = connect(mapStateToProps, {
     fetchCharacters: campaignActions.actions.fetchCharacters,
-    fetchProposedCharacters: campaignActions.actions.fetchProposedCharacters,
-    fetchLabels: campaignActions.actions.fetchLabels,
-    acceptProposedCharacter: proposedCharacterActions.actions.acceptProposedCharacter,
-    deleteProposedCharacter: proposedCharacterActions.actions.deleteProposedCharacter
+    fetchLabels: campaignActions.actions.fetchLabels
 })(CampaignCharactersRaw);

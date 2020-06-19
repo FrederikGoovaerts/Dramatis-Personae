@@ -338,65 +338,6 @@ class CampaignServiceTests {
         Assertions.assertEquals(mutableListOf(label1, label2), result?.get(0)?.labels)
     }
 
-
-    @Test
-    fun `getProposedCharacters should not return character proposed by other players for non-owner`() {
-        val user = mockkClass(User::class)
-        val otherUser = mockkClass(User::class)
-        val char1 = mockkClass(ProposedCharacter::class, relaxUnitFun = true)
-        every { char1.proposedBy } returns otherUser
-        val char2 = mockkClass(ProposedCharacter::class, relaxUnitFun = true)
-        every { char2.proposedBy } returns user
-        val camp = mockkClass(Campaign::class)
-        every { camp.proposedCharacters } returns mutableListOf(char1, char2)
-        every { camp.members } returns mutableListOf(user, otherUser)
-        every { camp.isOwnedBy(any()) } returns false
-        every { campaignRepository.findById(any()) } returns Optional.of(camp)
-        val result = campaignService.getProposedCharacters(user, UUID.randomUUID())
-        Assertions.assertEquals(mutableListOf(char2), result)
-    }
-
-    @Test
-    fun `getProposedCharacters should return all proposed characters for owner`() {
-        val user = mockkClass(User::class)
-        val otherUser = mockkClass(User::class)
-        val char1 = mockkClass(ProposedCharacter::class, relaxUnitFun = true)
-        every { char1.proposedBy } returns otherUser
-        every { char1.name } returns "a"
-        val char2 = mockkClass(ProposedCharacter::class, relaxUnitFun = true)
-        every { char2.proposedBy } returns user
-        every { char2.name } returns "a"
-        val camp = mockkClass(Campaign::class)
-        every { camp.proposedCharacters } returns mutableListOf(char1, char2)
-        every { camp.members } returns mutableListOf(user, otherUser)
-        every { camp.isOwnedBy(any()) } returns true
-        every { campaignRepository.findById(any()) } returns Optional.of(camp)
-        val result = campaignService.getProposedCharacters(user, UUID.randomUUID())
-        Assertions.assertEquals(mutableListOf(char1, char2), result)
-    }
-
-    @Test
-    fun `getProposedCharacters should return proposed characters sorted on name`() {
-        val user = mockkClass(User::class)
-        val otherUser = mockkClass(User::class)
-        val char1 = mockkClass(ProposedCharacter::class, relaxUnitFun = true)
-        every { char1.proposedBy } returns otherUser
-        every { char1.name } returns "b"
-        val char2 = mockkClass(ProposedCharacter::class, relaxUnitFun = true)
-        every { char2.proposedBy } returns user
-        every { char2.name } returns "a"
-        val char3 = mockkClass(ProposedCharacter::class, relaxUnitFun = true)
-        every { char3.proposedBy } returns user
-        every { char3.name } returns "c"
-        val camp = mockkClass(Campaign::class)
-        every { camp.proposedCharacters } returns mutableListOf(char1, char2, char3)
-        every { camp.members } returns mutableListOf(user, otherUser)
-        every { camp.isOwnedBy(any()) } returns true
-        every { campaignRepository.findById(any()) } returns Optional.of(camp)
-        val result = campaignService.getProposedCharacters(user, UUID.randomUUID())
-        Assertions.assertEquals(mutableListOf(char2, char1, char3), result)
-    }
-
     @Test
     fun `getSharedNotes should not return private or dm-shared notes by other players for non-owner`() {
         val user = mockkClass(User::class)
@@ -474,5 +415,52 @@ class CampaignServiceTests {
         every { campaignRepository.findById(any()) } returns Optional.of(camp)
         val result = campaignService.getLabels(user, UUID.randomUUID())
         Assertions.assertEquals(mutableListOf(label2), result)
+    }
+
+    @Test
+    fun `createCharacter should persist a character for the owner`() {
+        val user = mockkClass(User::class)
+        val camp = mockkClass(Campaign::class)
+        val charList = mutableListOf<Character>()
+        every { camp.isOwnedBy(any()) } returns true
+        every { camp.allowPlayerCharacterManagement } returns false
+        every { camp.characters } returns charList
+        every { campaignRepository.findById(any()) } returns Optional.of(camp)
+        every { campaignRepository.save<Campaign>(any()) } returns camp
+        campaignService.createCharacter(user, UUID.randomUUID(), "name", "desc", true)
+        verify { campaignRepository.save<Campaign>(any()) }
+        Assertions.assertEquals(1, charList.size)
+    }
+
+    @Test
+    fun `createCharacter should persist a character for a member if character management is allowed`() {
+        val user = mockkClass(User::class)
+        val camp = mockkClass(Campaign::class)
+        val charList = mutableListOf<Character>()
+        every { camp.isOwnedBy(any()) } returns false
+        every { camp.isAccessibleBy(any()) } returns true
+        every { camp.allowPlayerCharacterManagement } returns true
+        every { camp.characters } returns charList
+        every { campaignRepository.findById(any()) } returns Optional.of(camp)
+        every { campaignRepository.save<Campaign>(any()) } returns camp
+        campaignService.createCharacter(user, UUID.randomUUID(), "name", "desc", true)
+        verify { campaignRepository.save<Campaign>(any()) }
+        Assertions.assertEquals(1, charList.size)
+    }
+
+    @Test
+    fun `createCharacter should not persist a character for a member if character management is not allowed`() {
+        val user = mockkClass(User::class)
+        val camp = mockkClass(Campaign::class)
+        val charList = mutableListOf<Character>()
+        every { camp.isOwnedBy(any()) } returns false
+        every { camp.isAccessibleBy(any()) } returns true
+        every { camp.allowPlayerCharacterManagement } returns false
+        every { camp.characters } returns charList
+        every { campaignRepository.findById(any()) } returns Optional.of(camp)
+        every { campaignRepository.save<Campaign>(any()) } returns camp
+        campaignService.createCharacter(user, UUID.randomUUID(), "name", "desc", true)
+        verify(inverse = true) { campaignRepository.save<Campaign>(any()) }
+        Assertions.assertEquals(0, charList.size)
     }
 }

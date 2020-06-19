@@ -1,5 +1,5 @@
 import { CreateNotePayload, Note } from '../../types/note.types';
-import { Character, CharacterEditPayload, VisibilityUpdatePayload } from '../../types/character.types';
+import { Character, CharacterEditPayload } from '../../types/character.types';
 import { ActionTypeMapping, ActionUnion, createAction } from './base';
 import { AddLabelPayload, RemoveLabelPayload } from '../../types/label.types';
 
@@ -16,7 +16,6 @@ export enum names {
     createNote = 'CREATE_CHARACTER_NOTE',
     editCharacter = 'EDIT_CHARACTER',
     deleteCharacter = 'DELETE_CHARACTER',
-    setVisibility = 'SET_CHARACTER_VISIBILITY',
     addLabel = 'ADD_CHARACTER_LABEL',
     removeLabel = 'REMOVE_CHARACTER_LABEL'
 }
@@ -34,7 +33,6 @@ export const actions = {
     createNote: (p: CreateNotePayload) => createAction(names.createNote, p),
     editCharacter: (p: CharacterEditPayload) => createAction(names.editCharacter, p),
     deleteCharacter: (p: string) => createAction(names.deleteCharacter, p),
-    setVisible: (p: VisibilityUpdatePayload) => createAction(names.setVisibility, p),
     addLabel: (p: AddLabelPayload) => createAction(names.addLabel, p),
     removeLabel: (p: RemoveLabelPayload) => createAction(names.removeLabel, p)
 };
