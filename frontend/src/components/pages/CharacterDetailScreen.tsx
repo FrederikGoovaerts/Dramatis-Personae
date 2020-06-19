@@ -1,6 +1,5 @@
 import './CharacterDetailScreen.scss';
 
-import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
@@ -14,8 +13,7 @@ import { RootState } from '../../store/reducers';
 import { Character } from '../../types/character.types';
 import { Campaign } from '../../types/campaign.types';
 import { Note, EditNotePayload, DeleteNotePayload, NoteVisibility, CreateNotePayload } from '../../types/note.types';
-import { IconButton, Modal, Box, FormControlLabel, Toolbar, Button } from '@material-ui/core';
-import { Edit } from '@material-ui/icons';
+import { Modal, Box, Toolbar, Button } from '@material-ui/core';
 import { CharacterHeader } from '../molecules/CharacterHeader';
 import { Notes } from '../molecules/Notes';
 import { CharacterLabels } from './characterDetailComponents/CharacterLabels';
