@@ -3,7 +3,7 @@ import { api } from '../config/constants';
 import { buildPath } from './base.api';
 import moment from 'moment';
 import { Note, CreateNotePayload } from '../types/note.types';
-import { Character, VisibilityUpdatePayload } from '../types/character.types';
+import { Character } from '../types/character.types';
 import { RawNote } from './note.api';
 import { AddLabelPayload, RemoveLabelPayload, Label } from '../types/label.types';
 
@@ -21,14 +21,9 @@ export async function get(id: string): Promise<Character> {
     return data;
 }
 
-export async function update(id: string, name: string, description: string): Promise<void> {
+export async function update(id: string, name: string, description: string, visible: boolean): Promise<void> {
     const url = buildPath(`${api.CHARACTER.PATH}/${id}`);
-    await axiosInstance.put(url, { name, description });
-}
-
-export async function setVisible(payload: VisibilityUpdatePayload): Promise<void> {
-    const url = buildPath(`${api.CHARACTER.PATH}/${payload.characterId}${api.CHARACTER.SUBPATH_VISIBLE}`);
-    await axiosInstance.put(url, payload.visible, { headers: { 'Content-Type': 'application/json' } });
+    await axiosInstance.put(url, { name, description, visible });
 }
 
 export async function deletePermanently(id: string): Promise<void> {

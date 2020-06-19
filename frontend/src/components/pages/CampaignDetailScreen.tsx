@@ -121,6 +121,7 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                                     <CampaignCharacters
                                         campaignId={campaign.id}
                                         owner={campaign.owner}
+                                        canManage={campaign.settings.allowPlayerCharacterManagement || campaign.owner}
                                         matchUrl={url}
                                     />
                                 )}

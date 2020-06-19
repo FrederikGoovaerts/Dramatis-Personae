@@ -19,15 +19,12 @@ export interface ListCharacter {
 export interface CharacterPrototype {
     name: string;
     description: string;
+    visible: boolean;
 }
 
 export interface CharacterEditPayload {
     characterId: string;
     name: string;
     description: string;
-}
-
-export interface VisibilityUpdatePayload {
-    characterId: string;
     visible: boolean;
 }

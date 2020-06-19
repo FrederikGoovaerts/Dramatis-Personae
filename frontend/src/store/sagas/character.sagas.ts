@@ -46,7 +46,8 @@ function* createNote(action: characterActions.specificTypes['createNote']) {
 
 function* editCharacter(action: characterActions.specificTypes['editCharacter']) {
     try {
-        yield character.update(action.payload.characterId, action.payload.name, action.payload.description);
+        const { characterId, name, description, visible } = action.payload;
+        yield character.update(characterId, name, description, visible);
         yield put(characterActions.actions.fetchCharacter(action.payload.characterId));
     } catch (e) {
         console.error('Unable to update character. Please try again later.');
@@ -58,15 +59,6 @@ function* deleteCharacter(action: characterActions.specificTypes['deleteCharacte
         yield character.deletePermanently(action.payload);
     } catch (e) {
         console.error('Unable to delete character. Please try again later.');
-    }
-}
-
-function* setVisibility(action: characterActions.specificTypes['setVisible']) {
-    try {
-        yield character.setVisible(action.payload);
-        yield put(characterActions.actions.fetchCharacter(action.payload.characterId));
-    } catch (e) {
-        console.error('Unable to update note. Please try again later.');
     }
 }
 
@@ -95,7 +87,6 @@ export default function* watcher() {
     yield takeEvery(characterActions.names.createNote, createNote);
     yield takeEvery(characterActions.names.editCharacter, editCharacter);
     yield takeEvery(characterActions.names.deleteCharacter, deleteCharacter);
-    yield takeEvery(characterActions.names.setVisibility, setVisibility);
     yield takeEvery(characterActions.names.addLabel, addLabel);
     yield takeEvery(characterActions.names.removeLabel, removeLabel);
 }

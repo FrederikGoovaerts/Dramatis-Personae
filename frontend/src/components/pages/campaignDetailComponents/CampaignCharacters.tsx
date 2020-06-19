@@ -29,6 +29,7 @@ import { ListLabel, Label } from '../../../types/label.types';
 interface Props {
     campaignId: string;
     owner: boolean;
+    canManage: boolean;
     matchUrl: string;
 }
 
@@ -144,7 +145,11 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
         <Paper className="modalPaper">
             <div className="modalContainer">
                 <Typography variant="h5">New character</Typography>
-                <CreateCharacterForm campaignId={this.props.campaignId} onSubmitComplete={this.closeCreate} />
+                <CreateCharacterForm
+                    campaignId={this.props.campaignId}
+                    onSubmitComplete={this.closeCreate}
+                    owner={this.props.owner}
+                />
             </div>
         </Paper>
     );
@@ -190,7 +195,7 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
                         </Paper>
                     )}
                 </Box>
-                {this.props.owner && (
+                {this.props.canManage && (
                     <Fab className="CampaignDetail__createFab" color="primary" onClick={this.openCreate}>
                         <Add />
                     </Fab>

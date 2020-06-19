@@ -7,6 +7,7 @@ import { NewCharacterForm } from './NewCharacterForm';
 
 interface Props {
     campaignId: string;
+    owner: boolean;
     onSubmitComplete?: () => void;
 }
 
@@ -21,12 +22,13 @@ class CreateCharacterFormRaw extends React.Component<AllProps> {
         super(props);
     }
 
-    handleSubmit = (name: string, description: string) => {
+    handleSubmit = (name: string, description: string, visible: boolean) => {
         this.props.createCharacter({
             campaignId: this.props.campaignId,
             character: {
-                name: name,
-                description: description
+                name,
+                description,
+                visible
             }
         });
         if (this.props.onSubmitComplete) {
@@ -34,7 +36,7 @@ class CreateCharacterFormRaw extends React.Component<AllProps> {
         }
     };
 
-    render = () => <NewCharacterForm onSubmit={this.handleSubmit} />;
+    render = () => <NewCharacterForm onSubmit={this.handleSubmit} owner={this.props.owner} />;
 }
 
 export const CreateCharacterForm = connect(null, { createCharacter: campaignActions.actions.createCharacter })(
