@@ -14,7 +14,7 @@ import { RootState } from '../../store/reducers';
 import { Character } from '../../types/character.types';
 import { Campaign } from '../../types/campaign.types';
 import { Note, EditNotePayload, DeleteNotePayload, NoteVisibility, CreateNotePayload } from '../../types/note.types';
-import { IconButton, Modal, Box, FormControlLabel, Toolbar } from '@material-ui/core';
+import { IconButton, Modal, Box, FormControlLabel, Toolbar, Button } from '@material-ui/core';
 import { Edit } from '@material-ui/icons';
 import { CharacterHeader } from '../molecules/CharacterHeader';
 import { Notes } from '../molecules/Notes';
@@ -111,16 +111,15 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
                         campaignId={campaign.id}
                     />
                     {(campaign.owner || campaign.settings.allowPlayerCharacterManagement) && (
-                        <Paper className="CharacterDetail__adminControls">
-                            <FormControlLabel
-                                control={
-                                    <IconButton onClick={() => this.setState({ editCharacterOpen: true })}>
-                                        <Edit />
-                                    </IconButton>
-                                }
-                                label="Edit character"
-                            />
-                        </Paper>
+                        <Box marginBottom="1em">
+                            <Button
+                                size="small"
+                                variant="outlined"
+                                onClick={() => this.setState({ editCharacterOpen: true })}
+                            >
+                                Edit character
+                            </Button>
+                        </Box>
                     )}
                     <Notes
                         campaignOwner={this.props.campaign.owner}
