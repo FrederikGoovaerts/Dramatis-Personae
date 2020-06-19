@@ -416,4 +416,51 @@ class CampaignServiceTests {
         val result = campaignService.getLabels(user, UUID.randomUUID())
         Assertions.assertEquals(mutableListOf(label2), result)
     }
+
+    @Test
+    fun `createCharacter should persist a character for the owner`() {
+        val user = mockkClass(User::class)
+        val camp = mockkClass(Campaign::class)
+        val charList = mutableListOf<Character>()
+        every { camp.isOwnedBy(any()) } returns true
+        every { camp.allowPlayerCharacterManagement } returns false
+        every { camp.characters } returns charList
+        every { campaignRepository.findById(any()) } returns Optional.of(camp)
+        every { campaignRepository.save<Campaign>(any()) } returns camp
+        campaignService.createCharacter(user, UUID.randomUUID(), "name", "desc", true)
+        verify { campaignRepository.save<Campaign>(any()) }
+        Assertions.assertEquals(1, charList.size)
+    }
+
+    @Test
+    fun `createCharacter should persist a character for a member if character management is allowed`() {
+        val user = mockkClass(User::class)
+        val camp = mockkClass(Campaign::class)
+        val charList = mutableListOf<Character>()
+        every { camp.isOwnedBy(any()) } returns false
+        every { camp.isAccessibleBy(any()) } returns true
+        every { camp.allowPlayerCharacterManagement } returns true
+        every { camp.characters } returns charList
+        every { campaignRepository.findById(any()) } returns Optional.of(camp)
+        every { campaignRepository.save<Campaign>(any()) } returns camp
+        campaignService.createCharacter(user, UUID.randomUUID(), "name", "desc", true)
+        verify { campaignRepository.save<Campaign>(any()) }
+        Assertions.assertEquals(1, charList.size)
+    }
+
+    @Test
+    fun `createCharacter should not persist a character for a member if character management is not allowed`() {
+        val user = mockkClass(User::class)
+        val camp = mockkClass(Campaign::class)
+        val charList = mutableListOf<Character>()
+        every { camp.isOwnedBy(any()) } returns false
+        every { camp.isAccessibleBy(any()) } returns true
+        every { camp.allowPlayerCharacterManagement } returns false
+        every { camp.characters } returns charList
+        every { campaignRepository.findById(any()) } returns Optional.of(camp)
+        every { campaignRepository.save<Campaign>(any()) } returns camp
+        campaignService.createCharacter(user, UUID.randomUUID(), "name", "desc", true)
+        verify(inverse = true) { campaignRepository.save<Campaign>(any()) }
+        Assertions.assertEquals(0, charList.size)
+    }
 }
