@@ -15,7 +15,7 @@ import {
     InputLabel,
     Box
 } from '@material-ui/core';
-import { VisibilityOff } from '@material-ui/icons';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
 interface Props {
     campaignId: string;

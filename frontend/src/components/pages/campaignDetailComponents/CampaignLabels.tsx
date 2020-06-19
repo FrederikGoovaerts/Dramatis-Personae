@@ -12,7 +12,9 @@ import {
     Modal,
     IconButton
 } from '@material-ui/core';
-import { Add, Visibility, Edit } from '@material-ui/icons';
+import Add from '@material-ui/icons/Add';
+import Visibility from '@material-ui/icons/Visibility';
+import Edit from '@material-ui/icons/Edit';
 import { RootState } from '../../../store/reducers';
 import { campaignActions, labelActions } from '../../../store/actions';
 import { connect } from 'react-redux';

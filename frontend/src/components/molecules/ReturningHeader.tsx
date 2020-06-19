@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Header } from './Header';
 import { Button, Typography, Box } from '@material-ui/core';
-import { ArrowBack } from '@material-ui/icons';
+import ArrowBack from '@material-ui/icons/ArrowBack';
 import { Redirect } from 'react-router';
 
 interface Props {

@@ -14,7 +14,9 @@ import {
     Modal
 } from '@material-ui/core';
 import { Note, NoteVisibility } from '../../types/note.types';
-import { VisibilityOff, Edit, Add } from '@material-ui/icons';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import Edit from '@material-ui/icons/Edit';
+import Add from '@material-ui/icons/Add';
 import { NewNoteForm } from './NewNoteForm';
 import { EditNoteForm } from './EditNoteForm';
 

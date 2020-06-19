@@ -16,7 +16,9 @@ import {
     MenuItem,
     Button
 } from '@material-ui/core';
-import { Add, Visibility, VisibilityOff } from '@material-ui/icons';
+import Add from '@material-ui/icons/Add';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { ListCharacter } from '../../../types/character.types';
 import { ListItemLink } from '../../atoms/ListItemLink';
 import { routes } from '../../../config/constants';

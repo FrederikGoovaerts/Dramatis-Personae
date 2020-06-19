@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Box, Typography, IconButton, Button, Modal, CircularProgress } from '@material-ui/core';
-import { HighlightOff, Person } from '@material-ui/icons';
+import HighlightOff from '@material-ui/icons/HighlightOff';
+import Person from '@material-ui/icons/Person';
 import { ConfirmableButton } from '../../atoms/DeleteButton';
 import { EditCampaignForm } from '../../molecules/EditCampaignForm';
 import { Campaign, CampaignMember } from '../../../types/campaign.types';
