@@ -1,10 +1,7 @@
 import './CharacterDetailScreen.scss';
 
-import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
-import { ChangeEvent } from 'react';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { match, Redirect } from 'react-router';
@@ -13,11 +10,10 @@ import { routes } from '../../config/constants';
 import { EditCharacterForm } from '../molecules/EditCharacterForm';
 import { campaignActions, characterActions, noteActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
-import { Character, VisibilityUpdatePayload } from '../../types/character.types';
+import { Character } from '../../types/character.types';
 import { Campaign } from '../../types/campaign.types';
 import { Note, EditNotePayload, DeleteNotePayload, NoteVisibility, CreateNotePayload } from '../../types/note.types';
-import { IconButton, Modal, Box, FormControlLabel, Toolbar } from '@material-ui/core';
-import { Edit } from '@material-ui/icons';
+import { Modal, Box, Toolbar, Button } from '@material-ui/core';
 import { CharacterHeader } from '../molecules/CharacterHeader';
 import { Notes } from '../molecules/Notes';
 import { CharacterLabels } from './characterDetailComponents/CharacterLabels';
@@ -41,7 +37,6 @@ interface MapProps {
     fetchNotes: (id: string) => void;
     fetchSharedNotes: (id: string) => void;
     fetchCampaign: (id: string) => void;
-    setVisible: (payload: VisibilityUpdatePayload) => void;
     createNote: (payload: CreateNotePayload) => void;
     editCharacterNote: (payload: EditNotePayload) => void;
     deleteCharacterNote: (payload: DeleteNotePayload) => void;
@@ -70,18 +65,12 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
         this.props.fetchSharedNotes(this.props.match.params.characterId);
     }
 
-    handleToggleVisible = (event: ChangeEvent<HTMLInputElement>) => {
-        if (this.props.character) {
-            this.props.setVisible({ characterId: this.props.character.id, visible: event.target.checked });
-        }
-    };
-
     closeEditCharacter = () => {
         this.setState({ editCharacterOpen: false });
     };
 
     renderEditCharacter = () => {
-        if (!this.props.character) {
+        if (!this.props.character || !this.props.campaign) {
             return undefined;
         }
         const character = this.props.character;
@@ -91,6 +80,8 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
                 characterId={character.id}
                 initialName={character.name}
                 initialDescription={character.description}
+                initialVisibility={character.visible}
+                owner={this.props.campaign.owner}
                 onSubmitComplete={this.closeEditCharacter}
                 onDelete={onDelete}
             />
@@ -117,27 +108,16 @@ class CharacterDetailRaw extends React.Component<AllProps, State> {
                         canChange={campaign.owner || campaign.settings.allowPlayerCharacterLabelManagement}
                         campaignId={campaign.id}
                     />
-                    {this.props.campaign.owner && (
-                        <Paper className="CharacterDetail__adminControls">
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        color="primary"
-                                        onChange={this.handleToggleVisible}
-                                        checked={character.visible}
-                                    />
-                                }
-                                label="Visible to players"
-                            />
-                            <FormControlLabel
-                                control={
-                                    <IconButton onClick={() => this.setState({ editCharacterOpen: true })}>
-                                        <Edit />
-                                    </IconButton>
-                                }
-                                label="Edit character"
-                            />
-                        </Paper>
+                    {(campaign.owner || campaign.settings.allowPlayerCharacterManagement) && (
+                        <Box marginBottom="1em">
+                            <Button
+                                size="small"
+                                variant="outlined"
+                                onClick={() => this.setState({ editCharacterOpen: true })}
+                            >
+                                Edit character
+                            </Button>
+                        </Box>
                     )}
                     <Notes
                         campaignOwner={this.props.campaign.owner}
@@ -184,7 +164,6 @@ export const CharacterDetailScreen = connect(mapStateToProps, {
     fetchCampaign: campaignActions.actions.fetchCampaign,
     fetchNotes: characterActions.actions.fetchNotes,
     fetchSharedNotes: characterActions.actions.fetchSharedNotes,
-    setVisible: characterActions.actions.setVisible,
     deleteCharacter: characterActions.actions.deleteCharacter,
     createNote: characterActions.actions.createNote,
     editCharacterNote: noteActions.actions.editCharacterNote,

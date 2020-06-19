@@ -9,7 +9,7 @@ import { match, Redirect, Route, Switch } from 'react-router';
 import { Box, Drawer, Toolbar, Theme } from '@material-ui/core';
 
 import { routes } from '../../config/constants';
-import { campaignActions, proposedCharacterActions } from '../../store/actions';
+import { campaignActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
 import { Campaign } from '../../types/campaign.types';
 import { CampaignHeader } from '../molecules/CampaignHeader';
@@ -121,6 +121,7 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                                     <CampaignCharacters
                                         campaignId={campaign.id}
                                         owner={campaign.owner}
+                                        canManage={campaign.settings.allowPlayerCharacterManagement || campaign.owner}
                                         matchUrl={url}
                                     />
                                 )}
@@ -159,19 +160,13 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
 
 const mapStateToProps = (state: RootState) => ({
     campaign: state.campaign.campaign,
-    characters: state.campaign.characters,
-    proposedCharacters: state.campaign.proposedCharacters,
     loading: state.campaign.campaignLoading
 });
 
 export const CampaignDetailScreen = connect(mapStateToProps, {
     fetchCampaign: campaignActions.actions.fetchCampaign,
-    fetchCharacters: campaignActions.actions.fetchCharacters,
-    fetchProposedCharacters: campaignActions.actions.fetchProposedCharacters,
     fetchNotes: campaignActions.actions.fetchNotes,
     fetchSharedNotes: campaignActions.actions.fetchSharedNotes,
-    acceptProposedCharacter: proposedCharacterActions.actions.acceptProposedCharacter,
-    deleteProposedCharacter: proposedCharacterActions.actions.deleteProposedCharacter,
     fetchMembers: campaignActions.actions.fetchMembers,
     deleteCampaign: campaignActions.actions.deleteCampaign,
     leaveCampaign: campaignActions.actions.leaveCampaign,

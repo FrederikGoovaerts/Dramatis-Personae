@@ -2,6 +2,8 @@ package dev.frederik.dramatispersonae.auth
 
 import com.google.gson.Gson
 import dev.frederik.dramatispersonae.AuthenticationConfig
+import org.springframework.context.annotation.Bean
+import org.springframework.stereotype.Component
 import java.net.URI
 import java.net.URLEncoder
 import java.net.http.HttpClient
@@ -11,10 +13,18 @@ import java.nio.charset.StandardCharsets
 
 const val DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
 
-class GoogleOpenIdClient(private val authenticationConfig: AuthenticationConfig) {
+@Component
+class GoogleOpenIdClientProvider(private val authenticationConfig: AuthenticationConfig) {
+    @Bean
+    fun provideClient(): GoogleOpenIdClient {
+        return GoogleOpenIdClient(authenticationConfig);
+    }
+}
 
-    private val httpClient: HttpClient = HttpClient.newBuilder().build()
-    private val gson: Gson = Gson()
+class GoogleOpenIdClient(private val authenticationConfig: AuthenticationConfig,
+                         private val httpClient: HttpClient = HttpClient.newBuilder().build(),
+                         private val gson: Gson = Gson()) {
+
     private val discoveryDocument: DiscoveryDocument
 
     init {

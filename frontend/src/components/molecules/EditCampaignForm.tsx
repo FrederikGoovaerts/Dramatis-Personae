@@ -26,7 +26,7 @@ type AllProps = Props & MapProps;
 
 interface State {
     name: string;
-    autoAcceptProposedCharacter: boolean;
+    allowPlayerCharacterManagement: boolean;
     allowPlayerLabelManagement: boolean;
     allowPlayerCharacterLabelManagement: boolean;
 }
@@ -36,7 +36,7 @@ class EditCampaignFormRaw extends React.Component<AllProps, State> {
         super(props);
         this.state = {
             name: props.name,
-            autoAcceptProposedCharacter: props.settings.autoAcceptProposedCharacter,
+            allowPlayerCharacterManagement: props.settings.allowPlayerCharacterManagement,
             allowPlayerLabelManagement: props.settings.allowPlayerLabelManagement,
             allowPlayerCharacterLabelManagement: props.settings.allowPlayerCharacterLabelManagement
         };
@@ -48,7 +48,7 @@ class EditCampaignFormRaw extends React.Component<AllProps, State> {
 
     handleSubmit = () => {
         const {
-            autoAcceptProposedCharacter,
+            allowPlayerCharacterManagement,
             allowPlayerLabelManagement,
             allowPlayerCharacterLabelManagement
         } = this.state;
@@ -56,7 +56,7 @@ class EditCampaignFormRaw extends React.Component<AllProps, State> {
             id: this.props.id,
             name: this.state.name,
             campaignSettings: {
-                autoAcceptProposedCharacter,
+                allowPlayerCharacterManagement,
                 allowPlayerLabelManagement,
                 allowPlayerCharacterLabelManagement
             }
@@ -73,8 +73,8 @@ class EditCampaignFormRaw extends React.Component<AllProps, State> {
         }
     };
 
-    handleChangeAutoAcceptProposedCharacter = (event: ChangeEvent<HTMLInputElement>) => {
-        this.setState({ autoAcceptProposedCharacter: event.target.checked });
+    handleChangeAllowPlayerCharacterManagement = (event: ChangeEvent<HTMLInputElement>) => {
+        this.setState({ allowPlayerCharacterManagement: event.target.checked });
     };
 
     handleChangeAllowPlayerLabelManagement = (event: ChangeEvent<HTMLInputElement>) => {
@@ -99,13 +99,13 @@ class EditCampaignFormRaw extends React.Component<AllProps, State> {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={this.state.autoAcceptProposedCharacter}
-                                    onChange={this.handleChangeAutoAcceptProposedCharacter}
-                                    name="autoAcceptProposedCharacter"
+                                    checked={this.state.allowPlayerCharacterManagement}
+                                    onChange={this.handleChangeAllowPlayerCharacterManagement}
+                                    name="allowPlayerCharacterManagement"
                                     color="primary"
                                 />
                             }
-                            label="Auto accept proposed characters"
+                            label="Allow players to manage characters"
                         />
                         <FormControlLabel
                             control={

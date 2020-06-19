@@ -3,17 +3,20 @@ import { connect } from 'react-redux';
 
 import { characterActions } from '../../store/actions';
 import { BaseEditCharacterForm } from './BaseEditCharacterForm';
+import { CharacterEditPayload } from '../../types/character.types';
 
 interface Props {
     characterId: string;
     initialName: string;
     initialDescription: string;
+    initialVisibility: boolean;
+    owner: boolean;
     onSubmitComplete?: () => void;
     onDelete?: () => void;
 }
 
 interface MapProps {
-    editCharacter: (payload: { characterId: string; name: string; description: string }) => void;
+    editCharacter: (payload: CharacterEditPayload) => void;
     deleteCharacter: (params: string) => void;
 }
 
@@ -24,11 +27,12 @@ class EditCharacterFormRaw extends React.Component<AllProps> {
         super(props);
     }
 
-    handleSubmit = (name: string, description: string) => {
+    handleSubmit = (name: string, description: string, visible: boolean) => {
         this.props.editCharacter({
             characterId: this.props.characterId,
             name,
-            description
+            description,
+            visible
         });
         if (this.props.onSubmitComplete) {
             this.props.onSubmitComplete();
@@ -46,6 +50,8 @@ class EditCharacterFormRaw extends React.Component<AllProps> {
         <BaseEditCharacterForm
             initialName={this.props.initialName}
             initialDescription={this.props.initialDescription}
+            initialVisibility={this.props.initialVisibility}
+            owner={this.props.owner}
             onSubmit={this.handleSubmit}
             onDelete={this.handleDelete}
         />
