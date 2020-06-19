@@ -120,7 +120,7 @@ class CampaignController(private val service: CampaignService) {
         @PathVariable id: UUID,
         @RequestBody dto: CreateCharacterDto
     ): ResponseEntity<Unit> {
-        val success = this.service.createCharacter(auth.principal, id, dto.name, dto.description)
+        val success = this.service.createCharacter(auth.principal, id, dto.name, dto.description, dto.visible)
         return ResponseEntity(if (success) HttpStatus.CREATED else HttpStatus.FORBIDDEN)
     }
 
@@ -330,7 +330,7 @@ class CampaignService(private val repository: CampaignRepository, private val la
         return sortCharacters(characters)
     }
 
-    fun createCharacter(user: User, id: UUID, name: String, description: String): Boolean {
+    fun createCharacter(user: User, id: UUID, name: String, description: String, visible: Boolean): Boolean {
         val campaignQuery = repository.findById(id)
         if (!campaignQuery.isPresent) {
             return false
@@ -339,7 +339,7 @@ class CampaignService(private val repository: CampaignRepository, private val la
         if (!campaign.isOwnedBy(user) && !(campaign.allowPlayerCharacterManagement && campaign.isAccessibleBy(user))) {
             return false
         }
-        val newCharacter = Character(name, description, false, campaign, mutableListOf())
+        val newCharacter = Character(name, description, visible, campaign, mutableListOf())
         campaign.characters.add(newCharacter)
         this.repository.save(campaign)
         return true

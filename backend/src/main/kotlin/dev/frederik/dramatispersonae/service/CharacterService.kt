@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
 
-data class CreateCharacterDto(val name: String, val description: String)
+data class CreateCharacterDto(val name: String, val description: String, val visible: Boolean)
 
 data class CharacterListView(
     val name: String,
@@ -54,17 +54,7 @@ class CharacterController(private val service: CharacterService) {
         @PathVariable id: UUID,
         @RequestBody character: CreateCharacterDto
     ): ResponseEntity<Unit> {
-        val success = this.service.updateCharacter(auth.principal, id, character.name, character.description)
-        return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
-    }
-
-    @PutMapping("/{id}/visible")
-    fun updateCharacterVisibility(
-        auth: GoogleAuthentication,
-        @PathVariable id: UUID,
-        @RequestBody visible: Boolean
-    ): ResponseEntity<Unit> {
-        val success = this.service.updateCharacterVisibility(auth.principal, id, visible)
+        val success = this.service.updateCharacter(auth.principal, id, character.name, character.description, character.visible)
         return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
     }
 
@@ -137,7 +127,7 @@ class CharacterService(private val repository: CharacterRepository, private val 
         }
     }
 
-    fun updateCharacter(user: User, id: UUID, name: String, description: String): Boolean {
+    fun updateCharacter(user: User, id: UUID, name: String, description: String, visible: Boolean): Boolean {
         val characterQuery = repository.findById(id)
         if (!characterQuery.isPresent) {
             return false
@@ -148,16 +138,6 @@ class CharacterService(private val repository: CharacterRepository, private val 
         }
         character.name = name
         character.description = description
-        this.repository.save(character)
-        return true
-    }
-
-    fun updateCharacterVisibility(user: User, id: UUID, visible: Boolean): Boolean {
-        val characterQuery = repository.findById(id)
-        if (!characterQuery.isPresent || !characterQuery.get().campaign.isOwnedBy(user)) {
-            return false
-        }
-        val character = characterQuery.get()
         character.isVisible = visible
         this.repository.save(character)
         return true
