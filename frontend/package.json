@@ -11,7 +11,7 @@
         "build": "npm run build:clean && npm run build:webpack",
         "build:clean": "rimraf build",
         "build:webpack": "webpack --mode production",
-        "test": "echo \"No tests added yet\"",
+        "test": "jest",
         "lint": "eslint src/**/*.ts{,x}",
         "lint-fix": "eslint src/**/*.ts{,x} --fix"
     },
@@ -40,6 +40,7 @@
         "prettier": "^2.0.4",
         "raw-loader": "^4.0.0",
         "react-router": "^5.1.2",
+        "react-test-renderer": "^16.13.1",
         "rimraf": "^3.0.2",
         "sass": "^1.26.3",
         "sass-loader": "^8.0.2",
@@ -55,6 +56,7 @@
     "dependencies": {
         "@material-ui/core": "^4.9.10",
         "@material-ui/icons": "^4.9.1",
+        "@types/react-test-renderer": "^16.9.2",
         "axios": "^0.19.2",
         "axios-auth-refresh": "^2.2.4",
         "jsonwebtoken": "^8.5.1",
