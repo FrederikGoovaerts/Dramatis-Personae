@@ -8,10 +8,10 @@ import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-
 import { routes } from '../config/constants';
 import { applicationActions } from '../store/actions';
 import { RootState } from '../store/reducers';
+import { Landing } from './atoms/Landing';
 import { CampaignDetailScreen, MatchParams as CampaignMatchParams } from './pages/CampaignDetailScreen';
 import { CampaignList } from './pages/CampaignList';
 import { CharacterDetailScreen, MatchParams as CharacterMatchParams } from './pages/CharacterDetailScreen';
-import { Landing } from './pages/Landing';
 
 interface Props {
     initialized: boolean;
