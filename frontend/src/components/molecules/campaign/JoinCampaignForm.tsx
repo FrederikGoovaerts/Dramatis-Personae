@@ -1,7 +1,7 @@
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { ChangeEvent } from 'react';
-import * as React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
 import { campaignActions } from '../../../store/actions';
@@ -17,44 +17,30 @@ interface MapProps {
 
 type AllProps = Props & MapProps;
 
-interface State {
-    input: string;
-}
+const JoinCampaignFormRaw = (props: AllProps) => {
+    const [input, setInput] = useState('');
 
-class JoinCampaignFormRaw extends React.Component<AllProps, State> {
-    constructor(props: AllProps) {
-        super(props);
-        this.state = { input: '' };
-    }
-
-    handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        this.setState({ input: event.target.value });
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setInput(event.target.value);
     };
 
-    handleSubmit = () => {
-        this.props.joinCampaign(this.state.input);
-        this.setState({ input: '' });
-        if (this.props.onSubmitComplete) {
-            this.props.onSubmitComplete();
+    const handleSubmit = () => {
+        props.joinCampaign(input);
+        setInput('');
+        if (props.onSubmitComplete) {
+            props.onSubmitComplete();
         }
     };
 
-    render() {
-        return (
-            <div className={this.props.className}>
-                <TextField
-                    label="Campaign invite code"
-                    value={this.state.input}
-                    onChange={this.handleChange}
-                    margin="dense"
-                />
-                <Button variant="contained" onClick={this.handleSubmit}>
-                    Join
-                </Button>
-            </div>
-        );
-    }
-}
+    return (
+        <div className={props.className}>
+            <TextField label="Campaign invite code" value={input} onChange={handleChange} margin="dense" />
+            <Button variant="contained" onClick={handleSubmit}>
+                Join
+            </Button>
+        </div>
+    );
+};
 
 export const JoinCampaignForm = connect(null, { joinCampaign: campaignActions.actions.joinCampaign })(
     JoinCampaignFormRaw
