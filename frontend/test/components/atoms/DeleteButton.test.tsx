@@ -1,6 +1,6 @@
 import React from 'react';
 import { DeleteButton, ConfirmableButton } from '../../../src/components/atoms/DeleteButton';
-import renderer from 'react-test-renderer';
+import renderer, { act } from 'react-test-renderer';
 
 test('The delete button should go through three states', () => {
     const component = renderer.create(<DeleteButton onConfirm={() => undefined} />);
@@ -11,7 +11,7 @@ test('The delete button should go through three states', () => {
     expect(tree).toMatchSnapshot();
 
     // Click delete button once
-    tree.props.onClick();
+    act(tree.props.onClick);
     tree = component.toJSON();
     if (!tree) {
         fail();
@@ -19,7 +19,7 @@ test('The delete button should go through three states', () => {
     expect(tree).toMatchSnapshot();
 
     // Confirm delete
-    tree.props.onClick();
+    act(tree.props.onClick);
     tree = component.toJSON();
     if (!tree) {
         fail();
@@ -38,7 +38,7 @@ test('The confirmable button should show the supplied labels', () => {
     expect(tree).toMatchSnapshot();
 
     // Click delete button once
-    tree.props.onClick();
+    act(tree.props.onClick);
     tree = component.toJSON();
     if (!tree) {
         fail();
@@ -46,7 +46,7 @@ test('The confirmable button should show the supplied labels', () => {
     expect(tree).toMatchSnapshot();
 
     // Confirm delete
-    tree.props.onClick();
+    act(tree.props.onClick);
     tree = component.toJSON();
     if (!tree) {
         fail();
