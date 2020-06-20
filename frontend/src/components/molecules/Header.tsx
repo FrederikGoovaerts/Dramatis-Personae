@@ -30,7 +30,7 @@ const useStyles = makeStyles({
     }
 });
 
-const HeaderRaw = (props: Props) => {
+export const HeaderRaw = (props: Props) => {
     const classes = useStyles();
     return (
         <AppBar position="fixed" className={props.className}>
