@@ -5,7 +5,7 @@ import { characterActions } from '../../../store/actions';
 import { RemoveLabelPayload, Label } from '../../../types/label.types';
 import { Box, Chip, Modal } from '@material-ui/core';
 import Add from '@material-ui/icons/Add';
-import { AddCharacterLabelForm } from '../../molecules/AddCharacterLabelForm';
+import { AddCharacterLabelForm } from '../../molecules/label/AddCharacterLabelForm';
 
 interface Props {
     campaignId: string;

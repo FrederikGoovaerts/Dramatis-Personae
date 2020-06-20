@@ -2,7 +2,7 @@ import { Paper, Button, TextField, Typography, FormControlLabel, Checkbox } from
 import { ChangeEvent } from 'react';
 import * as React from 'react';
 
-import { DeleteButton } from '../atoms/DeleteButton';
+import { DeleteButton } from '../../atoms/DeleteButton';
 
 interface Props {
     initialName: string;

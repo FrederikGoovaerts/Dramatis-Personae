@@ -19,8 +19,8 @@ import { RootState } from '../../../store/reducers';
 import { campaignActions, labelActions } from '../../../store/actions';
 import { connect } from 'react-redux';
 import { Label, DeleteLabelPayload, EditLabelPayload } from '../../../types/label.types';
-import { CreateLabelForm } from '../../molecules/CreateLabelForm';
-import { EditLabelForm } from '../../molecules/EditLabelForm';
+import { CreateLabelForm } from '../../molecules/label/CreateLabelForm';
+import { EditLabelForm } from '../../molecules/label/EditLabelForm';
 
 interface Props {
     campaignId: string;

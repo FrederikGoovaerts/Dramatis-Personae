@@ -4,7 +4,7 @@ import { RootState } from '../../../store/reducers';
 import { campaignActions, noteActions } from '../../../store/actions';
 import { connect } from 'react-redux';
 import { Note, CreateNotePayload, NoteVisibility, EditNotePayload, DeleteNotePayload } from '../../../types/note.types';
-import { Notes } from '../../molecules/Notes';
+import { Notes } from '../../molecules/note/Notes';
 
 interface Props {
     campaignId: string;

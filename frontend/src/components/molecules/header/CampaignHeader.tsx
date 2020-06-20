@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { routes } from '../../config/constants';
+import { routes } from '../../../config/constants';
 import { ReturningHeader } from './ReturningHeader';
 
 interface Props {

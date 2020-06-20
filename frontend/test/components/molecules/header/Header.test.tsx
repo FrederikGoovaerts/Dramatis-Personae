@@ -1,5 +1,5 @@
 import React from 'react';
-import { HeaderRaw } from '../../../src/components/molecules/Header';
+import { HeaderRaw } from '../../../../src/components/molecules/header/Header';
 import { create } from 'react-test-renderer';
 
 describe('The Header', () => {

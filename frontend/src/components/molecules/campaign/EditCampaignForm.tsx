@@ -5,9 +5,9 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Paper, Typography, Box, FormControlLabel, Checkbox } from '@material-ui/core';
 
-import { campaignActions } from '../../store/actions';
-import { DeleteButton } from '../atoms/DeleteButton';
-import { CampaignSettings, CampaignEditPayload } from '../../types/campaign.types';
+import { campaignActions } from '../../../store/actions';
+import { DeleteButton } from '../../atoms/DeleteButton';
+import { CampaignSettings, CampaignEditPayload } from '../../../types/campaign.types';
 
 interface Props {
     id: string;

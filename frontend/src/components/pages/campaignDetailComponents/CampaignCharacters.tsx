@@ -22,7 +22,7 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { ListCharacter } from '../../../types/character.types';
 import { ListItemLink } from '../../atoms/ListItemLink';
 import { routes } from '../../../config/constants';
-import { CreateCharacterForm } from '../../molecules/CreateCharacterForm';
+import { CreateCharacterForm } from '../../molecules/character/CreateCharacterForm';
 import { RootState } from '../../../store/reducers';
 import { campaignActions } from '../../../store/actions';
 import { connect } from 'react-redux';

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { AddLabelPayload, Label } from '../../types/label.types';
-import { RootState } from '../../store/reducers';
-import { campaignActions, characterActions } from '../../store/actions';
-import { Character } from '../../types/character.types';
+import { AddLabelPayload, Label } from '../../../types/label.types';
+import { RootState } from '../../../store/reducers';
+import { campaignActions, characterActions } from '../../../store/actions';
+import { Character } from '../../../types/character.types';
 import {
     CircularProgress,
     Typography,

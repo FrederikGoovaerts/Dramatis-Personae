@@ -13,7 +13,7 @@ import {
     Typography,
     Modal
 } from '@material-ui/core';
-import { Note, NoteVisibility } from '../../types/note.types';
+import { Note, NoteVisibility } from '../../../types/note.types';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Edit from '@material-ui/icons/Edit';
 import Add from '@material-ui/icons/Add';

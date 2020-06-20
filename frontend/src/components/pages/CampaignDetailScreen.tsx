@@ -12,7 +12,7 @@ import { routes } from '../../config/constants';
 import { campaignActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
 import { Campaign } from '../../types/campaign.types';
-import { CampaignHeader } from '../molecules/CampaignHeader';
+import { CampaignHeader } from '../molecules/header/CampaignHeader';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import { CampaignCharacters } from './campaignDetailComponents/CampaignCharacters';
 import { CampaignDetails } from './campaignDetailComponents/CampaignDetails';

@@ -7,15 +7,15 @@ import { connect } from 'react-redux';
 import { match, Redirect } from 'react-router';
 
 import { routes } from '../../config/constants';
-import { EditCharacterForm } from '../molecules/EditCharacterForm';
+import { EditCharacterForm } from '../molecules/character/EditCharacterForm';
 import { campaignActions, characterActions, noteActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
 import { Character } from '../../types/character.types';
 import { Campaign } from '../../types/campaign.types';
 import { Note, EditNotePayload, DeleteNotePayload, NoteVisibility, CreateNotePayload } from '../../types/note.types';
 import { Modal, Box, Toolbar, Button } from '@material-ui/core';
-import { CharacterHeader } from '../molecules/CharacterHeader';
-import { Notes } from '../molecules/Notes';
+import { CharacterHeader } from '../molecules/header/CharacterHeader';
+import { Notes } from '../molecules/note/Notes';
 import { CharacterLabels } from './characterDetailComponents/CharacterLabels';
 
 export interface MatchParams {

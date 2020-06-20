@@ -3,7 +3,7 @@ import { Box, Typography, IconButton, Button, Modal, CircularProgress } from '@m
 import HighlightOff from '@material-ui/icons/HighlightOff';
 import Person from '@material-ui/icons/Person';
 import { ConfirmableButton } from '../../atoms/DeleteButton';
-import { EditCampaignForm } from '../../molecules/EditCampaignForm';
+import { EditCampaignForm } from '../../molecules/campaign/EditCampaignForm';
 import { Campaign, CampaignMember } from '../../../types/campaign.types';
 import { campaignActions } from '../../../store/actions';
 import { connect } from 'react-redux';

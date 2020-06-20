@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { campaignActions } from '../../store/actions';
+import { campaignActions } from '../../../store/actions';
 import { Paper, Typography } from '@material-ui/core';
 import { LabelForm } from './LabelForm';
 

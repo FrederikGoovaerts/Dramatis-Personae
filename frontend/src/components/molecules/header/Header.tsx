@@ -6,8 +6,8 @@ import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { applicationActions } from '../../store/actions';
-import { PersonaeNoCircleIcon } from '../../assets/svg/PersonaeNoCircleIcon';
+import { applicationActions } from '../../../store/actions';
+import { PersonaeNoCircleIcon } from '../../../assets/svg/PersonaeNoCircleIcon';
 import { Box, makeStyles } from '@material-ui/core';
 
 interface Props {

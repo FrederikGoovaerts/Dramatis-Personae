@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
 import { Paper, Typography, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
-import { NoteVisibility } from '../../types/note.types';
+import { NoteVisibility } from '../../../types/note.types';
 
 interface Props {
     className?: string;

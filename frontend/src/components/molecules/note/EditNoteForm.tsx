@@ -4,9 +4,9 @@ import TextField from '@material-ui/core/TextField';
 import { ChangeEvent } from 'react';
 import { Paper, Typography, FormControl, InputLabel, Select, MenuItem, Box } from '@material-ui/core';
 
-import { DeleteButton } from '../atoms/DeleteButton';
-import { Note, NoteVisibility } from '../../types/note.types';
-import { AlertBox } from '../atoms/AlertBox';
+import { DeleteButton } from '../../atoms/DeleteButton';
+import { Note, NoteVisibility } from '../../../types/note.types';
+import { AlertBox } from '../../atoms/AlertBox';
 
 interface Props {
     note: Note;

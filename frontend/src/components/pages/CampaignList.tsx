@@ -11,9 +11,9 @@ import { campaignActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
 import { Campaign } from '../../types/campaign.types';
 
-import { Header } from '../molecules/Header';
-import { JoinCampaignForm } from '../molecules/JoinCampaignForm';
-import { NewCampaignForm } from '../molecules/NewCampaignForm';
+import { Header } from '../molecules/header/Header';
+import { JoinCampaignForm } from '../molecules/campaign/JoinCampaignForm';
+import { NewCampaignForm } from '../molecules/campaign/NewCampaignForm';
 
 interface Props {
     match: match<{}>;

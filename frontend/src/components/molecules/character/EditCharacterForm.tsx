@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { characterActions } from '../../store/actions';
+import { characterActions } from '../../../store/actions';
 import { BaseEditCharacterForm } from './BaseEditCharacterForm';
-import { CharacterEditPayload } from '../../types/character.types';
+import { CharacterEditPayload } from '../../../types/character.types';
 
 interface Props {
     characterId: string;
