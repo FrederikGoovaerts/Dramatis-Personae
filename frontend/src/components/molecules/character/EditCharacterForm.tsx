@@ -2,8 +2,10 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { characterActions } from '../../../store/actions';
-import { BaseEditCharacterForm } from './BaseEditCharacterForm';
 import { CharacterEditPayload } from '../../../types/character.types';
+import { Paper, Typography } from '@material-ui/core';
+import { DeleteButton } from '../../atoms/DeleteButton';
+import { CharacterForm } from './CharacterForm';
 
 interface Props {
     characterId: string;
@@ -42,19 +44,27 @@ class EditCharacterFormRaw extends React.Component<AllProps> {
     handleDelete = () => {
         this.props.deleteCharacter(this.props.characterId);
         if (this.props.onDelete) {
-            setTimeout(this.props.onDelete, 500);
+            setTimeout(this.props.onDelete, 200);
         }
     };
 
     render = () => (
-        <BaseEditCharacterForm
-            initialName={this.props.initialName}
-            initialDescription={this.props.initialDescription}
-            initialVisibility={this.props.initialVisibility}
-            owner={this.props.owner}
-            onSubmit={this.handleSubmit}
-            onDelete={this.handleDelete}
-        />
+        <Paper className="modalPaper">
+            <div className="modalContainer">
+                <div className="modalHeader">
+                    <Typography variant="h5">Update character</Typography>
+                    <DeleteButton onConfirm={this.handleDelete} />
+                </div>
+                <CharacterForm
+                    initialName={this.props.initialName}
+                    initialDescription={this.props.initialDescription}
+                    initialVisibility={this.props.initialVisibility}
+                    owner={this.props.owner}
+                    buttonLabel="Update"
+                    onSubmit={this.handleSubmit}
+                />
+            </div>
+        </Paper>
     );
 }
 
