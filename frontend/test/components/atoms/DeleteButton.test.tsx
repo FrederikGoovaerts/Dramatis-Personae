@@ -1,9 +1,9 @@
 import React from 'react';
 import { DeleteButton, ConfirmableButton } from '../../../src/components/atoms/DeleteButton';
-import renderer, { act } from 'react-test-renderer';
+import { create, act } from 'react-test-renderer';
 
 test('The delete button should go through three states', () => {
-    const component = renderer.create(<DeleteButton onConfirm={() => undefined} />);
+    const component = create(<DeleteButton onConfirm={() => undefined} />);
     let tree = component.toJSON();
     if (!tree) {
         fail();
@@ -28,7 +28,7 @@ test('The delete button should go through three states', () => {
 });
 
 test('The confirmable button should show the supplied labels', () => {
-    const component = renderer.create(
+    const component = create(
         <ConfirmableButton defaultText="the default" confirmedText="when confirmed" onConfirm={() => undefined} />
     );
     let tree = component.toJSON();
