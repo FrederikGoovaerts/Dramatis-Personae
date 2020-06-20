@@ -1,8 +1,8 @@
-import { Paper, Button, TextField, Typography, FormControlLabel, Checkbox } from '@material-ui/core';
-import { ChangeEvent } from 'react';
+import { Paper, Typography } from '@material-ui/core';
 import * as React from 'react';
 
 import { DeleteButton } from '../../atoms/DeleteButton';
+import { CharacterForm } from './CharacterForm';
 
 interface Props {
     initialName: string;
@@ -13,41 +13,10 @@ interface Props {
     onDelete?: () => void;
 }
 
-interface State {
-    name: string;
-    description: string;
-    visible: boolean;
-}
-
-export class BaseEditCharacterForm extends React.Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-        this.state = {
-            name: props.initialName,
-            description: props.initialDescription,
-            visible: props.initialVisibility
-        };
-    }
-
-    handleChangeName = (event: ChangeEvent<HTMLInputElement>) => {
-        this.setState({ name: event.target.value });
-    };
-
-    handleToggleVisible = (event: ChangeEvent<HTMLInputElement>) => {
-        this.setState({ visible: event.target.checked });
-    };
-
-    handleChangeDescription = (event: ChangeEvent<HTMLInputElement>) => {
-        this.setState({ description: event.target.value });
-    };
-
-    handleSubmit = () => {
-        this.props.onSubmit(this.state.name, this.state.description, this.state.visible);
-    };
-
+export class BaseEditCharacterForm extends React.Component<Props> {
     handleDelete = () => {
         if (this.props.onDelete) {
-            setTimeout(this.props.onDelete, 500);
+            setTimeout(this.props.onDelete, 200);
         }
     };
 
@@ -59,30 +28,14 @@ export class BaseEditCharacterForm extends React.Component<Props, State> {
                         <Typography variant="h5">Update character</Typography>
                         {this.props.onDelete && <DeleteButton onConfirm={this.handleDelete} />}
                     </div>
-                    <TextField label="Name" value={this.state.name} onChange={this.handleChangeName} margin="dense" />
-                    <TextField
-                        multiline
-                        variant="outlined"
-                        label="Description"
-                        value={this.state.description}
-                        onChange={this.handleChangeDescription}
-                        margin="normal"
+                    <CharacterForm
+                        initialName={this.props.initialName}
+                        initialDescription={this.props.initialDescription}
+                        initialVisibility={this.props.initialVisibility}
+                        owner={this.props.owner}
+                        buttonLabel="Update"
+                        onSubmit={this.props.onSubmit}
                     />
-                    {this.props.owner && (
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    color="primary"
-                                    onChange={this.handleToggleVisible}
-                                    checked={this.state.visible}
-                                />
-                            }
-                            label="Visible to players"
-                        />
-                    )}
-                    <Button variant="contained" color="primary" onClick={this.handleSubmit} disabled={!this.state.name}>
-                        Update
-                    </Button>
                 </div>
             </Paper>
         );

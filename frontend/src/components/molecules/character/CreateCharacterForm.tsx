@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { campaignActions } from '../../../store/actions';
 import { CharacterPrototype } from '../../../types/character.types';
-import { NewCharacterForm } from './NewCharacterForm';
+import { CharacterForm } from './CharacterForm';
 
 interface Props {
     campaignId: string;
@@ -18,10 +18,6 @@ interface MapProps {
 type AllProps = Props & MapProps;
 
 class CreateCharacterFormRaw extends React.Component<AllProps> {
-    constructor(props: AllProps) {
-        super(props);
-    }
-
     handleSubmit = (name: string, description: string, visible: boolean) => {
         this.props.createCharacter({
             campaignId: this.props.campaignId,
@@ -36,7 +32,7 @@ class CreateCharacterFormRaw extends React.Component<AllProps> {
         }
     };
 
-    render = () => <NewCharacterForm onSubmit={this.handleSubmit} owner={this.props.owner} />;
+    render = () => <CharacterForm onSubmit={this.handleSubmit} owner={this.props.owner} buttonLabel="Create" />;
 }
 
 export const CreateCharacterForm = connect(null, { createCharacter: campaignActions.actions.createCharacter })(

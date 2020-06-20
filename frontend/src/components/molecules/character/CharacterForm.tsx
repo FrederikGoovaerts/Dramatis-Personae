@@ -6,6 +6,10 @@ import { FormControlLabel, Checkbox } from '@material-ui/core';
 
 interface Props {
     owner: boolean;
+    buttonLabel: string;
+    initialName?: string;
+    initialDescription?: string;
+    initialVisibility?: boolean;
     onSubmit: (name: string, description: string, visible: boolean) => void;
 }
 
@@ -15,10 +19,14 @@ interface State {
     visible: boolean;
 }
 
-export class NewCharacterForm extends React.Component<Props, State> {
+export class CharacterForm extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
-        this.state = { name: '', description: '', visible: !this.props.owner };
+        this.state = {
+            name: props.initialName || '',
+            description: props.initialDescription || '',
+            visible: props.initialVisibility === undefined ? !this.props.owner : props.initialVisibility
+        };
     }
 
     handleChangeName = (event: ChangeEvent<HTMLInputElement>) => {
@@ -44,7 +52,7 @@ export class NewCharacterForm extends React.Component<Props, State> {
                 <TextField
                     label="Name"
                     required
-                    helperText="The name of the new character."
+                    helperText="The name of the character."
                     value={this.state.name}
                     onChange={this.handleChangeName}
                     margin="dense"
@@ -72,7 +80,7 @@ export class NewCharacterForm extends React.Component<Props, State> {
                     />
                 )}
                 <Button variant="contained" color="primary" onClick={this.handleSubmit} disabled={!this.state.name}>
-                    Create
+                    {this.props.buttonLabel}
                 </Button>
             </>
         );
