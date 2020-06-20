@@ -1,31 +1,3 @@
-.App__pageOuterContainer {
-    display: flex;
-    justify-content: center;
-}
-
-.App__pageInnerContainer {
-    width: 90vw;
-}
-
-.bottomSpaced {
-    margin-bottom: 2em;
-}
-
-.centering {
-    display: flex;
-    justify-content: center;
-}
-
-.flexColumn {
-    display: flex;
-    flex-direction: column;
-}
-
-.unstyled {
-    text-decoration: none;
-    color: inherit;
-}
-
 .modal {
     position: fixed;
     top: 50%;
