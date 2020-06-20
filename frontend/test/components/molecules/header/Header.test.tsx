@@ -1,6 +1,7 @@
 import React from 'react';
-import { HeaderRaw } from '../../../../src/components/molecules/header/Header';
 import { create } from 'react-test-renderer';
+
+import { HeaderRaw } from '../../../../src/components/molecules/header/Header';
 
 describe('The Header', () => {
     it('should accept content', () => {

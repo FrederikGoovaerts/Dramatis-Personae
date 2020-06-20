@@ -2,11 +2,12 @@ import { decode } from 'jsonwebtoken';
 import moment from 'moment';
 import { parse } from 'query-string';
 import { put, takeEvery } from 'redux-saga/effects';
+
+import { exchangeCode, refresh } from '../../api/authentication.api';
 import { removeAxiosAuthToken, setAxiosAuthToken } from '../../config/axios';
 import { oauth, storage } from '../../config/constants';
-import { applicationActions } from '../actions';
-import { exchangeCode, refresh } from '../../api/authentication.api';
 import { TokenResponse } from '../../types/auth.types';
+import { applicationActions } from '../actions';
 
 interface FormAttribute {
     name: string;

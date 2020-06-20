@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+
 import application, { ApplicationState } from './application.reducers';
 import campaign, { CampaignState } from './campaign.reducers';
 import character, { CharacterState } from './character.reducers';

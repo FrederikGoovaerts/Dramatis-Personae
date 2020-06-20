@@ -1,11 +1,12 @@
+import moment from 'moment';
+
 import { axiosInstance } from '../config/axios';
 import { api } from '../config/constants';
-import { buildPath } from './base.api';
-import moment from 'moment';
-import { Note, CreateNotePayload } from '../types/note.types';
 import { Character } from '../types/character.types';
+import { AddLabelPayload, Label, RemoveLabelPayload } from '../types/label.types';
+import { CreateNotePayload, Note } from '../types/note.types';
+import { buildPath } from './base.api';
 import { RawNote } from './note.api';
-import { AddLabelPayload, RemoveLabelPayload, Label } from '../types/label.types';
 
 interface RawCharacter {
     id: string;

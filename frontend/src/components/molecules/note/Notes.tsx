@@ -1,24 +1,25 @@
-import * as React from 'react';
 import {
     Box,
+    Divider,
+    IconButton,
+    List,
     ListItem,
-    ListItemText,
-    Tooltip,
     ListItemIcon,
     ListItemSecondaryAction,
-    IconButton,
-    Divider,
+    ListItemText,
+    Modal,
     Paper,
-    List,
-    Typography,
-    Modal
+    Tooltip,
+    Typography
 } from '@material-ui/core';
-import { Note, NoteVisibility } from '../../../types/note.types';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import Edit from '@material-ui/icons/Edit';
 import Add from '@material-ui/icons/Add';
-import { NewNoteForm } from './NewNoteForm';
+import Edit from '@material-ui/icons/Edit';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import * as React from 'react';
+
+import { Note, NoteVisibility } from '../../../types/note.types';
 import { EditNoteForm } from './EditNoteForm';
+import { NewNoteForm } from './NewNoteForm';
 
 interface Props {
     campaignOwner: boolean;

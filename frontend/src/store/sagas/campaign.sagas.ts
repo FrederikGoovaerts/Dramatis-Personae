@@ -1,8 +1,9 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { Campaign, CampaignPrototype, CampaignMember } from '../../types/campaign.types';
-import { campaignActions } from '../actions';
-import { ListCharacter } from '../../types/character.types';
+
 import * as campaign from '../../api/campaign.api';
+import { Campaign, CampaignMember, CampaignPrototype } from '../../types/campaign.types';
+import { ListCharacter } from '../../types/character.types';
+import { campaignActions } from '../actions';
 
 function* fetchCampaigns() {
     yield put(campaignActions.actions.setCampaignsLoading(true));

@@ -1,6 +1,6 @@
 import './CampaignList.scss';
 
-import { Grid, Paper, CircularProgress, Typography, Toolbar, Box } from '@material-ui/core';
+import { Box, CircularProgress, Grid, Paper, Toolbar, Typography } from '@material-ui/core';
 import { ChangeEvent } from 'react';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -10,10 +10,9 @@ import { Link } from 'react-router-dom';
 import { campaignActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
 import { Campaign } from '../../types/campaign.types';
-
-import { Header } from '../molecules/header/Header';
 import { JoinCampaignForm } from '../molecules/campaign/JoinCampaignForm';
 import { NewCampaignForm } from '../molecules/campaign/NewCampaignForm';
+import { Header } from '../molecules/header/Header';
 
 interface Props {
     match: match<{}>;

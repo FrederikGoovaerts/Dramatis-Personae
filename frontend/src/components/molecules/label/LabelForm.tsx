@@ -1,8 +1,8 @@
-import * as React from 'react';
+import { Box, Checkbox, FormControlLabel } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import * as React from 'react';
 import { ChangeEvent } from 'react';
-import { FormControlLabel, Checkbox, Box } from '@material-ui/core';
 
 import { Label } from '../../../types/label.types';
 import { AlertBox } from '../../atoms/AlertBox';

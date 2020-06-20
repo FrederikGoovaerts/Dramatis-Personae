@@ -1,9 +1,9 @@
+import { Paper, Typography } from '@material-ui/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { characterActions } from '../../../store/actions';
 import { CharacterEditPayload } from '../../../types/character.types';
-import { Paper, Typography } from '@material-ui/core';
 import { DeleteButton } from '../../atoms/DeleteButton';
 import { CharacterForm } from './CharacterForm';
 

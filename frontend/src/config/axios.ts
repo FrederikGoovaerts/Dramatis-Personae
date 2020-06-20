@@ -1,7 +1,8 @@
 import axios, { AxiosError } from 'axios';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
-import { api, storage } from './constants';
+
 import { buildPath } from '../api/base.api';
+import { api, storage } from './constants';
 
 export const axiosInstance = axios.create({
     timeout: 10000

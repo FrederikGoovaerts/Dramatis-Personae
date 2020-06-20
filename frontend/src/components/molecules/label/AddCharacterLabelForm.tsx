@@ -1,21 +1,22 @@
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { AddLabelPayload, Label } from '../../../types/label.types';
-import { RootState } from '../../../store/reducers';
-import { campaignActions, characterActions } from '../../../store/actions';
-import { Character } from '../../../types/character.types';
 import {
-    CircularProgress,
-    Typography,
-    Paper,
-    Select,
-    MenuItem,
+    Box,
     Button,
+    CircularProgress,
     FormControl,
     InputLabel,
-    Box
+    MenuItem,
+    Paper,
+    Select,
+    Typography
 } from '@material-ui/core';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import * as React from 'react';
+import { connect } from 'react-redux';
+
+import { campaignActions, characterActions } from '../../../store/actions';
+import { RootState } from '../../../store/reducers';
+import { Character } from '../../../types/character.types';
+import { AddLabelPayload, Label } from '../../../types/label.types';
 
 interface Props {
     campaignId: string;

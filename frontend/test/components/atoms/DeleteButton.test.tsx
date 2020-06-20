@@ -1,6 +1,7 @@
 import React from 'react';
-import { DeleteButton, ConfirmableButton } from '../../../src/components/atoms/DeleteButton';
-import { create, act } from 'react-test-renderer';
+import { act, create } from 'react-test-renderer';
+
+import { ConfirmableButton, DeleteButton } from '../../../src/components/atoms/DeleteButton';
 
 describe('The delete button', () => {
     it('should go through three states', () => {

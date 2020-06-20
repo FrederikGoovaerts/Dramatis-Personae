@@ -1,12 +1,13 @@
+import moment from 'moment';
+
 import { axiosInstance } from '../config/axios';
 import { api } from '../config/constants';
-import { buildPath } from './base.api';
-import moment from 'moment';
-import { Campaign, CampaignPrototype, CampaignMember, CampaignSettings } from '../types/campaign.types';
-import { ListCharacter, CharacterPrototype } from '../types/character.types';
-import { RawNote } from './note.api';
-import { CreateNotePayload, Note } from '../types/note.types';
+import { Campaign, CampaignMember, CampaignPrototype, CampaignSettings } from '../types/campaign.types';
+import { CharacterPrototype, ListCharacter } from '../types/character.types';
 import { CreateLabelPayload, Label, ListLabel } from '../types/label.types';
+import { CreateNotePayload, Note } from '../types/note.types';
+import { buildPath } from './base.api';
+import { RawNote } from './note.api';
 
 interface RawListCharacter {
     name: string;

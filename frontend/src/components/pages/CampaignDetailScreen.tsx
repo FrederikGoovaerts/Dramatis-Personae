@@ -1,24 +1,24 @@
 import './CampaignDetailScreen.scss';
 
+import { Box, Drawer, Theme, Toolbar } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import List from '@material-ui/core/List';
 import ListItemText from '@material-ui/core/ListItemText';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { match, Redirect, Route, Switch } from 'react-router';
-import { Box, Drawer, Toolbar, Theme } from '@material-ui/core';
 
 import { routes } from '../../config/constants';
 import { campaignActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
 import { Campaign } from '../../types/campaign.types';
+import { ListItemLink } from '../atoms/ListItemLink';
 import { CampaignHeader } from '../molecules/header/CampaignHeader';
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import { CampaignCharacters } from './campaignDetailComponents/CampaignCharacters';
 import { CampaignDetails } from './campaignDetailComponents/CampaignDetails';
-import { ListItemLink } from '../atoms/ListItemLink';
-import { CampaignNotes } from './campaignDetailComponents/CampaignNotes';
 import { CampaignLabels } from './campaignDetailComponents/CampaignLabels';
+import { CampaignNotes } from './campaignDetailComponents/CampaignNotes';
 
 const styles = (theme: Theme) => ({
     appBar: {

@@ -1,9 +1,10 @@
-import * as React from 'react';
 import { CircularProgress } from '@material-ui/core';
-import { RootState } from '../../../store/reducers';
-import { campaignActions, noteActions } from '../../../store/actions';
+import * as React from 'react';
 import { connect } from 'react-redux';
-import { Note, CreateNotePayload, NoteVisibility, EditNotePayload, DeleteNotePayload } from '../../../types/note.types';
+
+import { campaignActions, noteActions } from '../../../store/actions';
+import { RootState } from '../../../store/reducers';
+import { CreateNotePayload, DeleteNotePayload, EditNotePayload, Note, NoteVisibility } from '../../../types/note.types';
 import { Notes } from '../../molecules/note/Notes';
 
 interface Props {

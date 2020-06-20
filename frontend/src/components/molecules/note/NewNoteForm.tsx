@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { ChangeEvent } from 'react';
+import { FormControl, InputLabel, MenuItem, Paper, Select, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import * as React from 'react';
+import { ChangeEvent } from 'react';
 
-import { Paper, Typography, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 import { NoteVisibility } from '../../../types/note.types';
 
 interface Props {

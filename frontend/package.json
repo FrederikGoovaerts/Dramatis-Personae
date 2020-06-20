@@ -12,8 +12,8 @@
         "build:clean": "rimraf build",
         "build:webpack": "webpack --mode production",
         "test": "jest",
-        "lint": "eslint src/**/*.ts{,x}",
-        "lint-fix": "eslint src/**/*.ts{,x} --fix"
+        "lint": "eslint {test,src}/**/*.ts{,x}",
+        "lint-fix": "eslint {test,src}/**/*.ts{,x} --fix"
     },
     "author": "Frederik Goovaerts",
     "license": "MIT",
@@ -35,6 +35,7 @@
         "eslint-plugin-jsx-a11y": "^6.2.3",
         "eslint-plugin-prettier": "^3.1.2",
         "eslint-plugin-react": "^7.19.0",
+        "eslint-plugin-simple-import-sort": "^5.0.3",
         "html-webpack-plugin": "^4.2.0",
         "jest": "^26.0.1",
         "prettier": "^2.0.4",

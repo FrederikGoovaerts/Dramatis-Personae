@@ -1,8 +1,8 @@
 import { Campaign, CampaignEditPayload, CampaignMember } from '../../types/campaign.types';
-import { ActionTypeMapping, ActionUnion, createAction } from './base';
 import { CharacterPrototype, ListCharacter } from '../../types/character.types';
-import { Note, CreateNotePayload } from '../../types/note.types';
-import { Label, CreateLabelPayload } from '../../types/label.types';
+import { CreateLabelPayload, Label } from '../../types/label.types';
+import { CreateNotePayload, Note } from '../../types/note.types';
+import { ActionTypeMapping, ActionUnion, createAction } from './base';
 
 export enum names {
     fetchCampaigns = 'FETCH_CAMPAIGNS',

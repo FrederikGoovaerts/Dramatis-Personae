@@ -1,13 +1,14 @@
-import * as React from 'react';
-import { Box, Typography, IconButton, Button, Modal, CircularProgress } from '@material-ui/core';
+import { Box, Button, CircularProgress, IconButton, Modal, Typography } from '@material-ui/core';
 import HighlightOff from '@material-ui/icons/HighlightOff';
 import Person from '@material-ui/icons/Person';
+import * as React from 'react';
+import { connect } from 'react-redux';
+
+import { campaignActions } from '../../../store/actions';
+import { RootState } from '../../../store/reducers';
+import { Campaign, CampaignMember } from '../../../types/campaign.types';
 import { ConfirmableButton } from '../../atoms/DeleteButton';
 import { EditCampaignForm } from '../../molecules/campaign/EditCampaignForm';
-import { Campaign, CampaignMember } from '../../../types/campaign.types';
-import { campaignActions } from '../../../store/actions';
-import { connect } from 'react-redux';
-import { RootState } from '../../../store/reducers';
 
 interface Props {
     campaign: Campaign;

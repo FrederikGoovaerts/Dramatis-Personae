@@ -1,9 +1,9 @@
+import { createMemoryHistory } from 'history';
 import React from 'react';
+import { Router } from 'react-router';
 import { create } from 'react-test-renderer';
 
 import { ListItemLink } from '../../../src/components/atoms/ListItemLink';
-import { Router } from 'react-router';
-import { createMemoryHistory } from 'history';
 
 describe('The ListItemLink', () => {
     it('should render correctly', () => {

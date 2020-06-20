@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import { Button } from '@material-ui/core';
+import React, { useState } from 'react';
 
 type ButtonState = 'DEFAULT' | 'CLICKED' | 'DELETING';
 

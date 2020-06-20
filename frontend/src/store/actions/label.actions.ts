@@ -1,5 +1,5 @@
+import { DeleteLabelPayload, EditLabelPayload } from '../../types/label.types';
 import { ActionTypeMapping, ActionUnion, createAction } from './base';
-import { EditLabelPayload, DeleteLabelPayload } from '../../types/label.types';
 
 export enum names {
     editLabel = 'EDIT_LABEL',

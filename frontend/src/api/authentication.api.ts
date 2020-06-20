@@ -1,7 +1,7 @@
 import { axiosInstance } from '../config/axios';
 import { api, oauth } from '../config/constants';
-import { buildPath } from './base.api';
 import { TokenResponse } from '../types/auth.types';
+import { buildPath } from './base.api';
 
 export async function exchangeCode(code: string): Promise<TokenResponse> {
     const url = buildPath(`${api.AUTH.PATH}${api.AUTH.SUBPATH_CODE}`);

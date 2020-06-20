@@ -1,6 +1,7 @@
 import { put, takeEvery } from 'redux-saga/effects';
-import { characterActions } from '../actions';
+
 import * as character from '../../api/character.api';
+import { characterActions } from '../actions';
 
 function* fetchCharacter(action: characterActions.specificTypes['fetchCharacter']) {
     yield put(characterActions.actions.setCharacterLoading(true));

@@ -1,6 +1,7 @@
-import * as React from 'react';
-import { Typography, Box, Paper } from '@material-ui/core';
+import { Box, Paper, Typography } from '@material-ui/core';
 import Warning from '@material-ui/icons/Warning';
+import * as React from 'react';
+
 import { grayLight } from '../../assets/Colors';
 
 interface Props {

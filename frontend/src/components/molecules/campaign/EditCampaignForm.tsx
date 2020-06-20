@@ -1,13 +1,13 @@
+import { Box, Checkbox, FormControlLabel, Paper, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { ChangeEvent } from 'react';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Paper, Typography, Box, FormControlLabel, Checkbox } from '@material-ui/core';
 
 import { campaignActions } from '../../../store/actions';
+import { CampaignEditPayload, CampaignSettings } from '../../../types/campaign.types';
 import { DeleteButton } from '../../atoms/DeleteButton';
-import { CampaignSettings, CampaignEditPayload } from '../../../types/campaign.types';
 
 interface Props {
     id: string;

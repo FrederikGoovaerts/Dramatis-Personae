@@ -1,14 +1,13 @@
-import Button from '@material-ui/core/Button';
+import { Box, makeStyles } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { applicationActions } from '../../../store/actions';
 import { PersonaeNoCircleIcon } from '../../../assets/svg/PersonaeNoCircleIcon';
-import { Box, makeStyles } from '@material-ui/core';
+import { applicationActions } from '../../../store/actions';
 
 interface Props {
     className?: string;

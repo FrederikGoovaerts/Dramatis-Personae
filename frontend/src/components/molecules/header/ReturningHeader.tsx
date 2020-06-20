@@ -1,8 +1,9 @@
-import * as React from 'react';
-import { Header } from './Header';
-import { Button, Typography, Box } from '@material-ui/core';
+import { Box, Button, Typography } from '@material-ui/core';
 import ArrowBack from '@material-ui/icons/ArrowBack';
+import * as React from 'react';
 import { Redirect } from 'react-router';
+
+import { Header } from './Header';
 
 interface Props {
     title?: string;
