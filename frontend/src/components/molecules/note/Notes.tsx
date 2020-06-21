@@ -79,11 +79,10 @@ export class Notes extends React.Component<Props, State> {
     renderNote = (note: Note, own: boolean) => {
         const openEdit = () => this.setState({ editNote: note });
         return (
-            <div key={note.id} className="CharacterDetail__note">
+            <Box key={note.id} paddingX="1em">
                 <ListItem>
                     <ListItemText
                         primary={note.contents}
-                        primaryTypographyProps={{ align: 'justify', className: 'CharacterDetail__noteContents' }}
                         secondary={`Created ${note.addedOn.fromNow()}, last edited ${note.editedOn.fromNow()}${
                             !own ? `, by ${note.authorName}` : ''
                         }`}
@@ -103,7 +102,7 @@ export class Notes extends React.Component<Props, State> {
                         </ListItemSecondaryAction>
                     )}
                 </ListItem>
-            </div>
+            </Box>
         );
     };
 
@@ -126,13 +125,15 @@ export class Notes extends React.Component<Props, State> {
         const openCreate = () => this.setState({ createOpen: true });
         const renderedNotes = [
             ...this.props.notes.map(this.renderOwnNote),
-            <div key={'addButton'} className="CharacterDetail__note">
-                <ListItem className="CharacterDetail__addButtonItem">
-                    <IconButton edge="end" color="primary" onClick={openCreate}>
-                        <Add />
-                    </IconButton>
+            <Box key={'addButton'} paddingX="1em" paddingY="1.5em">
+                <ListItem>
+                    <ListItemSecondaryAction>
+                        <IconButton edge="end" color="primary" onClick={openCreate}>
+                            <Add />
+                        </IconButton>
+                    </ListItemSecondaryAction>
                 </ListItem>
-            </div>
+            </Box>
         ];
         return this.renderNotes(renderedNotes);
     };
