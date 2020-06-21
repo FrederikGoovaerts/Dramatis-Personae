@@ -9,9 +9,9 @@ import { rootSaga } from '../store/sagas';
 // Redux state
 const configureStore = (initialState: object) => {
     const sagaMiddleware = createSagaMiddleware();
-    const store = createStore(rootReducer, initialState, composeWithDevTools(applyMiddleware(sagaMiddleware)));
+    const createdStore = createStore(rootReducer, initialState, composeWithDevTools(applyMiddleware(sagaMiddleware)));
     sagaMiddleware.run(rootSaga);
-    return store;
+    return createdStore;
 };
 
 export const store = configureStore({});
