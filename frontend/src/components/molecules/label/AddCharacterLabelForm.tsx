@@ -10,7 +10,7 @@ import {
     Typography
 } from '@material-ui/core';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { campaignActions, characterActions } from '../../../store/actions';
@@ -31,85 +31,70 @@ interface MapProps {
     addLabel: (payload: AddLabelPayload) => void;
 }
 
-interface State {
-    selected: string;
-}
-
 type AllProps = Props & MapProps;
 
-class AddCharacterLabelFormRaw extends React.Component<AllProps, State> {
-    constructor(props: AllProps) {
-        super(props);
-        this.state = { selected: '' };
+const AddCharacterLabelFormRaw = (props: AllProps) => {
+    const { campaignId, fetchLabels } = props;
+
+    const [selected, setSelected] = useState('');
+
+    useEffect(() => {
+        fetchLabels(campaignId);
+    }, [fetchLabels, campaignId]);
+
+    if (props.loading) {
+        return <CircularProgress />;
     }
 
-    componentDidMount() {
-        this.props.fetchLabels(this.props.campaignId);
-    }
-
-    handleSelect = (
-        event: React.ChangeEvent<{
-            value: string;
-        }>
-    ) => {
-        this.setState({ selected: event.target.value });
+    const handleSelect = (event: React.ChangeEvent<{ value: string }>) => {
+        setSelected(event.target.value);
     };
 
-    handleSubmit = () => {
-        this.props.addLabel({ characterId: this.props.character.id, labelId: this.state.selected });
-        this.props.onSubmitComplete();
+    const handleSubmit = () => {
+        props.addLabel({ characterId: props.character.id, labelId: selected });
+        props.onSubmitComplete();
     };
 
-    render() {
-        if (this.props.loading) {
-            return <CircularProgress />;
-        }
-        const characterLabelIds = this.props.character.labels.map((label) => label.id);
-        const filteredLabels = this.props.labels.filter((label: Label) => !characterLabelIds.includes(label.id));
-        return (
-            <Paper className="modalPaper">
-                <div className="modalContainer">
-                    <div className="modalHeader">
-                        <Typography variant="h5">Add label(s)</Typography>
-                    </div>
-                    {filteredLabels.length > 0 ? (
-                        <FormControl margin="dense">
-                            <InputLabel>Label</InputLabel>
-                            <Select value={this.state.selected} onChange={this.handleSelect}>
-                                {filteredLabels.map((label: Label) => (
-                                    <MenuItem key={label.id} value={label.id}>
-                                        <Box display="flex">
-                                            <Typography>{label.name}</Typography>
-                                            {!label.visible && (
-                                                <Box marginLeft="0.5em" display="flex" alignItems="center">
-                                                    <VisibilityOff />
-                                                </Box>
-                                            )}
-                                        </Box>
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    ) : (
-                        <Box marginTop="1em">
-                            <Typography>There are no unapplied labels for this character.</Typography>
-                        </Box>
-                    )}
-                    <Box marginTop="1em" display="flex" flexDirection="column">
-                        <Button
-                            onClick={this.handleSubmit}
-                            color="primary"
-                            variant="contained"
-                            disabled={this.state.selected === ''}
-                        >
-                            Add
-                        </Button>
-                    </Box>
+    const characterLabelIds = props.character.labels.map((label) => label.id);
+    const filteredLabels = props.labels.filter((label: Label) => !characterLabelIds.includes(label.id));
+    return (
+        <Paper className="modalPaper">
+            <div className="modalContainer">
+                <div className="modalHeader">
+                    <Typography variant="h5">Add label(s)</Typography>
                 </div>
-            </Paper>
-        );
-    }
-}
+                {filteredLabels.length > 0 ? (
+                    <FormControl margin="dense">
+                        <InputLabel>Label</InputLabel>
+                        <Select value={selected} onChange={handleSelect}>
+                            {filteredLabels.map((label: Label) => (
+                                <MenuItem key={label.id} value={label.id}>
+                                    <Box display="flex">
+                                        <Typography>{label.name}</Typography>
+                                        {!label.visible && (
+                                            <Box marginLeft="0.5em" display="flex" alignItems="center">
+                                                <VisibilityOff />
+                                            </Box>
+                                        )}
+                                    </Box>
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                ) : (
+                    <Box marginTop="1em">
+                        <Typography>There are no unapplied labels for this character.</Typography>
+                    </Box>
+                )}
+                <Box marginTop="1em" display="flex" flexDirection="column">
+                    <Button onClick={handleSubmit} color="primary" variant="contained" disabled={selected === ''}>
+                        Add
+                    </Button>
+                </Box>
+            </div>
+        </Paper>
+    );
+};
 
 const mapStateToProps = (state: RootState) => ({
     labels: state.campaign.labels,
