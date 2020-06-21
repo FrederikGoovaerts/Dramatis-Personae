@@ -1,5 +1,3 @@
-import './CharacterDetailScreen.scss';
-
 import { Box, Button, Modal, Toolbar } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
@@ -18,13 +16,8 @@ import { CharacterHeader } from '../molecules/header/CharacterHeader';
 import { Notes } from '../molecules/note/Notes';
 import { CharacterLabels } from './characterDetailComponents/CharacterLabels';
 
-export interface MatchParams {
-    campaignId: string;
-    characterId: string;
-}
-
 interface Props {
-    match: match<MatchParams>;
+    match: match<{ campaignId: string; characterId: string }>;
 }
 
 interface MapProps {

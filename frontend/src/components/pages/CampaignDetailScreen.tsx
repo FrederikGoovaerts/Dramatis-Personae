@@ -33,12 +33,8 @@ const styles = (theme: Theme) => ({
     }
 });
 
-export interface MatchParams {
-    id: string;
-}
-
 interface Props {
-    match: match<MatchParams>;
+    match: match<{ id: string }>;
     path: string;
 }
 
@@ -46,8 +42,6 @@ interface MapProps extends WithStyles<typeof styles> {
     campaign: Campaign | null;
     loading: boolean;
     fetchCampaign: (campaignId: string) => void;
-    fetchNotes: (campaignId: string) => void;
-    fetchSharedNotes: (campaignId: string) => void;
 }
 
 type AllProps = Props & MapProps;
@@ -164,11 +158,5 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 export const CampaignDetailScreen = connect(mapStateToProps, {
-    fetchCampaign: campaignActions.actions.fetchCampaign,
-    fetchNotes: campaignActions.actions.fetchNotes,
-    fetchSharedNotes: campaignActions.actions.fetchSharedNotes,
-    fetchMembers: campaignActions.actions.fetchMembers,
-    deleteCampaign: campaignActions.actions.deleteCampaign,
-    leaveCampaign: campaignActions.actions.leaveCampaign,
-    rotateInviteCode: campaignActions.actions.rotateInviteCode
+    fetchCampaign: campaignActions.actions.fetchCampaign
 })(withStyles(styles)(CampaignDetailRaw));

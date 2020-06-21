@@ -9,9 +9,9 @@ import { routes } from '../config/constants';
 import { applicationActions } from '../store/actions';
 import { RootState } from '../store/reducers';
 import { Landing } from './atoms/Landing';
-import { CampaignDetailScreen, MatchParams as CampaignMatchParams } from './pages/CampaignDetailScreen';
+import { CampaignDetailScreen } from './pages/CampaignDetailScreen';
 import { CampaignList } from './pages/CampaignList';
-import { CharacterDetailScreen, MatchParams as CharacterMatchParams } from './pages/CharacterDetailScreen';
+import { CharacterDetailScreen } from './pages/CharacterDetailScreen';
 
 interface Props {
     initialized: boolean;
@@ -36,10 +36,10 @@ const App = (props: Props) => {
     });
 
     const campaignList = ({ match }: RouteComponentProps<{}>) => <CampaignList match={match} />;
-    const campaignDetail = ({ match, location }: RouteComponentProps<CampaignMatchParams>) => (
+    const campaignDetail = ({ match, location }: RouteComponentProps<{ id: string }>) => (
         <CampaignDetailScreen match={match} path={location.pathname} />
     );
-    const characterDetail = ({ match }: RouteComponentProps<CharacterMatchParams>) => (
+    const characterDetail = ({ match }: RouteComponentProps<{ campaignId: string; characterId: string }>) => (
         <CharacterDetailScreen match={match} />
     );
 
