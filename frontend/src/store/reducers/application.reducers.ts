@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+
 import { applicationActions } from '../actions';
 import { createReducer } from './base';
 

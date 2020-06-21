@@ -2,11 +2,13 @@ import { decode } from 'jsonwebtoken';
 import moment from 'moment';
 import { parse } from 'query-string';
 import { put, takeEvery } from 'redux-saga/effects';
-import { removeAxiosAuthToken, setAxiosAuthToken } from '../../config/axios';
-import { oauth, storage } from '../../config/constants';
-import { applicationActions } from '../actions';
+
 import { exchangeCode, refresh } from '../../api/authentication.api';
+import { removeAxiosAuthToken, setAxiosAuthToken } from '../../config/axios';
+import { oauth, routes, storage } from '../../config/constants';
+import { history } from '../../config/state';
 import { TokenResponse } from '../../types/auth.types';
+import { applicationActions } from '../actions';
 
 interface FormAttribute {
     name: string;
@@ -50,6 +52,8 @@ function* initializeApplication() {
             if (tokens.idToken && tokens.refreshToken) {
                 localStorage.setItem(storage.idToken, tokens.idToken);
                 localStorage.setItem(storage.refreshToken, tokens.refreshToken);
+                // Clean current URL
+                history.replace(routes.root);
             }
         }
     }

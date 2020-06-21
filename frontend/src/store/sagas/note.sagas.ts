@@ -1,6 +1,7 @@
 import { put, takeEvery } from 'redux-saga/effects';
-import { noteActions, characterActions, campaignActions } from '../actions';
+
 import * as note from '../../api/note.api';
+import { campaignActions, characterActions, noteActions } from '../actions';
 
 function* editCharacterNote(action: noteActions.specificTypes['editCharacterNote']) {
     try {

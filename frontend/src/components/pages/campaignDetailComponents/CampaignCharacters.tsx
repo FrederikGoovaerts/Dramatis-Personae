@@ -1,30 +1,33 @@
-import * as React from 'react';
 import {
     Box,
-    Typography,
-    Paper,
-    List,
-    Fab,
-    Modal,
-    ListItemText,
-    CircularProgress,
+    Button,
     Chip,
-    TextField,
+    CircularProgress,
+    Fab,
     FormControl,
     InputLabel,
-    Select,
+    List,
+    ListItemText,
     MenuItem,
-    Button
+    Modal,
+    Paper,
+    Select,
+    TextField,
+    Typography
 } from '@material-ui/core';
-import { Add, Visibility, VisibilityOff } from '@material-ui/icons';
-import { ListCharacter } from '../../../types/character.types';
-import { ListItemLink } from '../../atoms/ListItemLink';
-import { routes } from '../../../config/constants';
-import { CreateCharacterForm } from '../../molecules/CreateCharacterForm';
-import { RootState } from '../../../store/reducers';
-import { campaignActions } from '../../../store/actions';
+import Add from '@material-ui/icons/Add';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import * as React from 'react';
 import { connect } from 'react-redux';
-import { ListLabel, Label } from '../../../types/label.types';
+
+import { routes } from '../../../config/constants';
+import { campaignActions } from '../../../store/actions';
+import { RootState } from '../../../store/reducers';
+import { ListCharacter } from '../../../types/character.types';
+import { Label, ListLabel } from '../../../types/label.types';
+import { ListItemLink } from '../../atoms/ListItemLink';
+import { CreateCharacterForm } from '../../molecules/character/CreateCharacterForm';
 
 interface Props {
     campaignId: string;

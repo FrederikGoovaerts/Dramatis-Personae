@@ -1,7 +1,7 @@
-import { CreateNotePayload, Note } from '../../types/note.types';
 import { Character, CharacterEditPayload } from '../../types/character.types';
-import { ActionTypeMapping, ActionUnion, createAction } from './base';
 import { AddLabelPayload, RemoveLabelPayload } from '../../types/label.types';
+import { CreateNotePayload, Note } from '../../types/note.types';
+import { ActionTypeMapping, ActionUnion, createAction } from './base';
 
 export enum names {
     fetchCharacter = 'FETCH_CHARACTER',

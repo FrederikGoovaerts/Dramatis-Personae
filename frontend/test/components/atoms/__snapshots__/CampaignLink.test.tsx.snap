@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The ListItemLink should render correctly 1`] = `
+<a
+  className="makeStyles-link-1"
+  href="/campaign/campaignId"
+  onClick={[Function]}
+>
+  <div
+    className="MuiPaper-root makeStyles-paper-2 MuiPaper-elevation1 MuiPaper-rounded"
+  >
+    <h5
+      className="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom"
+    >
+      The campaign name
+    </h5>
+    <h6
+      className="MuiTypography-root MuiTypography-subtitle1"
+    >
+      Run by 
+      Name of Owner
+    </h6>
+  </div>
+</a>
+`;

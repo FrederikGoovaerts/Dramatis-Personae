@@ -1,5 +1,4 @@
-import './CharacterDetailScreen.scss';
-
+import { Box, Button, Modal, Toolbar } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
@@ -7,24 +6,18 @@ import { connect } from 'react-redux';
 import { match, Redirect } from 'react-router';
 
 import { routes } from '../../config/constants';
-import { EditCharacterForm } from '../molecules/EditCharacterForm';
 import { campaignActions, characterActions, noteActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
-import { Character } from '../../types/character.types';
 import { Campaign } from '../../types/campaign.types';
-import { Note, EditNotePayload, DeleteNotePayload, NoteVisibility, CreateNotePayload } from '../../types/note.types';
-import { Modal, Box, Toolbar, Button } from '@material-ui/core';
-import { CharacterHeader } from '../molecules/CharacterHeader';
-import { Notes } from '../molecules/Notes';
+import { Character } from '../../types/character.types';
+import { CreateNotePayload, DeleteNotePayload, EditNotePayload, Note, NoteVisibility } from '../../types/note.types';
+import { EditCharacterForm } from '../molecules/character/EditCharacterForm';
+import { CharacterHeader } from '../molecules/header/CharacterHeader';
+import { Notes } from '../molecules/note/Notes';
 import { CharacterLabels } from './characterDetailComponents/CharacterLabels';
 
-export interface MatchParams {
-    campaignId: string;
-    characterId: string;
-}
-
 interface Props {
-    match: match<MatchParams>;
+    match: match<{ campaignId: string; characterId: string }>;
 }
 
 interface MapProps {

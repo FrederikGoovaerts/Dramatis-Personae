@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { SvgProps } from './SvgIcon';
 
 export const PersonaeNoCircleIcon = (props: SvgProps) => (

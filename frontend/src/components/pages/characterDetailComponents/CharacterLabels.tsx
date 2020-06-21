@@ -1,11 +1,12 @@
+import { Box, Chip, Modal } from '@material-ui/core';
+import Add from '@material-ui/icons/Add';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Character } from '../../../types/character.types';
+
 import { characterActions } from '../../../store/actions';
-import { RemoveLabelPayload, Label } from '../../../types/label.types';
-import { Box, Chip, Modal } from '@material-ui/core';
-import { Add } from '@material-ui/icons';
-import { AddCharacterLabelForm } from '../../molecules/AddCharacterLabelForm';
+import { Character } from '../../../types/character.types';
+import { Label, RemoveLabelPayload } from '../../../types/label.types';
+import { AddCharacterLabelForm } from '../../molecules/label/AddCharacterLabelForm';
 
 interface Props {
     campaignId: string;

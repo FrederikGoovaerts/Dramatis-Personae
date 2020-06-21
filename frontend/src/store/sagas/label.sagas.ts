@@ -1,6 +1,7 @@
 import { put, takeEvery } from 'redux-saga/effects';
-import { labelActions, campaignActions } from '../actions';
+
 import * as label from '../../api/label.api';
+import { campaignActions, labelActions } from '../actions';
 
 function* editLabel(action: labelActions.specificTypes['editLabel']) {
     try {
