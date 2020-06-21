@@ -4,6 +4,7 @@ import {
     CircularProgress,
     FormControl,
     InputLabel,
+    makeStyles,
     MenuItem,
     Paper,
     Select,
@@ -12,7 +13,9 @@ import {
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
+import { routes } from '../../../config/constants';
 import { campaignActions, characterActions } from '../../../store/actions';
 import { RootState } from '../../../store/reducers';
 import { Character } from '../../../types/character.types';
@@ -31,10 +34,18 @@ interface MapProps {
     addLabel: (payload: AddLabelPayload) => void;
 }
 
+const useStyles = makeStyles((theme) => ({
+    labelLink: {
+        textDecoration: 'underline',
+        color: theme.palette.text.primary
+    }
+}));
+
 type AllProps = Props & MapProps;
 
 const AddCharacterLabelFormRaw = (props: AllProps) => {
     const { campaignId, fetchLabels } = props;
+    const classes = useStyles();
 
     const [selected, setSelected] = useState('');
 
@@ -83,7 +94,18 @@ const AddCharacterLabelFormRaw = (props: AllProps) => {
                     </FormControl>
                 ) : (
                     <Box marginTop="1em">
-                        <Typography>There are no unapplied labels for this character.</Typography>
+                        <Typography>
+                            There are no{' '}
+                            {
+                                <Link
+                                    to={`${routes.campaign.path}${props.campaignId}${routes.campaign.subpathLabels}`}
+                                    className={classes.labelLink}
+                                >
+                                    unapplied labels
+                                </Link>
+                            }{' '}
+                            for this character.
+                        </Typography>
                     </Box>
                 )}
                 <Box marginTop="1em" display="flex" flexDirection="column">
