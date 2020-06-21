@@ -5,7 +5,8 @@ import { put, takeEvery } from 'redux-saga/effects';
 
 import { exchangeCode, refresh } from '../../api/authentication.api';
 import { removeAxiosAuthToken, setAxiosAuthToken } from '../../config/axios';
-import { oauth, storage } from '../../config/constants';
+import { oauth, routes, storage } from '../../config/constants';
+import { history } from '../../config/state';
 import { TokenResponse } from '../../types/auth.types';
 import { applicationActions } from '../actions';
 
@@ -51,6 +52,8 @@ function* initializeApplication() {
             if (tokens.idToken && tokens.refreshToken) {
                 localStorage.setItem(storage.idToken, tokens.idToken);
                 localStorage.setItem(storage.refreshToken, tokens.refreshToken);
+                // Clean current URL
+                history.replace(routes.root);
             }
         }
     }
