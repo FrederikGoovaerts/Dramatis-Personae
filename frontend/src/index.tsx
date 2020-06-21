@@ -1,16 +1,12 @@
 import { MuiThemeProvider } from '@material-ui/core';
-import { createBrowserHistory } from 'history';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 
 import App from './components/App';
-import configureStore from './config/store';
+import { history, store } from './config/state';
 import { theme } from './config/theme';
-
-const history = createBrowserHistory();
-const store = configureStore({});
 
 ReactDOM.render(
     <Provider store={store}>
