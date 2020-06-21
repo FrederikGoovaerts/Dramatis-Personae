@@ -13,9 +13,6 @@ describe('The ListItemLink', () => {
             </Router>
         );
         const tree = component.toJSON();
-        if (!tree) {
-            fail();
-        }
         expect(tree).toMatchSnapshot();
     });
 });
