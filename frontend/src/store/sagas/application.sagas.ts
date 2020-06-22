@@ -53,7 +53,10 @@ function* initializeApplication() {
                 localStorage.setItem(storage.idToken, tokens.idToken);
                 localStorage.setItem(storage.refreshToken, tokens.refreshToken);
                 // Clean current URL
-                history.replace(routes.root);
+                const preRedirectPath = localStorage.getItem(storage.preRedirectPath);
+                console.log(preRedirectPath);
+                localStorage.removeItem(storage.preRedirectPath);
+                history.replace(preRedirectPath || routes.root);
             }
         }
     }
@@ -87,6 +90,7 @@ function* initializeApplication() {
     }
     // Fall through in case no valid token is present
     localStorage.removeItem(storage.idToken);
+    localStorage.setItem(storage.preRedirectPath, window.location.pathname);
     redirectToOauth();
 }
 

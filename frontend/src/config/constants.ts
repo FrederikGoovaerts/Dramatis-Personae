@@ -60,10 +60,12 @@ export const routes = {
         subpathLabels: '/labels',
         subpathDetails: '/details'
     },
+    join: '/join/',
     root: '/'
 };
 
 export const storage = {
     idToken: 'idToken',
-    refreshToken: 'refreshToken'
+    refreshToken: 'refreshToken',
+    preRedirectPath: 'preRedirectPath'
 };

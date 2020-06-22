@@ -10,7 +10,6 @@ import { campaignActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
 import { Campaign } from '../../types/campaign.types';
 import { CampaignLink } from '../atoms/CampaignLink';
-import { JoinCampaignForm } from '../molecules/campaign/JoinCampaignForm';
 import { NewCampaignForm } from '../molecules/campaign/NewCampaignForm';
 import { Header } from '../molecules/header/Header';
 
@@ -65,7 +64,6 @@ class CampaignListRaw extends React.Component<AllProps> {
                 )}
                 <Box marginTop="1em">
                     <NewCampaignForm className="CampaignList__formContainer" onSubmitComplete={this.goToList} />
-                    <JoinCampaignForm className="CampaignList__formContainer" onSubmitComplete={this.goToList} />
                 </Box>
             </div>
         );
