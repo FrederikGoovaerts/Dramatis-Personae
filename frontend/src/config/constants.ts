@@ -66,5 +66,6 @@ export const routes = {
 
 export const storage = {
     idToken: 'idToken',
-    refreshToken: 'refreshToken'
+    refreshToken: 'refreshToken',
+    preRedirectPath: 'preRedirectPath'
 };
