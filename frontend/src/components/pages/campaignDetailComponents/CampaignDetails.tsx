@@ -8,8 +8,8 @@ import { campaignActions } from '../../../store/actions';
 import { RootState } from '../../../store/reducers';
 import { Campaign, CampaignMember } from '../../../types/campaign.types';
 import { ConfirmableButton } from '../../atoms/DeleteButton';
-import { EditCampaignForm } from '../../molecules/campaign/EditCampaignForm';
 import { CampaignInviteInfo } from '../../molecules/campaign/CampaignInviteInfo';
+import { EditCampaignForm } from '../../molecules/campaign/EditCampaignForm';
 
 interface Props {
     campaign: Campaign;
