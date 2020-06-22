@@ -20,7 +20,6 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { select } from 'redux-saga/effects';
 
 import { routes } from '../../../config/constants';
 import { campaignActions } from '../../../store/actions';
