@@ -48,7 +48,7 @@ type AllProps = Props & MapProps;
 
 interface State {
     filterName: string;
-    filterLabelId: string;
+    filterLabelIds: string[];
     createOpen: boolean;
 }
 
@@ -58,7 +58,7 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
         this.state = {
             createOpen: false,
             filterName: '',
-            filterLabelId: ''
+            filterLabelIds: []
         };
     }
 
@@ -66,6 +66,12 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
         this.props.fetchCharacters(this.props.campaignId);
         this.props.fetchLabels(this.props.campaignId);
     }
+
+    labelIdsToJoinedString = (labelIds: string[]): string =>
+        labelIds
+            .map((selected) => this.props.labels.find((label) => label.id === selected))
+            .map((label) => label?.name)
+            .join(', ');
 
     openCreate = (): void => {
         this.setState({ createOpen: true });
@@ -76,29 +82,30 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
     };
 
     clearFilters = () => {
-        this.setState({ filterLabelId: '', filterName: '' });
+        this.setState({ filterLabelIds: [], filterName: '' });
     };
 
     handleChangeNameFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({ filterName: event.target.value });
     };
 
-    handleChangeLabelFilter = (event: React.ChangeEvent<{ value: string }>) => {
-        this.setState({ filterLabelId: event.target.value });
+    handleChangeLabelFilter = (event: React.ChangeEvent<{ value: string[] }>) => {
+        this.setState({ filterLabelIds: event.target.value });
     };
 
     filteredCharacters = () => {
-        const { filterName: filterString, filterLabelId } = this.state;
+        const { filterName: filterString, filterLabelIds } = this.state;
         let filteredCharacters = [...this.props.characters];
         if (filterString !== '') {
             filteredCharacters = filteredCharacters.filter((character) =>
                 character.name.toLowerCase().includes(filterString.toLowerCase())
             );
         }
-        if (filterLabelId !== '') {
-            filteredCharacters = filteredCharacters.filter((character) =>
-                character.labels.find((label) => label.id === filterLabelId)
-            );
+        if (filterLabelIds.length > 0) {
+            filteredCharacters = filteredCharacters.filter((character) => {
+                const charLabelIds = character.labels.map((label) => label.id);
+                return filterLabelIds.every((label) => charLabelIds.includes(label));
+            });
         }
         return filteredCharacters;
     };
@@ -115,8 +122,13 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
             <Box minWidth="15em" display="flex" flexDirection="column" margin="0.5em">
                 <FormControl>
                     <InputLabel>Character label filter</InputLabel>
-                    <Select value={this.state.filterLabelId} onChange={this.handleChangeLabelFilter}>
-                        <MenuItem value="">None</MenuItem>
+                    <Select
+                        disabled={this.props.labels.length === 0}
+                        value={this.state.filterLabelIds}
+                        onChange={this.handleChangeLabelFilter}
+                        renderValue={this.labelIdsToJoinedString}
+                        multiple
+                    >
                         {this.props.labels.map((label: Label) => (
                             <MenuItem key={label.id} value={label.id}>
                                 <Box display="flex">
@@ -135,7 +147,7 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
             <Box margin="0.5em">
                 <Button
                     variant="outlined"
-                    disabled={!(this.state.filterLabelId || this.state.filterName)}
+                    disabled={!this.state.filterName && this.state.filterLabelIds.length === 0}
                     onClick={this.clearFilters}
                 >
                     Clear filters
