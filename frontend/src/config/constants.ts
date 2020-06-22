@@ -60,6 +60,7 @@ export const routes = {
         subpathLabels: '/labels',
         subpathDetails: '/details'
     },
+    join: '/join/',
     root: '/'
 };
 
