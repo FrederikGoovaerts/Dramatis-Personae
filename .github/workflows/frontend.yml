@@ -21,6 +21,9 @@ jobs:
       - name: Run linter
         run: npm run lint
         working-directory: ${{env.workdir}}
+      - name: Run typecheck
+        run: npm run typecheck
+        working-directory: ${{env.workdir}}
       - name: Run tests
         run: npm t
         working-directory: ${{env.workdir}}

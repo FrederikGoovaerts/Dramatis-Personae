@@ -12,6 +12,7 @@
         "build:clean": "rimraf build",
         "build:webpack": "webpack --mode production",
         "test": "jest",
+        "typecheck": "tsc --noEmit",
         "lint": "eslint {test,src}/**/*.ts{,x}",
         "lint-fix": "eslint {test,src}/**/*.ts{,x} --fix"
     },
