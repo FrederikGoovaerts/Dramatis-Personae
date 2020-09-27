@@ -14,7 +14,7 @@ import { NewCampaignForm } from '../molecules/campaign/NewCampaignForm';
 import { Header } from '../molecules/header/Header';
 
 interface Props {
-    match: match<{}>;
+    match: match;
 }
 
 interface MapProps {

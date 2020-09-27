@@ -7,7 +7,7 @@ import rootReducer from '../store/reducers';
 import { rootSaga } from '../store/sagas';
 
 // Redux state
-const configureStore = (initialState: object) => {
+const configureStore = (initialState: Record<string, unknown>) => {
     const sagaMiddleware = createSagaMiddleware();
     const createdStore = createStore(rootReducer, initialState, composeWithDevTools(applyMiddleware(sagaMiddleware)));
     sagaMiddleware.run(rootSaga);

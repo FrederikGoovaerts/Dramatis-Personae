@@ -30,6 +30,7 @@ module.exports = {
         '@typescript-eslint/no-explicit-any': 'error',
         '@typescript-eslint/no-unused-vars': WARN_AND_CI_ERROR,
         '@typescript-eslint/explicit-member-accessibility': 0,
-        '@typescript-eslint/explicit-function-return-type': 0
+        '@typescript-eslint/explicit-function-return-type': 0,
+        '@typescript-eslint/explicit-module-boundary-types': 0
     }
 };
