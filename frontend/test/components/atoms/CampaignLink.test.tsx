@@ -12,7 +12,6 @@ describe('The ListItemLink', () => {
                 <CampaignLink id="campaignId" name="The campaign name" ownerName="Name of Owner" />
             </Router>
         );
-        const tree = component.toJSON();
-        expect(tree).toMatchSnapshot();
+        expect(component.toJSON()).toMatchSnapshot();
     });
 });
