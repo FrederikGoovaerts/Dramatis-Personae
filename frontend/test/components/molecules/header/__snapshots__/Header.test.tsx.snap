@@ -8,10 +8,10 @@ exports[`The Header should accept a custom css class for the app bar 1`] = `
     className="MuiToolbar-root MuiToolbar-regular MuiToolbar-gutters"
   >
     <div
-      className="MuiBox-root MuiBox-root-82 makeStyles-content-2"
+      className="MuiBox-root MuiBox-root-6 makeStyles-content-2"
     >
       <div
-        className="MuiBox-root MuiBox-root-83 makeStyles-side-3"
+        className="MuiBox-root MuiBox-root-7 makeStyles-side-3"
       >
         <svg
           className="makeStyles-icon-1"
@@ -54,7 +54,7 @@ exports[`The Header should accept a custom css class for the app bar 1`] = `
         </h6>
       </div>
       <div
-        className="MuiBox-root MuiBox-root-114 makeStyles-side-3"
+        className="MuiBox-root MuiBox-root-8 makeStyles-side-3"
       >
         <button
           className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -97,13 +97,13 @@ exports[`The Header should accept content 1`] = `
     className="MuiToolbar-root MuiToolbar-regular MuiToolbar-gutters"
   >
     <div
-      className="MuiBox-root MuiBox-root-48 makeStyles-content-2"
+      className="MuiBox-root MuiBox-root-4 makeStyles-content-2"
     >
       <div>
         The left content
       </div>
       <div
-        className="MuiBox-root MuiBox-root-49 makeStyles-side-3"
+        className="MuiBox-root MuiBox-root-5 makeStyles-side-3"
       >
         <button
           className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"

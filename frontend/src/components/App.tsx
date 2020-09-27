@@ -36,7 +36,7 @@ const App = (props: Props) => {
         props.initialize();
     });
 
-    const campaignList = ({ match }: RouteComponentProps<{}>) => <CampaignList match={match} />;
+    const campaignList = ({ match }: RouteComponentProps) => <CampaignList match={match} />;
     const campaignDetail = ({ match, location }: RouteComponentProps<{ id: string }>) => (
         <CampaignDetailScreen match={match} path={location.pathname} />
     );

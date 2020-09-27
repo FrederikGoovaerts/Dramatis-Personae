@@ -12,7 +12,6 @@ describe('The ListItemLink', () => {
                 <ListItemLink to="destination">contents</ListItemLink>
             </Router>
         );
-        const tree = component.toJSON();
-        expect(tree).toMatchSnapshot();
+        expect(component.toJSON()).toMatchSnapshot();
     });
 });

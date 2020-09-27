@@ -49,9 +49,7 @@ module.exports = (env, argv) => {
             port: 8081
         };
         config.plugins.push(
-            new DotEnv({
-                path: './.env'
-            })
+            new DotEnv()
         );
     }
 
