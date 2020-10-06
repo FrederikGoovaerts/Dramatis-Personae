@@ -22,6 +22,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { routes } from '../../../config/constants';
+import { localStorageKeys } from '../../../config/state';
 import { campaignActions } from '../../../store/actions';
 import { RootState } from '../../../store/reducers';
 import { ListCharacter } from '../../../types/character.types';
@@ -50,6 +51,26 @@ interface State {
     filterName: string;
     filterLabelIds: string[];
     createOpen: boolean;
+}
+
+interface PersistedFilters {
+    filterName: string;
+    filterLabelIds: string[];
+}
+
+function getPersistedFilters(): PersistedFilters | undefined {
+    const filterString = localStorage.getItem(localStorageKeys.characterFilters);
+    if (!filterString) {
+        return undefined;
+    }
+    const filters = JSON.parse(filterString);
+    if (filters.filterName && filters.filterLabelIds) {
+        return filters as PersistedFilters;
+    }
+}
+
+function persistFilters(filters: { filterName: string; filterLableIds: string[] }): void {
+    localStorage.setItem(localStorageKeys.characterFilters, JSON.stringify(filters));
 }
 
 class CampaignCharactersRaw extends React.Component<AllProps, State> {

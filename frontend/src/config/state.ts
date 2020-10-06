@@ -18,3 +18,7 @@ export const store = configureStore({});
 
 // Browser history state
 export const history = createBrowserHistory();
+
+export const localStorageKeys = {
+    characterFilters: 'CHARACTER_FILTERS'
+};
