@@ -18,10 +18,11 @@ import {
 import Add from '@material-ui/icons/Add';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import * as React from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { routes } from '../../../config/constants';
+import { localStorageKeys } from '../../../config/state';
 import { campaignActions } from '../../../store/actions';
 import { RootState } from '../../../store/reducers';
 import { ListCharacter } from '../../../types/character.types';
@@ -36,100 +37,102 @@ interface Props {
     matchUrl: string;
 }
 
-interface MapProps {
-    characters: ListCharacter[];
-    labels: Label[];
-    loading: boolean;
-    fetchCharacters: (campaignId: string) => void;
-    fetchLabels: (campaignId: string) => void;
-}
-
-type AllProps = Props & MapProps;
-
-interface State {
+interface PersistedFilters {
     filterName: string;
     filterLabelIds: string[];
-    createOpen: boolean;
+    campaignId: string;
 }
 
-class CampaignCharactersRaw extends React.Component<AllProps, State> {
-    constructor(props: AllProps) {
-        super(props);
-        this.state = {
-            createOpen: false,
-            filterName: '',
-            filterLabelIds: []
-        };
+function getPersistedFilters(): PersistedFilters | undefined {
+    const filterString = localStorage.getItem(localStorageKeys.characterFilters);
+    if (!filterString) {
+        return undefined;
+    }
+    const filters = JSON.parse(filterString);
+    if (filters.filterName && filters.filterLabelIds) {
+        return filters as PersistedFilters;
+    }
+}
+
+function persistFilters(filters: { filterName: string; filterLabelIds: string[]; campaignId: string }): void {
+    localStorage.setItem(localStorageKeys.characterFilters, JSON.stringify(filters));
+}
+
+export const CampaignCharacters = (props: Props) => {
+    const [createOpen, setCreateOpen] = useState<boolean>(false);
+    const [filterName, setFilterName] = useState<string>('');
+    const [filterLabelIds, setFilterLabelIds] = useState<string[]>([]);
+
+    const dispatch = useDispatch();
+    const characters = useSelector((s: RootState) => s.campaign.characters);
+    const labels = useSelector((s: RootState) => s.campaign.labels);
+    const loading = useSelector((s: RootState) => s.campaign.charactersLoading || s.campaign.labelsLoading);
+
+    useEffect(() => {
+        dispatch(campaignActions.actions.fetchCharacters(props.campaignId));
+        dispatch(campaignActions.actions.fetchLabels(props.campaignId));
+        const filters = getPersistedFilters();
+        if (filters && filters.campaignId === props.campaignId) {
+            setFilterName(filters.filterName);
+            setFilterLabelIds(filters.filterLabelIds);
+        }
+    }, [dispatch, props.campaignId]);
+
+    useEffect(() => {
+        persistFilters({ filterName, filterLabelIds, campaignId: props.campaignId });
+    }, [filterName, filterLabelIds, props.campaignId]);
+
+    if (loading) {
+        return <CircularProgress />;
     }
 
-    componentDidMount() {
-        this.props.fetchCharacters(this.props.campaignId);
-        this.props.fetchLabels(this.props.campaignId);
+    let filteredCharacters = [...characters];
+    if (filterName !== '') {
+        filteredCharacters = filteredCharacters.filter((character) =>
+            character.name.toLowerCase().includes(filterName.toLowerCase())
+        );
+    }
+    if (filterLabelIds.length > 0) {
+        filteredCharacters = filteredCharacters.filter((character) => {
+            const charLabelIds = character.labels.map((label) => label.id);
+            return filterLabelIds.every((label) => charLabelIds.includes(label));
+        });
     }
 
-    labelIdsToJoinedString = (labelIds: string[]): string =>
+    const labelIdsToJoinedString = (labelIds: string[]): string =>
         labelIds
-            .map((selected) => this.props.labels.find((label) => label.id === selected))
+            .map((selected) => labels.find((label) => label.id === selected))
             .map((label) => label?.name)
+            .sort()
             .join(', ');
 
-    openCreate = (): void => {
-        this.setState({ createOpen: true });
+    const clearFilters = () => {
+        setFilterLabelIds([]);
+        setFilterName('');
     };
 
-    closeCreate = (): void => {
-        this.setState({ createOpen: false });
-    };
-
-    clearFilters = () => {
-        this.setState({ filterLabelIds: [], filterName: '' });
-    };
-
-    handleChangeNameFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.setState({ filterName: event.target.value });
-    };
-
-    handleChangeLabelFilter = (event: React.ChangeEvent<{ value: string[] }>) => {
-        this.setState({ filterLabelIds: event.target.value });
-    };
-
-    filteredCharacters = () => {
-        const { filterName: filterString, filterLabelIds } = this.state;
-        let filteredCharacters = [...this.props.characters];
-        if (filterString !== '') {
-            filteredCharacters = filteredCharacters.filter((character) =>
-                character.name.toLowerCase().includes(filterString.toLowerCase())
-            );
-        }
-        if (filterLabelIds.length > 0) {
-            filteredCharacters = filteredCharacters.filter((character) => {
-                const charLabelIds = character.labels.map((label) => label.id);
-                return filterLabelIds.every((label) => charLabelIds.includes(label));
-            });
-        }
-        return filteredCharacters;
-    };
-
-    renderCharacterFilters = () => (
+    const renderCharacterFilters = () => (
         <Box display="flex" flexWrap="wrap" alignItems="end" flexDirection="row">
             <Box minWidth="15em" display="flex" flexDirection="column" margin="0.5em">
                 <TextField
                     label="Character name filter"
-                    value={this.state.filterName}
-                    onChange={this.handleChangeNameFilter}
+                    value={filterName}
+                    onChange={(event) => setFilterName(event.target.value)}
                 />
             </Box>
             <Box minWidth="15em" display="flex" flexDirection="column" margin="0.5em">
                 <FormControl>
                     <InputLabel>Character label filter</InputLabel>
                     <Select
-                        disabled={this.props.labels.length === 0}
-                        value={this.state.filterLabelIds}
-                        onChange={this.handleChangeLabelFilter}
-                        renderValue={this.labelIdsToJoinedString}
+                        disabled={labels.length === 0}
+                        value={filterLabelIds}
+                        onChange={(event: React.ChangeEvent<{ value: string[] }>) =>
+                            setFilterLabelIds(event.target.value)
+                        }
+                        renderValue={labelIdsToJoinedString}
                         multiple
                     >
-                        {this.props.labels.map((label: Label) => (
+                        {labels.map((label: Label) => (
                             <MenuItem key={label.id} value={label.id}>
                                 <Box display="flex">
                                     {label.name}
@@ -145,32 +148,28 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
                 </FormControl>
             </Box>
             <Box margin="0.5em">
-                <Button
-                    variant="outlined"
-                    disabled={!this.state.filterName && this.state.filterLabelIds.length === 0}
-                    onClick={this.clearFilters}
-                >
+                <Button variant="outlined" disabled={!filterName && filterLabelIds.length === 0} onClick={clearFilters}>
                     Clear filters
                 </Button>
             </Box>
         </Box>
     );
 
-    renderCreateCharacter = () => (
+    const renderCreateCharacter = () => (
         <Paper className="modalPaper">
             <div className="modalContainer">
                 <Typography variant="h5">New character</Typography>
                 <CreateCharacterForm
-                    campaignId={this.props.campaignId}
-                    onSubmitComplete={this.closeCreate}
-                    owner={this.props.owner}
+                    campaignId={props.campaignId}
+                    onSubmitComplete={() => setCreateOpen(false)}
+                    owner={props.owner}
                 />
             </div>
         </Paper>
     );
 
-    renderCharacter = (character: ListCharacter) => (
-        <ListItemLink to={`${this.props.matchUrl}${routes.character}${character.id}`} key={character.id}>
+    const renderCharacter = (character: ListCharacter) => (
+        <ListItemLink to={`${props.matchUrl}${routes.character}${character.id}`} key={character.id}>
             <ListItemText
                 primary={
                     <Box display="flex" flexWrap="wrap" alignItems="center">
@@ -189,47 +188,30 @@ class CampaignCharactersRaw extends React.Component<AllProps, State> {
                 }
                 secondary={character.description}
             />
-            {this.props.owner && <Visibility color={character.visible ? 'primary' : 'disabled'} />}
+            {props.owner && <Visibility color={character.visible ? 'primary' : 'disabled'} />}
         </ListItemLink>
     );
 
-    render() {
-        const filteredCharacters = this.filteredCharacters();
-        if (this.props.loading) {
-            return <CircularProgress />;
-        }
-        return (
-            <Box>
-                {this.renderCharacterFilters()}
-                <Box marginBottom="1em">
-                    {filteredCharacters.length === 0 ? (
-                        <Typography variant="body1">No characters found.</Typography>
-                    ) : (
-                        <Paper elevation={3}>
-                            <List>{filteredCharacters.map(this.renderCharacter)}</List>
-                        </Paper>
-                    )}
-                </Box>
-                {this.props.canManage && (
-                    <Fab className="CampaignDetail__createFab" color="primary" onClick={this.openCreate}>
-                        <Add />
-                    </Fab>
+    return (
+        <Box>
+            {renderCharacterFilters()}
+            <Box marginBottom="1em">
+                {filteredCharacters.length === 0 ? (
+                    <Typography variant="body1">No characters found.</Typography>
+                ) : (
+                    <Paper elevation={3}>
+                        <List>{filteredCharacters.map(renderCharacter)}</List>
+                    </Paper>
                 )}
-                <Modal open={this.state.createOpen} onClose={this.closeCreate}>
-                    <div className="modal">{this.renderCreateCharacter()}</div>
-                </Modal>
             </Box>
-        );
-    }
-}
-
-const mapStateToProps = (state: RootState) => ({
-    characters: state.campaign.characters,
-    labels: state.campaign.labels,
-    loading: state.campaign.charactersLoading || state.campaign.labelsLoading
-});
-
-export const CampaignCharacters = connect(mapStateToProps, {
-    fetchCharacters: campaignActions.actions.fetchCharacters,
-    fetchLabels: campaignActions.actions.fetchLabels
-})(CampaignCharactersRaw);
+            {props.canManage && (
+                <Fab className="CampaignDetail__createFab" color="primary" onClick={() => setCreateOpen(true)}>
+                    <Add />
+                </Fab>
+            )}
+            <Modal open={createOpen} onClose={() => setCreateOpen(false)}>
+                <div className="modal">{renderCreateCharacter()}</div>
+            </Modal>
+        </Box>
+    );
+};
