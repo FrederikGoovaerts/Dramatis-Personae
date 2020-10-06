@@ -106,31 +106,19 @@ export const CampaignCharacters = (props: Props) => {
             .sort()
             .join(', ');
 
-    const openCreate = (): void => {
-        setCreateOpen(true);
-    };
-
-    const closeCreate = (): void => {
-        setCreateOpen(false);
-    };
-
     const clearFilters = () => {
         setFilterLabelIds([]);
         setFilterName('');
     };
 
-    const handleChangeNameFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setFilterName(event.target.value);
-    };
-
-    const handleChangeLabelFilter = (event: React.ChangeEvent<{ value: string[] }>) => {
-        setFilterLabelIds(event.target.value);
-    };
-
     const renderCharacterFilters = () => (
         <Box display="flex" flexWrap="wrap" alignItems="end" flexDirection="row">
             <Box minWidth="15em" display="flex" flexDirection="column" margin="0.5em">
-                <TextField label="Character name filter" value={filterName} onChange={handleChangeNameFilter} />
+                <TextField
+                    label="Character name filter"
+                    value={filterName}
+                    onChange={(event) => setFilterName(event.target.value)}
+                />
             </Box>
             <Box minWidth="15em" display="flex" flexDirection="column" margin="0.5em">
                 <FormControl>
@@ -138,7 +126,9 @@ export const CampaignCharacters = (props: Props) => {
                     <Select
                         disabled={labels.length === 0}
                         value={filterLabelIds}
-                        onChange={handleChangeLabelFilter}
+                        onChange={(event: React.ChangeEvent<{ value: string[] }>) =>
+                            setFilterLabelIds(event.target.value)
+                        }
                         renderValue={labelIdsToJoinedString}
                         multiple
                     >
@@ -169,7 +159,11 @@ export const CampaignCharacters = (props: Props) => {
         <Paper className="modalPaper">
             <div className="modalContainer">
                 <Typography variant="h5">New character</Typography>
-                <CreateCharacterForm campaignId={props.campaignId} onSubmitComplete={closeCreate} owner={props.owner} />
+                <CreateCharacterForm
+                    campaignId={props.campaignId}
+                    onSubmitComplete={() => setCreateOpen(false)}
+                    owner={props.owner}
+                />
             </div>
         </Paper>
     );
@@ -211,11 +205,11 @@ export const CampaignCharacters = (props: Props) => {
                 )}
             </Box>
             {props.canManage && (
-                <Fab className="CampaignDetail__createFab" color="primary" onClick={openCreate}>
+                <Fab className="CampaignDetail__createFab" color="primary" onClick={() => setCreateOpen(true)}>
                     <Add />
                 </Fab>
             )}
-            <Modal open={createOpen} onClose={closeCreate}>
+            <Modal open={createOpen} onClose={() => setCreateOpen(false)}>
                 <div className="modal">{renderCreateCharacter()}</div>
             </Modal>
         </Box>
