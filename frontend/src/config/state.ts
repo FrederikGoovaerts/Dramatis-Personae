@@ -20,5 +20,5 @@ export const store = configureStore({});
 export const history = createBrowserHistory();
 
 export const localStorageKeys = {
-    characterFilters: 'CHARACTER_FILTERS'
+    characterFilters: 'characterFilters'
 };

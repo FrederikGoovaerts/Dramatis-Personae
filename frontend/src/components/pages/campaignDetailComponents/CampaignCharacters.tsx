@@ -40,6 +40,7 @@ interface Props {
 interface PersistedFilters {
     filterName: string;
     filterLabelIds: string[];
+    campaignId: string;
 }
 
 function getPersistedFilters(): PersistedFilters | undefined {
@@ -53,7 +54,7 @@ function getPersistedFilters(): PersistedFilters | undefined {
     }
 }
 
-function persistFilters(filters: { filterName: string; filterLableIds: string[] }): void {
+function persistFilters(filters: { filterName: string; filterLabelIds: string[]; campaignId: string }): void {
     localStorage.setItem(localStorageKeys.characterFilters, JSON.stringify(filters));
 }
 
@@ -70,7 +71,16 @@ export const CampaignCharacters = (props: Props) => {
     useEffect(() => {
         dispatch(campaignActions.actions.fetchCharacters(props.campaignId));
         dispatch(campaignActions.actions.fetchLabels(props.campaignId));
+        const filters = getPersistedFilters();
+        if (filters && filters.campaignId === props.campaignId) {
+            setFilterName(filters.filterName);
+            setFilterLabelIds(filters.filterLabelIds);
+        }
     }, [dispatch, props.campaignId]);
+
+    useEffect(() => {
+        persistFilters({ filterName, filterLabelIds, campaignId: props.campaignId });
+    }, [filterName, filterLabelIds, props.campaignId]);
 
     if (loading) {
         return <CircularProgress />;
