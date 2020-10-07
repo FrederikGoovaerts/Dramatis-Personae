@@ -1,7 +1,7 @@
 import React from 'react';
 import { create } from 'react-test-renderer';
 
-import { ConfirmableButton, DeleteButton } from '../../../src/components/atoms/DeleteButton';
+import { ConfirmableButton, DeleteButton } from '../../../src/components/atoms/ConfirmableButton';
 
 describe('The delete button', () => {
     // TODO: Add tests for different states

@@ -32,10 +32,14 @@ export const ConfirmableButton = (props: Props) => {
     );
 };
 
-interface DeleteButtonProps {
+interface PredefinedButtonProps {
     onConfirm: () => void;
 }
 
-export const DeleteButton = (props: DeleteButtonProps) => (
+export const DeleteButton = (props: PredefinedButtonProps) => (
     <ConfirmableButton onConfirm={props.onConfirm} defaultText="Delete" confirmedText="Deleting..." />
+);
+
+export const MergeButton = (props: PredefinedButtonProps) => (
+    <ConfirmableButton onConfirm={props.onConfirm} defaultText="Merge" confirmedText="Merging..." />
 );

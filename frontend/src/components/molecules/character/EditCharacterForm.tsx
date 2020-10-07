@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { characterActions } from '../../../store/actions';
 import { CharacterEditPayload } from '../../../types/character.types';
-import { DeleteButton } from '../../atoms/DeleteButton';
+import { DeleteButton } from '../../atoms/ConfirmableButton';
 import { CharacterForm } from './CharacterForm';
 
 interface Props {

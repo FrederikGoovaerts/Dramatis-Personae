@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 import { campaignActions } from '../../../store/actions';
 import { CampaignEditPayload, CampaignSettings } from '../../../types/campaign.types';
-import { DeleteButton } from '../../atoms/DeleteButton';
+import { DeleteButton } from '../../atoms/ConfirmableButton';
 
 interface Props {
     id: string;

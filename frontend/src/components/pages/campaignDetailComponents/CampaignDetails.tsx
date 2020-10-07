@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { campaignActions } from '../../../store/actions';
 import { RootState } from '../../../store/reducers';
 import { Campaign, CampaignMember } from '../../../types/campaign.types';
-import { ConfirmableButton } from '../../atoms/DeleteButton';
+import { ConfirmableButton } from '../../atoms/ConfirmableButton';
 import { CampaignInviteInfo } from '../../molecules/campaign/CampaignInviteInfo';
 import { EditCampaignForm } from '../../molecules/campaign/EditCampaignForm';
 
