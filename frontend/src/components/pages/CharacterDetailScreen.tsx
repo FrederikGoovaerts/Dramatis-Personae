@@ -82,7 +82,11 @@ export const CharacterDetailScreen = (props: Props) => {
         return wrapContent(
             <Box>
                 <Box marginY="1em">
-                    <Typography variant="subtitle1">{character.description}</Typography>
+                    {character.description.split('\n').map((el, index) => (
+                        <Typography variant="subtitle1" key={index}>
+                            {el}
+                        </Typography>
+                    ))}
                 </Box>
                 <CharacterLabels
                     character={character}
