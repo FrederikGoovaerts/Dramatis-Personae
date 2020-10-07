@@ -68,6 +68,8 @@ export async function addLabel(payload: AddLabelPayload): Promise<void> {
 }
 
 export async function removeLabel(payload: RemoveLabelPayload): Promise<void> {
-    const url = buildPath(`${api.CHARACTER.PATH}/${payload.characterId}${api.CHARACTER.SUBPATH_LABEL}`);
-    await axiosInstance.delete(url, { headers: { 'Content-Type': 'application/json' }, data: `"${payload.labelId}"` });
+    const url = buildPath(
+        `${api.CHARACTER.PATH}/${payload.characterId}${api.CHARACTER.SUBPATH_LABEL}/${payload.labelId}`
+    );
+    await axiosInstance.delete(url);
 }

@@ -114,11 +114,11 @@ class CharacterController(private val service: CharacterService) {
         return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
     }
 
-    @DeleteMapping("/{id}/label")
+    @DeleteMapping("/{id}/label/{labelId}")
     fun removeLabel(
         auth: GoogleAuthentication,
         @PathVariable id: UUID,
-        @RequestBody labelId: UUID
+        @PathVariable labelId: UUID
     ): ResponseEntity<Unit> {
         val success = this.service.removeLabel(auth.principal, id, labelId)
         return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
@@ -178,6 +178,7 @@ class CharacterService(private val repository: CharacterRepository, private val 
         targetCharacter.labels.addAll(sourceCharacter.labels.filter { label -> !targetCharacter.labels.contains(label) })
         targetCharacter.notes.addAll(sourceCharacter.notes)
         sourceCharacter.notes.forEach { note -> note.character = targetCharacter }
+        sourceCharacter.notes.clear()
         targetCharacter.description += ("\n\n" + sourceCharacter.description)
         this.repository.save(targetCharacter)
         this.repository.delete(sourceCharacter)
