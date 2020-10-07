@@ -1,9 +1,8 @@
 import { Paper, Typography } from '@material-ui/core';
-import * as React from 'react';
-import { connect } from 'react-redux';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 
 import { characterActions } from '../../../store/actions';
-import { CharacterEditPayload } from '../../../types/character.types';
 import { DeleteButton } from '../../atoms/ConfirmableButton';
 import { CharacterForm } from './CharacterForm';
 
@@ -17,58 +16,46 @@ interface Props {
     onDelete?: () => void;
 }
 
-interface MapProps {
-    editCharacter: (payload: CharacterEditPayload) => void;
-    deleteCharacter: (params: string) => void;
-}
+export const EditCharacterForm = (props: Props) => {
+    const dispatch = useDispatch();
 
-type AllProps = Props & MapProps;
-
-class EditCharacterFormRaw extends React.Component<AllProps> {
-    constructor(props: AllProps) {
-        super(props);
-    }
-
-    handleSubmit = (name: string, description: string, visible: boolean) => {
-        this.props.editCharacter({
-            characterId: this.props.characterId,
-            name,
-            description,
-            visible
-        });
-        if (this.props.onSubmitComplete) {
-            this.props.onSubmitComplete();
+    const handleSubmit = (name: string, description: string, visible: boolean) => {
+        dispatch(
+            characterActions.actions.editCharacter({
+                characterId: props.characterId,
+                name,
+                description,
+                visible
+            })
+        );
+        if (props.onSubmitComplete) {
+            props.onSubmitComplete();
         }
     };
 
-    handleDelete = () => {
-        this.props.deleteCharacter(this.props.characterId);
-        if (this.props.onDelete) {
-            setTimeout(this.props.onDelete, 200);
+    const handleDelete = () => {
+        dispatch(characterActions.actions.deleteCharacter(props.characterId));
+        if (props.onDelete) {
+            setTimeout(props.onDelete, 200);
         }
     };
 
-    render = () => (
+    return (
         <Paper className="modalPaper">
             <div className="modalContainer">
                 <div className="modalHeader">
                     <Typography variant="h5">Update character</Typography>
-                    <DeleteButton onConfirm={this.handleDelete} />
+                    <DeleteButton onConfirm={handleDelete} />
                 </div>
                 <CharacterForm
-                    initialName={this.props.initialName}
-                    initialDescription={this.props.initialDescription}
-                    initialVisibility={this.props.initialVisibility}
-                    owner={this.props.owner}
+                    initialName={props.initialName}
+                    initialDescription={props.initialDescription}
+                    initialVisibility={props.initialVisibility}
+                    owner={props.owner}
                     buttonLabel="Update"
-                    onSubmit={this.handleSubmit}
+                    onSubmit={handleSubmit}
                 />
             </div>
         </Paper>
     );
-}
-
-export const EditCharacterForm = connect(null, {
-    editCharacter: characterActions.actions.editCharacter,
-    deleteCharacter: characterActions.actions.deleteCharacter
-})(EditCharacterFormRaw);
+};
