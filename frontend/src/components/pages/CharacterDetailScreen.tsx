@@ -1,16 +1,14 @@
 import { Box, Button, Modal, Toolbar } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
-import * as React from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { match, Redirect } from 'react-router';
 
 import { routes } from '../../config/constants';
 import { campaignActions, characterActions, noteActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
-import { Campaign } from '../../types/campaign.types';
-import { Character } from '../../types/character.types';
-import { CreateNotePayload, DeleteNotePayload, EditNotePayload, Note, NoteVisibility } from '../../types/note.types';
+import { NoteVisibility } from '../../types/note.types';
 import { EditCharacterForm } from '../molecules/character/EditCharacterForm';
 import { CharacterHeader } from '../molecules/header/CharacterHeader';
 import { Notes } from '../molecules/note/Notes';
@@ -20,145 +18,114 @@ interface Props {
     match: match<{ campaignId: string; characterId: string }>;
 }
 
-interface MapProps {
-    character: Character | null;
-    campaign: Campaign | null;
-    notes: Note[];
-    sharedNotes: Note[];
-    loading: boolean;
-    fetchCharacter: (id: string) => void;
-    fetchNotes: (id: string) => void;
-    fetchSharedNotes: (id: string) => void;
-    fetchCampaign: (id: string) => void;
-    createNote: (payload: CreateNotePayload) => void;
-    editCharacterNote: (payload: EditNotePayload) => void;
-    deleteCharacterNote: (payload: DeleteNotePayload) => void;
-}
+export const CharacterDetailScreen = (props: Props) => {
+    const dispatch = useDispatch();
+    const character = useSelector((state: RootState) => state.character.character);
+    const campaign = useSelector((state: RootState) => state.campaign.campaign);
+    const notes = useSelector((state: RootState) => state.character.notes);
+    const sharedNotes = useSelector((state: RootState) => state.character.sharedNotes);
+    const loading = useSelector(
+        (state: RootState) =>
+            state.character.loading &&
+            state.campaign.loading &&
+            state.character.notesLoading &&
+            state.character.sharedNotesLoading
+    );
 
-interface State {
-    editCharacterOpen: boolean;
-    deleted: boolean;
-}
+    const [editCharacterOpen, setEditCharacterOpen] = useState(false);
+    const [deleted, setDeleted] = useState(false);
 
-type AllProps = Props & MapProps;
+    useEffect(() => {
+        dispatch(characterActions.actions.fetchCharacter(props.match.params.characterId));
+        dispatch(campaignActions.actions.fetchCampaign(props.match.params.campaignId));
+        dispatch(characterActions.actions.fetchNotes(props.match.params.characterId));
+        dispatch(characterActions.actions.fetchSharedNotes(props.match.params.characterId));
+    }, [dispatch, props.match.params.characterId, props.match.params.campaignId]);
 
-class CharacterDetailRaw extends React.Component<AllProps, State> {
-    constructor(props: AllProps) {
-        super(props);
-        this.state = {
-            editCharacterOpen: false,
-            deleted: false
-        };
+    if (deleted) {
+        return <Redirect to={`${routes.campaign.path}${props.match.params.campaignId}`} />;
     }
 
-    componentDidMount(): void {
-        this.props.fetchCharacter(this.props.match.params.characterId);
-        this.props.fetchCampaign(this.props.match.params.campaignId);
-        this.props.fetchNotes(this.props.match.params.characterId);
-        this.props.fetchSharedNotes(this.props.match.params.characterId);
-    }
-
-    closeEditCharacter = () => {
-        this.setState({ editCharacterOpen: false });
+    const closeEditCharacter = () => {
+        setEditCharacterOpen(false);
     };
 
-    renderEditCharacter = () => {
-        if (!this.props.character || !this.props.campaign) {
+    const renderEditCharacter = () => {
+        if (!character || !campaign) {
             return undefined;
         }
-        const character = this.props.character;
-        const onDelete = () => this.setState({ deleted: true });
+        const onDelete = () => setDeleted(true);
         return (
             <EditCharacterForm
                 characterId={character.id}
+                campaignId={campaign.id}
                 initialName={character.name}
                 initialDescription={character.description}
                 initialVisibility={character.visible}
-                owner={this.props.campaign.owner}
-                onSubmitComplete={this.closeEditCharacter}
+                owner={campaign.owner}
+                onSubmitComplete={closeEditCharacter}
                 onDelete={onDelete}
             />
         );
     };
 
-    render() {
-        if (this.state.deleted) {
-            return <Redirect to={`${routes.campaign.path}${this.props.match.params.campaignId}`} />;
-        }
+    const wrapContent = (contents: React.ReactNode) => (
+        <Box className="CharacterDetail__container">
+            <CharacterHeader campaignId={props.match.params.campaignId} name={character?.name} />
+            <Toolbar />
+            {contents}
+        </Box>
+    );
 
-        let contents: React.ReactNode;
-        if (!this.props.character || !this.props.campaign || this.props.loading) {
-            contents = <CircularProgress />;
-        } else {
-            const { character, campaign } = this.props;
-            contents = (
-                <Box>
-                    <Box marginY="1em">
-                        <Typography variant="subtitle1">{character.description}</Typography>
-                    </Box>
-                    <CharacterLabels
-                        character={character}
-                        canChange={campaign.owner || campaign.settings.allowPlayerCharacterLabelManagement}
-                        campaignId={campaign.id}
-                    />
-                    {(campaign.owner || campaign.settings.allowPlayerCharacterManagement) && (
-                        <Box marginBottom="1em">
-                            <Button
-                                size="small"
-                                variant="outlined"
-                                onClick={() => this.setState({ editCharacterOpen: true })}
-                            >
-                                Edit character
-                            </Button>
-                        </Box>
-                    )}
-                    <Notes
-                        campaignOwner={this.props.campaign.owner}
-                        notes={this.props.notes}
-                        sharedNotes={this.props.sharedNotes}
-                        editNote={(noteId: string, contents: string, visibility: NoteVisibility) =>
-                            this.props.editCharacterNote({ id: character.id, noteId, contents, visibility })
-                        }
-                        deleteNote={(noteId: string) => this.props.deleteCharacterNote({ id: character.id, noteId })}
-                        createNote={(contents: string, visibility: NoteVisibility) =>
-                            this.props.createNote({ id: character.id, contents, visibility })
-                        }
-                    />
-                    <Modal open={this.state.editCharacterOpen} onClose={this.closeEditCharacter}>
-                        <div className="modal">{this.renderEditCharacter()}</div>
-                    </Modal>
+    if (!character || !campaign || loading) {
+        return wrapContent(<CircularProgress />);
+    } else {
+        return wrapContent(
+            <Box>
+                <Box marginY="1em">
+                    {character.description.split('\n').map((el, index) => (
+                        <Typography variant="subtitle1" key={index}>
+                            {el}
+                        </Typography>
+                    ))}
                 </Box>
-            );
-        }
-        return (
-            <Box className="CharacterDetail__container">
-                <CharacterHeader campaignId={this.props.match.params.campaignId} name={this.props.character?.name} />
-                <Toolbar />
-                {contents}
+                <CharacterLabels
+                    character={character}
+                    canChange={campaign.owner || campaign.settings.allowPlayerCharacterLabelManagement}
+                    campaignId={campaign.id}
+                />
+                {(campaign.owner || campaign.settings.allowPlayerCharacterManagement) && (
+                    <Box marginBottom="1em">
+                        <Button size="small" variant="outlined" onClick={() => setEditCharacterOpen(true)}>
+                            Edit character
+                        </Button>
+                    </Box>
+                )}
+                <Notes
+                    campaignOwner={campaign.owner}
+                    notes={notes}
+                    sharedNotes={sharedNotes}
+                    editNote={(noteId: string, contents: string, visibility: NoteVisibility) =>
+                        dispatch(
+                            noteActions.actions.editCharacterNote({
+                                id: character.id,
+                                noteId,
+                                contents,
+                                visibility
+                            })
+                        )
+                    }
+                    deleteNote={(noteId: string) =>
+                        dispatch(noteActions.actions.deleteCharacterNote({ id: character.id, noteId }))
+                    }
+                    createNote={(contents: string, visibility: NoteVisibility) =>
+                        dispatch(characterActions.actions.createNote({ id: character.id, contents, visibility }))
+                    }
+                />
+                <Modal open={editCharacterOpen} onClose={closeEditCharacter}>
+                    <div className="modal">{renderEditCharacter()}</div>
+                </Modal>
             </Box>
         );
     }
-}
-
-const mapStateToProps = (state: RootState) => ({
-    character: state.character.character,
-    campaign: state.campaign.campaign,
-    notes: state.character.notes,
-    sharedNotes: state.character.sharedNotes,
-    loading:
-        state.character.loading &&
-        state.campaign.loading &&
-        state.character.notesLoading &&
-        state.character.sharedNotesLoading
-});
-
-export const CharacterDetailScreen = connect(mapStateToProps, {
-    fetchCharacter: characterActions.actions.fetchCharacter,
-    fetchCampaign: campaignActions.actions.fetchCampaign,
-    fetchNotes: characterActions.actions.fetchNotes,
-    fetchSharedNotes: characterActions.actions.fetchSharedNotes,
-    deleteCharacter: characterActions.actions.deleteCharacter,
-    createNote: characterActions.actions.createNote,
-    editCharacterNote: noteActions.actions.editCharacterNote,
-    deleteCharacterNote: noteActions.actions.deleteCharacterNote
-})(CharacterDetailRaw);
+};

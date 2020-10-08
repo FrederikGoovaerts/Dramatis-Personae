@@ -2,7 +2,7 @@ import { Paper, Typography } from '@material-ui/core';
 import * as React from 'react';
 
 import { Label } from '../../../types/label.types';
-import { DeleteButton } from '../../atoms/DeleteButton';
+import { DeleteButton } from '../../atoms/ConfirmableButton';
 import { LabelForm } from './LabelForm';
 
 interface Props {

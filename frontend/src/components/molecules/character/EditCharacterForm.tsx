@@ -1,14 +1,15 @@
-import { Paper, Typography } from '@material-ui/core';
-import * as React from 'react';
-import { connect } from 'react-redux';
+import { Box, Divider, makeStyles, Paper, Typography } from '@material-ui/core';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 
 import { characterActions } from '../../../store/actions';
-import { CharacterEditPayload } from '../../../types/character.types';
-import { DeleteButton } from '../../atoms/DeleteButton';
+import { DeleteButton } from '../../atoms/ConfirmableButton';
 import { CharacterForm } from './CharacterForm';
+import { MergeCharacterForm } from './MergeCharacterForm';
 
 interface Props {
     characterId: string;
+    campaignId: string;
     initialName: string;
     initialDescription: string;
     initialVisibility: boolean;
@@ -17,58 +18,74 @@ interface Props {
     onDelete?: () => void;
 }
 
-interface MapProps {
-    editCharacter: (payload: CharacterEditPayload) => void;
-    deleteCharacter: (params: string) => void;
-}
-
-type AllProps = Props & MapProps;
-
-class EditCharacterFormRaw extends React.Component<AllProps> {
-    constructor(props: AllProps) {
-        super(props);
+const useStyles = makeStyles({
+    spaced: {
+        marginTop: '0.5em',
+        marginBottom: '0.5em'
+    },
+    flexRowEnd: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-end'
     }
+});
 
-    handleSubmit = (name: string, description: string, visible: boolean) => {
-        this.props.editCharacter({
-            characterId: this.props.characterId,
-            name,
-            description,
-            visible
-        });
-        if (this.props.onSubmitComplete) {
-            this.props.onSubmitComplete();
+export const EditCharacterForm = (props: Props) => {
+    const styles = useStyles();
+    const dispatch = useDispatch();
+
+    const handleSubmit = (name: string, description: string, visible: boolean) => {
+        dispatch(
+            characterActions.actions.editCharacter({
+                characterId: props.characterId,
+                name,
+                description,
+                visible
+            })
+        );
+        if (props.onSubmitComplete) {
+            props.onSubmitComplete();
         }
     };
 
-    handleDelete = () => {
-        this.props.deleteCharacter(this.props.characterId);
-        if (this.props.onDelete) {
-            setTimeout(this.props.onDelete, 200);
+    const handleDelete = () => {
+        dispatch(characterActions.actions.deleteCharacter(props.characterId));
+        if (props.onDelete) {
+            setTimeout(props.onDelete, 200);
         }
     };
 
-    render = () => (
+    const handleMerge = () => {
+        if (props.onDelete) {
+            setTimeout(props.onDelete, 200);
+        }
+    };
+
+    return (
         <Paper className="modalPaper">
             <div className="modalContainer">
                 <div className="modalHeader">
                     <Typography variant="h5">Update character</Typography>
-                    <DeleteButton onConfirm={this.handleDelete} />
                 </div>
                 <CharacterForm
-                    initialName={this.props.initialName}
-                    initialDescription={this.props.initialDescription}
-                    initialVisibility={this.props.initialVisibility}
-                    owner={this.props.owner}
+                    initialName={props.initialName}
+                    initialDescription={props.initialDescription}
+                    initialVisibility={props.initialVisibility}
+                    owner={props.owner}
                     buttonLabel="Update"
-                    onSubmit={this.handleSubmit}
+                    onSubmit={handleSubmit}
                 />
+                <Divider className={styles.spaced} />
+                <Typography variant="h6">Danger zone</Typography>
+                <Box className={styles.spaced}>
+                    <MergeCharacterForm
+                        characterId={props.characterId}
+                        campaignId={props.campaignId}
+                        onComplete={handleMerge}
+                    />
+                </Box>
+                <DeleteButton onConfirm={handleDelete} />
             </div>
         </Paper>
     );
-}
-
-export const EditCharacterForm = connect(null, {
-    editCharacter: characterActions.actions.editCharacter,
-    deleteCharacter: characterActions.actions.deleteCharacter
-})(EditCharacterFormRaw);
+};

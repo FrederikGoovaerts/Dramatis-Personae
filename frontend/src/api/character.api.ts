@@ -27,6 +27,11 @@ export async function update(id: string, name: string, description: string, visi
     await axiosInstance.put(url, { name, description, visible });
 }
 
+export async function merge(id: string, target: string): Promise<void> {
+    const url = buildPath(`${api.CHARACTER.PATH}/${id}${api.CHARACTER.SUBPATH_MERGE}`);
+    await axiosInstance.post(url, { target });
+}
+
 export async function deletePermanently(id: string): Promise<void> {
     const url = buildPath(`${api.CHARACTER.PATH}/${id}`);
     await axiosInstance.delete(url);
@@ -63,6 +68,8 @@ export async function addLabel(payload: AddLabelPayload): Promise<void> {
 }
 
 export async function removeLabel(payload: RemoveLabelPayload): Promise<void> {
-    const url = buildPath(`${api.CHARACTER.PATH}/${payload.characterId}${api.CHARACTER.SUBPATH_LABEL}`);
-    await axiosInstance.delete(url, { headers: { 'Content-Type': 'application/json' }, data: `"${payload.labelId}"` });
+    const url = buildPath(
+        `${api.CHARACTER.PATH}/${payload.characterId}${api.CHARACTER.SUBPATH_LABEL}/${payload.labelId}`
+    );
+    await axiosInstance.delete(url);
 }

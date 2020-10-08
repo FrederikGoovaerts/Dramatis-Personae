@@ -32,6 +32,7 @@ export const api = {
     CHARACTER: {
         PATH: '/character',
         SUBPATH_NOTE: '/note',
+        SUBPATH_MERGE: '/merge',
         SUBPATH_SHARED_NOTES: '/sharednotes',
         SUBPATH_VISIBLE: '/visible',
         SUBPATH_LABEL: '/label'

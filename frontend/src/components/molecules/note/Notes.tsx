@@ -82,10 +82,23 @@ export class Notes extends React.Component<Props, State> {
             <Box key={note.id} paddingX="1em">
                 <ListItem>
                     <ListItemText
-                        primary={note.contents}
-                        secondary={`Created ${note.addedOn.fromNow()}, last edited ${note.editedOn.fromNow()}${
-                            !own ? `, by ${note.authorName}` : ''
-                        }`}
+                        disableTypography
+                        primary={
+                            <>
+                                {note.contents.split('\n').map((el, index) => (
+                                    <Typography variant="body1" key={index}>
+                                        {el}
+                                    </Typography>
+                                ))}
+                            </>
+                        }
+                        secondary={
+                            <Typography variant="body2" color="textSecondary">
+                                {`Created ${note.addedOn.fromNow()}, last edited ${note.editedOn.fromNow()}${
+                                    !own ? `, by ${note.authorName}` : ''
+                                }`}
+                            </Typography>
+                        }
                     />
                     {!own && note.visibility === 'DM_SHARED' && (
                         <ListItemIcon>

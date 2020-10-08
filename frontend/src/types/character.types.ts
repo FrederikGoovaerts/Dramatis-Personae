@@ -28,3 +28,8 @@ export interface CharacterEditPayload {
     description: string;
     visible: boolean;
 }
+
+export interface MergeCharacterPayload {
+    id: string;
+    target: string;
+}

@@ -6,7 +6,7 @@ import { ChangeEvent } from 'react';
 
 import { Note, NoteVisibility } from '../../../types/note.types';
 import { AlertBox } from '../../atoms/AlertBox';
-import { DeleteButton } from '../../atoms/DeleteButton';
+import { DeleteButton } from '../../atoms/ConfirmableButton';
 
 interface Props {
     note: Note;
