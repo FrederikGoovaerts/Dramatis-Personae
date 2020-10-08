@@ -1,10 +1,11 @@
-import { Character, CharacterEditPayload } from '../../types/character.types';
+import { Character, CharacterEditPayload, MergeCharacterPayload } from '../../types/character.types';
 import { AddLabelPayload, RemoveLabelPayload } from '../../types/label.types';
 import { CreateNotePayload, Note } from '../../types/note.types';
 import { ActionTypeMapping, ActionUnion, createAction } from './base';
 
 export enum names {
     fetchCharacter = 'FETCH_CHARACTER',
+    mergeCharacter = 'MERGE_CHARACTER',
     setCharacterLoading = 'SET_CHARACTER_LOADING',
     setCharacter = 'SET_CHARACTER',
     fetchNotes = 'FETCH_CHARACTER_NOTES',
@@ -22,6 +23,7 @@ export enum names {
 
 export const actions = {
     fetchCharacter: (id: string) => createAction(names.fetchCharacter, id),
+    mergeCharacter: (p: MergeCharacterPayload) => createAction(names.mergeCharacter, p),
     setCharacterLoading: (p: boolean) => createAction(names.setCharacterLoading, p),
     setCharacter: (p: Character) => createAction(names.setCharacter, p),
     fetchNotes: (id: string) => createAction(names.fetchNotes, id),

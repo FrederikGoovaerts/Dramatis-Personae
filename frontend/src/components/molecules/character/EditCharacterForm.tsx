@@ -55,6 +55,12 @@ export const EditCharacterForm = (props: Props) => {
         }
     };
 
+    const handleMerge = () => {
+        if (props.onDelete) {
+            setTimeout(props.onDelete, 200);
+        }
+    };
+
     return (
         <Paper className="modalPaper">
             <div className="modalContainer">
@@ -72,7 +78,11 @@ export const EditCharacterForm = (props: Props) => {
                 <Divider className={styles.spaced} />
                 <Typography variant="h6">Danger zone</Typography>
                 <Box className={styles.spaced}>
-                    <MergeCharacterForm characterId={props.characterId} campaignId={props.campaignId} />
+                    <MergeCharacterForm
+                        characterId={props.characterId}
+                        campaignId={props.campaignId}
+                        onComplete={handleMerge}
+                    />
                 </Box>
                 <Box className={`${styles.spaced} ${styles.flexRowEnd}`}>
                     <DeleteButton onConfirm={handleDelete} />

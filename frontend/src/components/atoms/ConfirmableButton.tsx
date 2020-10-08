@@ -7,6 +7,7 @@ interface Props {
     onConfirm: () => void;
     defaultText: string;
     confirmedText: string;
+    disabled?: boolean;
 }
 
 export const ConfirmableButton = (props: Props) => {
@@ -22,7 +23,7 @@ export const ConfirmableButton = (props: Props) => {
     };
 
     const variant = state === 'DEFAULT' ? 'outlined' : 'contained';
-    const disabled = state === 'DELETING';
+    const disabled = state === 'DELETING' || props.disabled;
     const contents = state === 'DEFAULT' ? props.defaultText : state === 'CLICKED' ? 'Confirm' : props.confirmedText;
 
     return (
@@ -34,12 +35,23 @@ export const ConfirmableButton = (props: Props) => {
 
 interface PredefinedButtonProps {
     onConfirm: () => void;
+    disabled?: boolean;
 }
 
 export const DeleteButton = (props: PredefinedButtonProps) => (
-    <ConfirmableButton onConfirm={props.onConfirm} defaultText="Delete" confirmedText="Deleting..." />
+    <ConfirmableButton
+        onConfirm={props.onConfirm}
+        defaultText="Delete"
+        confirmedText="Deleting..."
+        disabled={props.disabled}
+    />
 );
 
 export const MergeButton = (props: PredefinedButtonProps) => (
-    <ConfirmableButton onConfirm={props.onConfirm} defaultText="Merge into" confirmedText="Merging..." />
+    <ConfirmableButton
+        onConfirm={props.onConfirm}
+        defaultText="Merge into"
+        confirmedText="Merging..."
+        disabled={props.disabled}
+    />
 );

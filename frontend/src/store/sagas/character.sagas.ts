@@ -14,6 +14,14 @@ function* fetchCharacter(action: characterActions.specificTypes['fetchCharacter'
     yield put(characterActions.actions.setCharacterLoading(false));
 }
 
+function* mergeCharacter(action: characterActions.specificTypes['mergeCharacter']) {
+    try {
+        yield character.merge(action.payload.id, action.payload.target);
+    } catch (e) {
+        console.error('Unable to merge character. Please try again later.');
+    }
+}
+
 function* fetchNotes(action: characterActions.specificTypes['fetchNotes']) {
     yield put(characterActions.actions.setNotesLoading(true));
     try {
@@ -83,6 +91,7 @@ function* removeLabel(action: characterActions.specificTypes['removeLabel']) {
 
 export default function* watcher() {
     yield takeEvery(characterActions.names.fetchCharacter, fetchCharacter);
+    yield takeEvery(characterActions.names.mergeCharacter, mergeCharacter);
     yield takeEvery(characterActions.names.fetchNotes, fetchNotes);
     yield takeEvery(characterActions.names.fetchSharedNotes, fetchSharedNotes);
     yield takeEvery(characterActions.names.createNote, createNote);
