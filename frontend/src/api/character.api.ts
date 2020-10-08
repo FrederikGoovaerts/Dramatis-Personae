@@ -1,11 +1,12 @@
+import moment from 'moment';
+
 import { axiosInstance } from '../config/axios';
 import { api } from '../config/constants';
-import { buildPath } from './base.api';
-import moment from 'moment';
-import { Note, CreateNotePayload } from '../types/note.types';
 import { Character } from '../types/character.types';
+import { AddLabelPayload, Label, RemoveLabelPayload } from '../types/label.types';
+import { CreateNotePayload, Note } from '../types/note.types';
+import { buildPath } from './base.api';
 import { RawNote } from './note.api';
-import { AddLabelPayload, RemoveLabelPayload, Label } from '../types/label.types';
 
 interface RawCharacter {
     id: string;
@@ -24,6 +25,11 @@ export async function get(id: string): Promise<Character> {
 export async function update(id: string, name: string, description: string, visible: boolean): Promise<void> {
     const url = buildPath(`${api.CHARACTER.PATH}/${id}`);
     await axiosInstance.put(url, { name, description, visible });
+}
+
+export async function merge(id: string, target: string): Promise<void> {
+    const url = buildPath(`${api.CHARACTER.PATH}/${id}${api.CHARACTER.SUBPATH_MERGE}`);
+    await axiosInstance.post(url, { target });
 }
 
 export async function deletePermanently(id: string): Promise<void> {
@@ -62,6 +68,8 @@ export async function addLabel(payload: AddLabelPayload): Promise<void> {
 }
 
 export async function removeLabel(payload: RemoveLabelPayload): Promise<void> {
-    const url = buildPath(`${api.CHARACTER.PATH}/${payload.characterId}${api.CHARACTER.SUBPATH_LABEL}`);
-    await axiosInstance.delete(url, { headers: { 'Content-Type': 'application/json' }, data: `"${payload.labelId}"` });
+    const url = buildPath(
+        `${api.CHARACTER.PATH}/${payload.characterId}${api.CHARACTER.SUBPATH_LABEL}/${payload.labelId}`
+    );
+    await axiosInstance.delete(url);
 }

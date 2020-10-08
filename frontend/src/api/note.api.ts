@@ -1,7 +1,7 @@
 import { axiosInstance } from '../config/axios';
 import { api } from '../config/constants';
-import { buildPath } from './base.api';
 import { EditNotePayload, NoteVisibility } from '../types/note.types';
+import { buildPath } from './base.api';
 
 export interface RawNote {
     id: string;

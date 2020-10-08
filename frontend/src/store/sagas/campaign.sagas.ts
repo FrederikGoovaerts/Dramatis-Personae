@@ -1,8 +1,9 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { Campaign, CampaignPrototype, CampaignMember } from '../../types/campaign.types';
-import { campaignActions } from '../actions';
-import { ListCharacter } from '../../types/character.types';
+
 import * as campaign from '../../api/campaign.api';
+import { Campaign, CampaignMember, CampaignPrototype } from '../../types/campaign.types';
+import { ListCharacter } from '../../types/character.types';
+import { campaignActions } from '../actions';
 
 function* fetchCampaigns() {
     yield put(campaignActions.actions.setCampaignsLoading(true));
@@ -50,7 +51,7 @@ function* fetchMembers(action: campaignActions.specificTypes['fetchMembers']) {
 
 function* createCharacter(action: campaignActions.specificTypes['createCharacter']) {
     try {
-        yield campaign.createCharacter(action.payload.campaignId, action.payload.character);
+        yield call(campaign.createCharacter, action.payload.campaignId, action.payload.character);
         yield put(campaignActions.actions.fetchCharacters(action.payload.campaignId));
     } catch (e) {
         console.error('Unable to create character. Please try again later.');
@@ -59,7 +60,7 @@ function* createCharacter(action: campaignActions.specificTypes['createCharacter
 
 function* joinCampaign(action: campaignActions.specificTypes['joinCampaign']) {
     try {
-        yield campaign.join(action.payload);
+        yield call(campaign.join, action.payload);
         yield put(campaignActions.actions.fetchCampaigns());
     } catch (e) {
         console.error('Unable to join campaign. Please try again later or check if the code is correct.');
@@ -68,7 +69,7 @@ function* joinCampaign(action: campaignActions.specificTypes['joinCampaign']) {
 
 function* rotateInviteCode(action: campaignActions.specificTypes['rotateInviteCode']) {
     try {
-        yield campaign.rotateInviteCode(action.payload);
+        yield call(campaign.rotateInviteCode, action.payload);
         yield put(campaignActions.actions.fetchCampaign(action.payload));
     } catch (e) {
         console.error('Unable to rotate invite code. Please try again later.');
@@ -77,7 +78,7 @@ function* rotateInviteCode(action: campaignActions.specificTypes['rotateInviteCo
 
 function* leaveCampaign(action: campaignActions.specificTypes['leaveCampaign']) {
     try {
-        yield campaign.leave(action.payload);
+        yield call(campaign.leave, action.payload);
         yield put(campaignActions.actions.fetchCampaigns());
     } catch (e) {
         console.error('Unable to leave campaign. Please try again later.');
@@ -86,7 +87,7 @@ function* leaveCampaign(action: campaignActions.specificTypes['leaveCampaign']) 
 
 function* kickFromCampaign(action: campaignActions.specificTypes['kickFromCampaign']) {
     try {
-        yield campaign.kick(action.payload.campaignId, action.payload.userId);
+        yield call(campaign.kick, action.payload.campaignId, action.payload.userId);
         yield put(campaignActions.actions.fetchMembers(action.payload.campaignId));
     } catch (e) {
         console.error('Unable to kick user from campaign. Please try again later.');
@@ -105,7 +106,7 @@ function* newCampaign(action: campaignActions.specificTypes['newCampaign']) {
 
 function* editCampaign(action: campaignActions.specificTypes['editCampaign']) {
     try {
-        yield campaign.update(action.payload.id, action.payload.name, action.payload.campaignSettings);
+        yield call(campaign.update, action.payload.id, action.payload.name, action.payload.campaignSettings);
         yield put(campaignActions.actions.fetchCampaign(action.payload.id));
     } catch (e) {
         console.error('Unable to delete campaign. Please try again later.');
@@ -114,7 +115,7 @@ function* editCampaign(action: campaignActions.specificTypes['editCampaign']) {
 
 function* deleteCampaign(action: campaignActions.specificTypes['deleteCampaign']) {
     try {
-        yield campaign.deletePermanently(action.payload);
+        yield call(campaign.deletePermanently, action.payload);
         yield put(campaignActions.actions.fetchCampaigns());
     } catch (e) {
         console.error('Unable to delete campaign. Please try again later.');
@@ -124,7 +125,7 @@ function* deleteCampaign(action: campaignActions.specificTypes['deleteCampaign']
 function* fetchNotes(action: campaignActions.specificTypes['fetchNotes']) {
     yield put(campaignActions.actions.setNotesLoading(true));
     try {
-        const result = yield campaign.getNotes(action.payload);
+        const result = yield call(campaign.getNotes, action.payload);
         yield put(campaignActions.actions.setNotes(result));
     } catch (e) {
         console.error('Unable to fetch notes. Please try again later.');
@@ -135,7 +136,7 @@ function* fetchNotes(action: campaignActions.specificTypes['fetchNotes']) {
 function* fetchSharedNotes(action: campaignActions.specificTypes['fetchSharedNotes']) {
     yield put(campaignActions.actions.setSharedNotesLoading(true));
     try {
-        const result = yield campaign.getSharedNotes(action.payload);
+        const result = yield call(campaign.getSharedNotes, action.payload);
         yield put(campaignActions.actions.setSharedNotes(result));
     } catch (e) {
         console.error('Unable to fetch shared notes. Please try again later.');
@@ -145,7 +146,7 @@ function* fetchSharedNotes(action: campaignActions.specificTypes['fetchSharedNot
 
 function* createNote(action: campaignActions.specificTypes['createNote']) {
     try {
-        yield campaign.createNote(action.payload);
+        yield call(campaign.createNote, action.payload);
         yield put(campaignActions.actions.fetchNotes(action.payload.id));
     } catch (e) {
         console.error('Unable to create note. Please try again later.');
@@ -154,7 +155,7 @@ function* createNote(action: campaignActions.specificTypes['createNote']) {
 
 function* createLabel(action: campaignActions.specificTypes['createLabel']) {
     try {
-        yield campaign.createLabel(action.payload);
+        yield call(campaign.createLabel, action.payload);
         yield put(campaignActions.actions.fetchLabels(action.payload.id));
     } catch (e) {
         console.error('Unable to create label. Please try again later.');
@@ -164,7 +165,7 @@ function* createLabel(action: campaignActions.specificTypes['createLabel']) {
 function* fetchLabels(action: campaignActions.specificTypes['fetchLabels']) {
     yield put(campaignActions.actions.setLabelsLoading(true));
     try {
-        const result = yield campaign.getLabels(action.payload);
+        const result = yield call(campaign.getLabels, action.payload);
         yield put(campaignActions.actions.setLabels(result));
     } catch (e) {
         console.error('Unable to fetch labels. Please try again later.');

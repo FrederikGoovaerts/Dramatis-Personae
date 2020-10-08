@@ -1,17 +1,3 @@
-.CampaignList__content {
-    margin-top: 2em;
-    display: flex;
-    flex-direction: column;
-}
-
-.CampaignList__tabs {
-    margin-top: 2em;
-}
-
-.CampaignList__forms {
-    margin-top: 2em;
-}
-
 .CampaignList__formContainer {
     display: flex;
     flex-direction: row;
@@ -20,14 +6,4 @@
     button {
         margin-left: 1em;
     }
-}
-
-.CampaignList__campaignLink {
-    display: flex;
-    margin: 1em;
-}
-
-.CampaignList__campaignPaper {
-    padding: 2em;
-    max-width: 10em;
 }

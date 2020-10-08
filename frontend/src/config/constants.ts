@@ -32,6 +32,7 @@ export const api = {
     CHARACTER: {
         PATH: '/character',
         SUBPATH_NOTE: '/note',
+        SUBPATH_MERGE: '/merge',
         SUBPATH_SHARED_NOTES: '/sharednotes',
         SUBPATH_VISIBLE: '/visible',
         SUBPATH_LABEL: '/label'
@@ -60,10 +61,12 @@ export const routes = {
         subpathLabels: '/labels',
         subpathDetails: '/details'
     },
+    join: '/join/',
     root: '/'
 };
 
 export const storage = {
     idToken: 'idToken',
-    refreshToken: 'refreshToken'
+    refreshToken: 'refreshToken',
+    preRedirectPath: 'preRedirectPath'
 };

@@ -2,11 +2,13 @@ import { decode } from 'jsonwebtoken';
 import moment from 'moment';
 import { parse } from 'query-string';
 import { put, takeEvery } from 'redux-saga/effects';
-import { removeAxiosAuthToken, setAxiosAuthToken } from '../../config/axios';
-import { oauth, storage } from '../../config/constants';
-import { applicationActions } from '../actions';
+
 import { exchangeCode, refresh } from '../../api/authentication.api';
+import { removeAxiosAuthToken, setAxiosAuthToken } from '../../config/axios';
+import { oauth, routes, storage } from '../../config/constants';
+import { history } from '../../config/state';
 import { TokenResponse } from '../../types/auth.types';
+import { applicationActions } from '../actions';
 
 interface FormAttribute {
     name: string;
@@ -50,6 +52,11 @@ function* initializeApplication() {
             if (tokens.idToken && tokens.refreshToken) {
                 localStorage.setItem(storage.idToken, tokens.idToken);
                 localStorage.setItem(storage.refreshToken, tokens.refreshToken);
+                // Clean current URL
+                const preRedirectPath = localStorage.getItem(storage.preRedirectPath);
+                console.log(preRedirectPath);
+                localStorage.removeItem(storage.preRedirectPath);
+                history.replace(preRedirectPath || routes.root);
             }
         }
     }
@@ -83,6 +90,7 @@ function* initializeApplication() {
     }
     // Fall through in case no valid token is present
     localStorage.removeItem(storage.idToken);
+    localStorage.setItem(storage.preRedirectPath, window.location.pathname);
     redirectToOauth();
 }
 

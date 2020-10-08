@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux';
+
 import { Character } from '../../types/character.types';
+import { Note } from '../../types/note.types';
 import { applicationActions, characterActions } from '../actions';
 import { createReducer } from './base';
-import { Note } from '../../types/note.types';
 
 export interface CharacterState {
     loading: boolean;

@@ -1,10 +1,11 @@
-import { put, takeEvery } from 'redux-saga/effects';
-import { noteActions, characterActions, campaignActions } from '../actions';
+import { call, put, takeEvery } from 'redux-saga/effects';
+
 import * as note from '../../api/note.api';
+import { campaignActions, characterActions, noteActions } from '../actions';
 
 function* editCharacterNote(action: noteActions.specificTypes['editCharacterNote']) {
     try {
-        yield note.editCharacterNote(action.payload);
+        yield call(note.editCharacterNote, action.payload);
         yield put(characterActions.actions.fetchNotes(String(action.payload.id)));
         yield put(characterActions.actions.fetchSharedNotes(String(action.payload.id)));
     } catch (e) {
@@ -14,7 +15,7 @@ function* editCharacterNote(action: noteActions.specificTypes['editCharacterNote
 
 function* deleteCharacterNote(action: noteActions.specificTypes['deleteCharacterNote']) {
     try {
-        yield note.deleteCharacterNote(action.payload.noteId);
+        yield call(note.deleteCharacterNote, action.payload.noteId);
         yield put(characterActions.actions.fetchNotes(String(action.payload.id)));
     } catch (e) {
         console.error('Unable to delete note. Please try again later.');
@@ -23,7 +24,7 @@ function* deleteCharacterNote(action: noteActions.specificTypes['deleteCharacter
 
 function* editCampaignNote(action: noteActions.specificTypes['editCampaignNote']) {
     try {
-        yield note.editCampaignNote(action.payload);
+        yield call(note.editCampaignNote, action.payload);
         yield put(campaignActions.actions.fetchNotes(String(action.payload.id)));
         yield put(campaignActions.actions.fetchSharedNotes(String(action.payload.id)));
     } catch (e) {
@@ -33,7 +34,7 @@ function* editCampaignNote(action: noteActions.specificTypes['editCampaignNote']
 
 function* deleteCampaignNote(action: noteActions.specificTypes['deleteCampaignNote']) {
     try {
-        yield note.deleteCampaignNote(action.payload.noteId);
+        yield call(note.deleteCampaignNote, action.payload.noteId);
         yield put(campaignActions.actions.fetchNotes(String(action.payload.id)));
     } catch (e) {
         console.error('Unable to delete note. Please try again later.');

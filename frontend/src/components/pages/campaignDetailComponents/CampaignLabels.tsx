@@ -1,24 +1,27 @@
-import * as React from 'react';
 import {
     Box,
-    Typography,
-    Paper,
-    List,
-    Fab,
-    ListItemText,
-    ListItem,
     CircularProgress,
+    Fab,
+    IconButton,
+    List,
+    ListItem,
     ListItemIcon,
+    ListItemText,
     Modal,
-    IconButton
+    Paper,
+    Typography
 } from '@material-ui/core';
-import { Add, Visibility, Edit } from '@material-ui/icons';
-import { RootState } from '../../../store/reducers';
-import { campaignActions, labelActions } from '../../../store/actions';
+import Add from '@material-ui/icons/Add';
+import Edit from '@material-ui/icons/Edit';
+import Visibility from '@material-ui/icons/Visibility';
+import * as React from 'react';
 import { connect } from 'react-redux';
-import { Label, DeleteLabelPayload, EditLabelPayload } from '../../../types/label.types';
-import { CreateLabelForm } from '../../molecules/CreateLabelForm';
-import { EditLabelForm } from '../../molecules/EditLabelForm';
+
+import { campaignActions, labelActions } from '../../../store/actions';
+import { RootState } from '../../../store/reducers';
+import { DeleteLabelPayload, EditLabelPayload, Label } from '../../../types/label.types';
+import { CreateLabelForm } from '../../molecules/label/CreateLabelForm';
+import { EditLabelForm } from '../../molecules/label/EditLabelForm';
 
 interface Props {
     campaignId: string;

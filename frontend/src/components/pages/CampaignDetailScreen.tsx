@@ -1,24 +1,24 @@
 import './CampaignDetailScreen.scss';
 
+import { Box, Drawer, Theme, Toolbar } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import List from '@material-ui/core/List';
 import ListItemText from '@material-ui/core/ListItemText';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { match, Redirect, Route, Switch } from 'react-router';
-import { Box, Drawer, Toolbar, Theme } from '@material-ui/core';
 
 import { routes } from '../../config/constants';
 import { campaignActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
 import { Campaign } from '../../types/campaign.types';
-import { CampaignHeader } from '../molecules/CampaignHeader';
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import { ListItemLink } from '../atoms/ListItemLink';
+import { CampaignHeader } from '../molecules/header/CampaignHeader';
 import { CampaignCharacters } from './campaignDetailComponents/CampaignCharacters';
 import { CampaignDetails } from './campaignDetailComponents/CampaignDetails';
-import { ListItemLink } from '../atoms/ListItemLink';
-import { CampaignNotes } from './campaignDetailComponents/CampaignNotes';
 import { CampaignLabels } from './campaignDetailComponents/CampaignLabels';
+import { CampaignNotes } from './campaignDetailComponents/CampaignNotes';
 
 const styles = (theme: Theme) => ({
     appBar: {
@@ -33,12 +33,8 @@ const styles = (theme: Theme) => ({
     }
 });
 
-export interface MatchParams {
-    id: string;
-}
-
 interface Props {
-    match: match<MatchParams>;
+    match: match<{ id: string }>;
     path: string;
 }
 
@@ -46,8 +42,6 @@ interface MapProps extends WithStyles<typeof styles> {
     campaign: Campaign | null;
     loading: boolean;
     fetchCampaign: (campaignId: string) => void;
-    fetchNotes: (campaignId: string) => void;
-    fetchSharedNotes: (campaignId: string) => void;
 }
 
 type AllProps = Props & MapProps;
@@ -164,11 +158,5 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 export const CampaignDetailScreen = connect(mapStateToProps, {
-    fetchCampaign: campaignActions.actions.fetchCampaign,
-    fetchNotes: campaignActions.actions.fetchNotes,
-    fetchSharedNotes: campaignActions.actions.fetchSharedNotes,
-    fetchMembers: campaignActions.actions.fetchMembers,
-    deleteCampaign: campaignActions.actions.deleteCampaign,
-    leaveCampaign: campaignActions.actions.leaveCampaign,
-    rotateInviteCode: campaignActions.actions.rotateInviteCode
+    fetchCampaign: campaignActions.actions.fetchCampaign
 })(withStyles(styles)(CampaignDetailRaw));

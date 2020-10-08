@@ -8,7 +8,7 @@ The application is available as automatically built [Docker](https://docs.docker
 
 ### The Spring profile
 
-Running the application can be done in two modes, `dev` and `production` mode, complimented by Spring Profiles with those respective names. The environment variable to set the active profile is `spring_profiles_active`, with those values, `dev` and `production` as possible values.
+Running the application can be done in two modes, `dev` and `production` mode, complemented by Spring Profiles with those respective names. The environment variable to set the active profile is `spring_profiles_active`, with those values, `dev` and `production` as possible values.
 
 In `dev` mode, the application does not perform any authentication, starts with an in-memory database (H2) and is provided with some example data for testing during development. The OAuth and Database environment variables are not necessary in this case.
 
@@ -24,8 +24,8 @@ These last two should be assigned to the `spring_googleAuth_clientId` and `sprin
 
 Connection to the database is configured through the following variables, for which the names should be self-explanatory:
 
-* `spring_datasource_url`
-* `spring_datasource_username`
-* `spring_datasource_password`
+- `spring_datasource_url`
+- `spring_datasource_username`
+- `spring_datasource_password`
 
- The application will perform the necessary table creation and migration on startup.
+The application will perform the necessary table creation and migration on startup.

@@ -1,22 +1,20 @@
 import './CampaignList.scss';
 
-import { Grid, Paper, CircularProgress, Typography, Toolbar, Box } from '@material-ui/core';
+import { Box, CircularProgress, Grid, Toolbar, Typography } from '@material-ui/core';
 import { ChangeEvent } from 'react';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { match } from 'react-router';
-import { Link } from 'react-router-dom';
 
 import { campaignActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
 import { Campaign } from '../../types/campaign.types';
-
-import { Header } from '../molecules/Header';
-import { JoinCampaignForm } from '../molecules/JoinCampaignForm';
-import { NewCampaignForm } from '../molecules/NewCampaignForm';
+import { CampaignLink } from '../atoms/CampaignLink';
+import { NewCampaignForm } from '../molecules/campaign/NewCampaignForm';
+import { Header } from '../molecules/header/Header';
 
 interface Props {
-    match: match<{}>;
+    match: match;
 }
 
 interface MapProps {
@@ -26,17 +24,6 @@ interface MapProps {
 }
 
 type AllProps = Props & MapProps;
-
-const campaignToListItemLink = (campaign: Campaign) => (
-    <Link to={`/campaign/${campaign.id}`} key={campaign.id} className="CampaignList__campaignLink">
-        <Paper className="CampaignList__campaignPaper">
-            <Typography variant="h5" gutterBottom>
-                {campaign.name}
-            </Typography>
-            <Typography variant="subtitle1">Run by {campaign.ownerName}</Typography>
-        </Paper>
-    </Link>
-);
 
 class CampaignListRaw extends React.Component<AllProps> {
     constructor(props: AllProps) {
@@ -65,13 +52,19 @@ class CampaignListRaw extends React.Component<AllProps> {
                     <Typography>You are currently not part of any campaigns!</Typography>
                 ) : (
                     <Grid container justify="flex-start" spacing={2}>
-                        {this.props.campaigns.map(campaignToListItemLink)}
+                        {this.props.campaigns.map((campaign) => (
+                            <CampaignLink
+                                key={campaign.id}
+                                id={campaign.id}
+                                name={campaign.name}
+                                ownerName={campaign.ownerName}
+                            />
+                        ))}
                     </Grid>
                 )}
-                <div className="CampaignList__forms">
+                <Box marginTop="1em">
                     <NewCampaignForm className="CampaignList__formContainer" onSubmitComplete={this.goToList} />
-                    <JoinCampaignForm className="CampaignList__formContainer" onSubmitComplete={this.goToList} />
-                </div>
+                </Box>
             </div>
         );
 
@@ -82,7 +75,7 @@ class CampaignListRaw extends React.Component<AllProps> {
                 <Box marginY="1em">
                     <Typography variant="h4">Campaigns</Typography>
                 </Box>
-                <div className="CampaignList__content">{contents}</div>
+                <div>{contents}</div>
             </div>
         );
     }

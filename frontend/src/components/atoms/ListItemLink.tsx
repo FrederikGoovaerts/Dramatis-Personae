@@ -8,6 +8,4 @@ export interface Props {
     selected?: boolean;
 }
 
-export function ListItemLink(props: Props) {
-    return <ListItem selected={props.selected} button component={Link} {...props} />;
-}
+export const ListItemLink = (props: Props) => <ListItem selected={props.selected} button component={Link} {...props} />;

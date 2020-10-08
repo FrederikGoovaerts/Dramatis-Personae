@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*
 
 data class CreateCharacterDto(val name: String, val description: String, val visible: Boolean)
 
+data class MergeCharacterDto(val target: UUID)
+
 data class CharacterListView(
     val name: String,
     val description: String,
@@ -58,6 +60,16 @@ class CharacterController(private val service: CharacterService) {
         return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
     }
 
+    @PostMapping("/{id}/merge")
+    fun mergeCharacter(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID,
+        @RequestBody merge: MergeCharacterDto
+    ): ResponseEntity<Unit> {
+        val success = this.service.mergeCharacter(auth.principal, id, merge.target)
+        return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
+    }
+
     @DeleteMapping("/{id}")
     fun deleteCharacter(auth: GoogleAuthentication, @PathVariable id: UUID): ResponseEntity<Unit> {
         val success = this.service.deleteCharacter(auth.principal, id)
@@ -102,11 +114,11 @@ class CharacterController(private val service: CharacterService) {
         return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
     }
 
-    @DeleteMapping("/{id}/label")
+    @DeleteMapping("/{id}/label/{labelId}")
     fun removeLabel(
         auth: GoogleAuthentication,
         @PathVariable id: UUID,
-        @RequestBody labelId: UUID
+        @PathVariable labelId: UUID
     ): ResponseEntity<Unit> {
         val success = this.service.removeLabel(auth.principal, id, labelId)
         return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
@@ -140,6 +152,36 @@ class CharacterService(private val repository: CharacterRepository, private val 
         character.description = description
         character.isVisible = visible
         this.repository.save(character)
+        return true
+    }
+
+    fun mergeCharacter(user: User, id: UUID, target: UUID): Boolean {
+        if (id == target) {
+            return false
+        }
+        val sourceCharacterQuery = repository.findById(id)
+        val targetCharacterQuery = repository.findById(target)
+        if (!sourceCharacterQuery.isPresent || !targetCharacterQuery.isPresent) {
+            return false
+        }
+        val sourceCharacter = sourceCharacterQuery.get()
+        val targetCharacter = targetCharacterQuery.get()
+        if (sourceCharacter.campaign != targetCharacter.campaign) {
+            return false;
+        }
+        val isCharacterAllowed = { char: Character ->
+            char.campaign.isOwnedBy(user) || (char.isVisible && char.campaign.allowPlayerCharacterManagement && char.campaign.isAccessibleBy(user))
+        }
+        if (!isCharacterAllowed(sourceCharacter) || !isCharacterAllowed(targetCharacter)) {
+            return false
+        }
+        targetCharacter.labels.addAll(sourceCharacter.labels.filter { label -> !targetCharacter.labels.contains(label) })
+        targetCharacter.notes.addAll(sourceCharacter.notes)
+        sourceCharacter.notes.forEach { note -> note.character = targetCharacter }
+        sourceCharacter.notes.clear()
+        targetCharacter.description += ("\n\n" + sourceCharacter.description)
+        this.repository.save(targetCharacter)
+        this.repository.delete(sourceCharacter)
         return true
     }
 

@@ -1,10 +1,11 @@
 import { combineReducers } from 'redux';
+
 import { Campaign, CampaignMember } from '../../types/campaign.types';
 import { ListCharacter } from '../../types/character.types';
+import { Label } from '../../types/label.types';
+import { Note } from '../../types/note.types';
 import { applicationActions, campaignActions } from '../actions';
 import { createReducer } from './base';
-import { Note } from '../../types/note.types';
-import { Label } from '../../types/label.types';
 
 export interface CampaignState {
     loading: boolean;

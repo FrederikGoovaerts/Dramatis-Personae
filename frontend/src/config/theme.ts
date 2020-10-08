@@ -1,5 +1,6 @@
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 import { SimplePaletteColorOptions } from '@material-ui/core/styles/createPalette';
+
 import {
     primaryColor,
     primaryDarkColor,

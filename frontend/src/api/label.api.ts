@@ -1,7 +1,7 @@
 import { axiosInstance } from '../config/axios';
 import { api } from '../config/constants';
-import { buildPath } from './base.api';
 import { EditLabelPayload } from '../types/label.types';
+import { buildPath } from './base.api';
 
 export async function editLabel(payload: EditLabelPayload): Promise<void> {
     const url = buildPath(`${api.LABEL.PATH}/${payload.labelId}`);
