@@ -1,4 +1,5 @@
-import { Box, CircularProgress, makeStyles, MenuItem, Select } from '@material-ui/core';
+import { Box, CircularProgress, makeStyles, MenuItem, Select, Tooltip, Typography } from '@material-ui/core';
+import { HelpOutline } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -55,23 +56,28 @@ export const MergeCharacterForm = (props: Props) => {
     }
 
     return (
-        <Box className={styles.container}>
-            {loading ? (
-                <CircularProgress />
-            ) : (
-                <Select
-                    value={target}
-                    onChange={(event: React.ChangeEvent<{ value: string }>) => setTarget(event.target.value)}
-                    className={styles.select}
-                >
-                    {otherCharacters.map((char) => (
-                        <MenuItem key={char.id} value={char.id}>
-                            {char.name}
-                        </MenuItem>
-                    ))}
-                </Select>
-            )}
-            <MergeButton onConfirm={merge} disabled={!target} />
-        </Box>
+        <>
+            <Box className={styles.container}>
+                {loading ? (
+                    <CircularProgress />
+                ) : (
+                    <Select
+                        value={target}
+                        onChange={(event: React.ChangeEvent<{ value: string }>) => setTarget(event.target.value)}
+                        className={styles.select}
+                    >
+                        {otherCharacters.map((char) => (
+                            <MenuItem key={char.id} value={char.id}>
+                                {char.name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                )}
+                <MergeButton onConfirm={merge} disabled={!target} />
+            </Box>
+            <Typography variant="caption" color="textSecondary">
+                Merging this character into another will append the descriptions and transfer all notes and labels.
+            </Typography>
+        </>
     );
 };

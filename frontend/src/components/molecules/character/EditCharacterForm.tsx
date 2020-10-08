@@ -84,9 +84,7 @@ export const EditCharacterForm = (props: Props) => {
                         onComplete={handleMerge}
                     />
                 </Box>
-                <Box className={`${styles.spaced} ${styles.flexRowEnd}`}>
-                    <DeleteButton onConfirm={handleDelete} />
-                </Box>
+                <DeleteButton onConfirm={handleDelete} />
             </div>
         </Paper>
     );
