@@ -1,5 +1,4 @@
-import { Box, CircularProgress, makeStyles, MenuItem, Select, Tooltip, Typography } from '@material-ui/core';
-import { HelpOutline } from '@material-ui/icons';
+import { Box, CircularProgress, makeStyles, MenuItem, Select, Typography } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
