@@ -58,6 +58,7 @@ export const CharacterDetailScreen = (props: Props) => {
         return (
             <EditCharacterForm
                 characterId={character.id}
+                campaignId={campaign.id}
                 initialName={character.name}
                 initialDescription={character.description}
                 initialVisibility={character.visible}

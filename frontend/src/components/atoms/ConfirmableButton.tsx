@@ -41,5 +41,5 @@ export const DeleteButton = (props: PredefinedButtonProps) => (
 );
 
 export const MergeButton = (props: PredefinedButtonProps) => (
-    <ConfirmableButton onConfirm={props.onConfirm} defaultText="Merge" confirmedText="Merging..." />
+    <ConfirmableButton onConfirm={props.onConfirm} defaultText="Merge into" confirmedText="Merging..." />
 );
