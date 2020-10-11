@@ -2,7 +2,7 @@ import moment from 'moment';
 
 import { axiosInstance } from '../config/axios';
 import { api } from '../config/constants';
-import { Character } from '../types/character.types';
+import { Character, CharacterRelation } from '../types/character.types';
 import { AddLabelPayload, Label, RemoveLabelPayload } from '../types/label.types';
 import { CreateNotePayload, Note } from '../types/note.types';
 import { buildPath } from './base.api';
@@ -72,4 +72,20 @@ export async function removeLabel(payload: RemoveLabelPayload): Promise<void> {
         `${api.CHARACTER.PATH}/${payload.characterId}${api.CHARACTER.SUBPATH_LABEL}/${payload.labelId}`
     );
     await axiosInstance.delete(url);
+}
+
+export async function createRelation(origId: string, destId: string, relation: string): Promise<void> {
+    const url = buildPath(`${api.CHARACTER_RELATION}`);
+    await axiosInstance.post(url, { origin: origId, destination: destId, relation });
+}
+
+export async function deleteRelation(id: string): Promise<void> {
+    const url = buildPath(`${api.CHARACTER_RELATION}/${id}`);
+    await axiosInstance.delete(url);
+}
+
+export async function getRelations(id: string): Promise<CharacterRelation[]> {
+    const url = buildPath(`${api.CHARACTER_RELATION}/${id}`);
+    const result: CharacterRelation[] = (await axiosInstance.get(url)).data;
+    return result;
 }

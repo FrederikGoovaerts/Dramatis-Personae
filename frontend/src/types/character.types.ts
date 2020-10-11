@@ -16,6 +16,19 @@ export interface ListCharacter {
     visible: boolean;
 }
 
+export interface CharacterRelation {
+    origin: {
+        id: string;
+        name: string;
+    };
+    destination: {
+        id: string;
+        name: string;
+    };
+    relation: string;
+    id: string;
+}
+
 export interface CharacterPrototype {
     name: string;
     description: string;
