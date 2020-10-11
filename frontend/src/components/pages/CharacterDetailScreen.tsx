@@ -19,9 +19,13 @@ interface Props {
 }
 
 export const CharacterDetailScreen = (props: Props) => {
+    const { campaignId, characterId } = props.match.params;
+
     const dispatch = useDispatch();
     const character = useSelector((state: RootState) => state.character.character);
     const campaign = useSelector((state: RootState) => state.campaign.campaign);
+    const campaignCharacters = useSelector((state: RootState) => state.campaign.characters);
+    const otherCharacters = campaignCharacters.filter((c) => c.id !== characterId);
     const notes = useSelector((state: RootState) => state.character.notes);
     const sharedNotes = useSelector((state: RootState) => state.character.sharedNotes);
     const loading = useSelector(
@@ -36,14 +40,15 @@ export const CharacterDetailScreen = (props: Props) => {
     const [deleted, setDeleted] = useState(false);
 
     useEffect(() => {
-        dispatch(characterActions.actions.fetchCharacter(props.match.params.characterId));
-        dispatch(campaignActions.actions.fetchCampaign(props.match.params.campaignId));
-        dispatch(characterActions.actions.fetchNotes(props.match.params.characterId));
-        dispatch(characterActions.actions.fetchSharedNotes(props.match.params.characterId));
-    }, [dispatch, props.match.params.characterId, props.match.params.campaignId]);
+        dispatch(characterActions.actions.fetchCharacter(characterId));
+        dispatch(campaignActions.actions.fetchCampaign(campaignId));
+        dispatch(campaignActions.actions.fetchCharacters(campaignId));
+        dispatch(characterActions.actions.fetchNotes(characterId));
+        dispatch(characterActions.actions.fetchSharedNotes(characterId));
+    }, [dispatch, characterId, campaignId]);
 
     if (deleted) {
-        return <Redirect to={`${routes.campaign.path}${props.match.params.campaignId}`} />;
+        return <Redirect to={`${routes.campaign.path}${campaignId}`} />;
     }
 
     const closeEditCharacter = () => {
@@ -71,7 +76,7 @@ export const CharacterDetailScreen = (props: Props) => {
 
     const wrapContent = (contents: React.ReactNode) => (
         <Box className="CharacterDetail__container">
-            <CharacterHeader campaignId={props.match.params.campaignId} name={character?.name} />
+            <CharacterHeader campaignId={campaignId} name={character?.name} />
             <Toolbar />
             {contents}
         </Box>
