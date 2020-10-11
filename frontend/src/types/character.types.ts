@@ -46,3 +46,9 @@ export interface MergeCharacterPayload {
     id: string;
     target: string;
 }
+
+export interface CreateRelationPayload {
+    orig: string;
+    dest: string;
+    relation: string;
+}
