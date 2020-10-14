@@ -25,6 +25,9 @@ interface Props {
 }
 
 const useStyles = makeStyles({
+    container: {
+        marginBottom: '1em'
+    },
     card: {
         padding: '0.2em'
     },
@@ -32,16 +35,18 @@ const useStyles = makeStyles({
         paddingBottom: '0.2em',
         wordWrap: 'break-word'
     },
-    addPaper: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-
-        marginTop: '1em',
-        marginBottom: '1em'
+    addGridItem: {
+        display: 'flex'
     },
-    container: {
-        marginBottom: '1em'
+    addCard: {
+        display: 'flex',
+        flex: 1
+    },
+    addCardContent: {
+        display: 'flex',
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });
 
@@ -77,16 +82,19 @@ export const Relations = (props: Props) => {
     return (
         <Box className={styles.container}>
             <Typography variant="h5">Relations</Typography>
-            {props.relations.length > 0 && (
-                <Grid container spacing={2}>
-                    {props.relations.map(renderRelationGI)}
+            <Grid container spacing={2}>
+                {props.relations.map(renderRelationGI)}
+
+                <Grid item xs={6} sm={3} md={2} key="addButton" className={styles.addGridItem}>
+                    <Card className={styles.addCard}>
+                        <CardContent className={styles.addCardContent}>
+                            <IconButton onClick={console.log}>
+                                <Add />
+                            </IconButton>
+                        </CardContent>
+                    </Card>
                 </Grid>
-            )}
-            <Paper className={styles.addPaper}>
-                <IconButton onClick={console.log}>
-                    <Add />
-                </IconButton>
-            </Paper>
+            </Grid>
         </Box>
     );
 };
