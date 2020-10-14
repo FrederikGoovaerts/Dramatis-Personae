@@ -1,4 +1,5 @@
 import { Label, ListLabel } from './label.types';
+import { Relation } from './relation.types';
 
 export interface Character {
     id: string;
@@ -16,16 +17,7 @@ export interface ListCharacter {
     visible: boolean;
 }
 
-export interface CharacterRelation {
-    origin: {
-        id: string;
-        name: string;
-    };
-    destination: {
-        id: string;
-        name: string;
-    };
-    relation: string;
+export interface CharacterRelation extends Relation {
     id: string;
 }
 
@@ -51,4 +43,9 @@ export interface CreateRelationPayload {
     orig: string;
     dest: string;
     relation: string;
+}
+
+export interface DeleteRelationPayload {
+    charId: string;
+    relationId: string;
 }

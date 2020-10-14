@@ -3,6 +3,7 @@ import {
     CharacterEditPayload,
     CharacterRelation,
     CreateRelationPayload,
+    DeleteRelationPayload,
     MergeCharacterPayload
 } from '../../types/character.types';
 import { AddLabelPayload, RemoveLabelPayload } from '../../types/label.types';
@@ -24,6 +25,7 @@ export enum names {
     setSharedNotesLoading = 'SET_SHARED_CHARACTER_NOTES_LOADING',
     setSharedNotes = 'SET_SHARED_CHARACTER_NOTES',
     createRelation = 'CREATE_CHARACTER_RELATION',
+    deleteRelation = 'DELETE_CHARACTER_RELATION',
     createNote = 'CREATE_CHARACTER_NOTE',
     editCharacter = 'EDIT_CHARACTER',
     deleteCharacter = 'DELETE_CHARACTER',
@@ -46,6 +48,7 @@ export const actions = {
     setSharedNotesLoading: (p: boolean) => createAction(names.setSharedNotesLoading, p),
     setSharedNotes: (p: Note[]) => createAction(names.setSharedNotes, p),
     createRelation: (p: CreateRelationPayload) => createAction(names.createRelation, p),
+    deleteRelation: (p: DeleteRelationPayload) => createAction(names.deleteRelation, p),
     createNote: (p: CreateNotePayload) => createAction(names.createNote, p),
     editCharacter: (p: CharacterEditPayload) => createAction(names.editCharacter, p),
     deleteCharacter: (p: string) => createAction(names.deleteCharacter, p),

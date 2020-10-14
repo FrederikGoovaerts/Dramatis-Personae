@@ -61,7 +61,17 @@ function* createRelation(action: characterActions.specificTypes['createRelation'
         // Assume we always create from the origin character and thus reload its relations
         yield put(characterActions.actions.fetchRelations(action.payload.orig));
     } catch (e) {
-        console.error('Unable to create note. Please try again later.');
+        console.error('Unable to create relation. Please try again later.');
+    }
+}
+
+function* deleteRelation(action: characterActions.specificTypes['deleteRelation']) {
+    try {
+        yield call(character.deleteRelation, action.payload.relationId);
+        // Assume we always create from the origin character and thus reload its relations
+        yield put(characterActions.actions.fetchRelations(action.payload.charId));
+    } catch (e) {
+        console.error('Unable to delete relation. Please try again later.');
     }
 }
 
@@ -117,6 +127,7 @@ export default function* watcher() {
     yield takeEvery(characterActions.names.fetchSharedNotes, fetchSharedNotes);
     yield takeEvery(characterActions.names.fetchRelations, fetchRelations);
     yield takeEvery(characterActions.names.createRelation, createRelation);
+    yield takeEvery(characterActions.names.deleteRelation, deleteRelation);
     yield takeEvery(characterActions.names.createNote, createNote);
     yield takeEvery(characterActions.names.editCharacter, editCharacter);
     yield takeEvery(characterActions.names.deleteCharacter, deleteCharacter);
