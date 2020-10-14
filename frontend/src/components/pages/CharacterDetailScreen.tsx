@@ -13,6 +13,7 @@ import { EditCharacterForm } from '../molecules/character/EditCharacterForm';
 import { CharacterHeader } from '../molecules/header/CharacterHeader';
 import { Notes } from '../molecules/note/Notes';
 import { CharacterLabels } from './characterDetailComponents/CharacterLabels';
+import { CharacterRelations } from './characterDetailComponents/CharacterRelations';
 
 interface Props {
     match: match<{ campaignId: string; characterId: string }>;
@@ -24,8 +25,6 @@ export const CharacterDetailScreen = (props: Props) => {
     const dispatch = useDispatch();
     const character = useSelector((state: RootState) => state.character.character);
     const campaign = useSelector((state: RootState) => state.campaign.campaign);
-    const campaignCharacters = useSelector((state: RootState) => state.campaign.characters);
-    const otherCharacters = campaignCharacters.filter((c) => c.id !== characterId);
     const notes = useSelector((state: RootState) => state.character.notes);
     const sharedNotes = useSelector((state: RootState) => state.character.sharedNotes);
     const loading = useSelector(
@@ -37,6 +36,7 @@ export const CharacterDetailScreen = (props: Props) => {
     );
 
     const [editCharacterOpen, setEditCharacterOpen] = useState(false);
+    const [loaded, setLoaded] = useState(false);
     const [deleted, setDeleted] = useState(false);
 
     useEffect(() => {
@@ -46,6 +46,12 @@ export const CharacterDetailScreen = (props: Props) => {
         dispatch(characterActions.actions.fetchNotes(characterId));
         dispatch(characterActions.actions.fetchSharedNotes(characterId));
     }, [dispatch, characterId, campaignId]);
+
+    useEffect(() => {
+        if (campaign?.id === campaignId && character?.id === characterId) {
+            setLoaded(true);
+        }
+    }, [character, campaign, campaignId, characterId]);
 
     if (deleted) {
         return <Redirect to={`${routes.campaign.path}${campaignId}`} />;
@@ -82,7 +88,7 @@ export const CharacterDetailScreen = (props: Props) => {
         </Box>
     );
 
-    if (!character || !campaign || loading) {
+    if (!character || !campaign || loading || !loaded) {
         return wrapContent(<CircularProgress />);
     } else {
         return wrapContent(
@@ -106,6 +112,7 @@ export const CharacterDetailScreen = (props: Props) => {
                         </Button>
                     </Box>
                 )}
+                <CharacterRelations />
                 <Notes
                     campaignOwner={campaign.owner}
                     notes={notes}
