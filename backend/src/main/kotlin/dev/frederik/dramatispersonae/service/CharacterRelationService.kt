@@ -15,7 +15,7 @@ data class CharacterRelationView(val origin: CharacterRelationCharacterView, val
 
 @RestController
 @RequestMapping("/api/charrelation")
-abstract class CharacterRelationController(private val service: CharacterRelationService) {
+class CharacterRelationController(private val service: CharacterRelationService) {
 
     @PostMapping
     fun createRelation(auth: GoogleAuthentication, @RequestBody dto: CharacterRelationDto): ResponseEntity<Unit> {
@@ -24,8 +24,8 @@ abstract class CharacterRelationController(private val service: CharacterRelatio
     }
 
     @GetMapping("/{id}")
-    fun getRelations(auth: GoogleAuthentication, @PathVariable charId: UUID): ResponseEntity<List<CharacterRelationView>> {
-        val result = this.service.getRelations(auth.principal, charId)
+    fun getRelations(auth: GoogleAuthentication, @PathVariable id: UUID): ResponseEntity<List<CharacterRelationView>> {
+        val result = this.service.getRelations(auth.principal, id)
         return if (result == null) {
             ResponseEntity(HttpStatus.FORBIDDEN)
         } else {
