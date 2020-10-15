@@ -75,5 +75,6 @@ class LocalDevFixtures(
         this.campaignRepository.save(campaign4)
 
         this.characterRelationRepository.save(CharacterRelation("is in love with", char1, char2))
+        this.characterRelationRepository.save(CharacterRelation("has friendzoned", char2, char1))
     }
 }
