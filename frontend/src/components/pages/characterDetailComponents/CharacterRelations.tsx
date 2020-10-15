@@ -44,7 +44,7 @@ export const CharacterRelations = (): JSX.Element => {
 
     return (
         <Relations
-            onAddRelations={addRelation}
+            onAddRelation={addRelation}
             onDeleteRelation={deleteRelation}
             self={character}
             relations={relations}
