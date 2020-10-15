@@ -66,12 +66,15 @@ class CharacterRelationService(private val repository: CharacterRelationReposito
 
     fun createRelation(user: User, originId: UUID, destinationId: UUID, relationText: String): Boolean {
         val origQuery = characterRepository.findById(originId)
-        val destQuery = characterRepository.findById(originId)
+        val destQuery = characterRepository.findById(destinationId)
         if (origQuery.isEmpty || destQuery.isEmpty) {
             return false
         }
         val orig = origQuery.get()
         val dest = destQuery.get()
+        if (orig == dest) {
+            return false
+        }
         val editAllowed = this.editAllowed(user, orig, dest)
         if (!editAllowed) {
             return false
