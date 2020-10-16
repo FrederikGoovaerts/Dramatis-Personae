@@ -13,12 +13,15 @@ import { EditCharacterForm } from '../molecules/character/EditCharacterForm';
 import { CharacterHeader } from '../molecules/header/CharacterHeader';
 import { Notes } from '../molecules/note/Notes';
 import { CharacterLabels } from './characterDetailComponents/CharacterLabels';
+import { CharacterRelations } from './characterDetailComponents/CharacterRelations';
 
 interface Props {
     match: match<{ campaignId: string; characterId: string }>;
 }
 
 export const CharacterDetailScreen = (props: Props) => {
+    const { campaignId, characterId } = props.match.params;
+
     const dispatch = useDispatch();
     const character = useSelector((state: RootState) => state.character.character);
     const campaign = useSelector((state: RootState) => state.campaign.campaign);
@@ -33,17 +36,25 @@ export const CharacterDetailScreen = (props: Props) => {
     );
 
     const [editCharacterOpen, setEditCharacterOpen] = useState(false);
+    const [loaded, setLoaded] = useState(false);
     const [deleted, setDeleted] = useState(false);
 
     useEffect(() => {
-        dispatch(characterActions.actions.fetchCharacter(props.match.params.characterId));
-        dispatch(campaignActions.actions.fetchCampaign(props.match.params.campaignId));
-        dispatch(characterActions.actions.fetchNotes(props.match.params.characterId));
-        dispatch(characterActions.actions.fetchSharedNotes(props.match.params.characterId));
-    }, [dispatch, props.match.params.characterId, props.match.params.campaignId]);
+        dispatch(characterActions.actions.fetchCharacter(characterId));
+        dispatch(campaignActions.actions.fetchCampaign(campaignId));
+        dispatch(campaignActions.actions.fetchCharacters(campaignId));
+        dispatch(characterActions.actions.fetchNotes(characterId));
+        dispatch(characterActions.actions.fetchSharedNotes(characterId));
+    }, [dispatch, characterId, campaignId]);
+
+    useEffect(() => {
+        if (campaign?.id === campaignId && character?.id === characterId) {
+            setLoaded(true);
+        }
+    }, [character, campaign, campaignId, characterId]);
 
     if (deleted) {
-        return <Redirect to={`${routes.campaign.path}${props.match.params.campaignId}`} />;
+        return <Redirect to={`${routes.campaign.path}${campaignId}`} />;
     }
 
     const closeEditCharacter = () => {
@@ -71,13 +82,13 @@ export const CharacterDetailScreen = (props: Props) => {
 
     const wrapContent = (contents: React.ReactNode) => (
         <Box className="CharacterDetail__container">
-            <CharacterHeader campaignId={props.match.params.campaignId} name={character?.name} />
+            <CharacterHeader campaignId={campaignId} name={character?.name} />
             <Toolbar />
             {contents}
         </Box>
     );
 
-    if (!character || !campaign || loading) {
+    if (!character || !campaign || loading || !loaded) {
         return wrapContent(<CircularProgress />);
     } else {
         return wrapContent(
@@ -101,6 +112,7 @@ export const CharacterDetailScreen = (props: Props) => {
                         </Button>
                     </Box>
                 )}
+                <CharacterRelations />
                 <Notes
                     campaignOwner={campaign.owner}
                     notes={notes}

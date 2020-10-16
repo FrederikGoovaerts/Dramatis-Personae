@@ -12,7 +12,8 @@ import org.springframework.stereotype.Component
 @Profile("dev")
 class LocalDevFixtures(
     private val userRepository: UserRepository,
-    private val campaignRepository: CampaignRepository
+    private val campaignRepository: CampaignRepository,
+    private val characterRelationRepository: CharacterRelationRepository
 ) : CommandLineRunner {
 
     override fun run(vararg args: String?) {
@@ -72,5 +73,8 @@ class LocalDevFixtures(
         this.campaignRepository.save(campaign2)
         this.campaignRepository.save(campaign3)
         this.campaignRepository.save(campaign4)
+
+        this.characterRelationRepository.save(CharacterRelation("is in love with", char1, char2))
+        this.characterRelationRepository.save(CharacterRelation("has friendzoned", char2, char1))
     }
 }

@@ -17,13 +17,15 @@ class CharacterServiceTests {
     lateinit var characterRepository: CharacterRepository
     @MockK
     lateinit var labelRepository: LabelRepository
+    @MockK
+    lateinit var relationRepository: CharacterRelationRepository
 
     lateinit var characterService: CharacterService
 
     @BeforeEach
     fun beforeEach() {
         MockKAnnotations.init(this, relaxUnitFun = true)
-        characterService = CharacterService(characterRepository, labelRepository)
+        characterService = CharacterService(characterRepository, labelRepository, relationRepository)
     }
 
     @Test

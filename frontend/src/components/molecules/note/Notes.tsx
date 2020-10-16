@@ -138,14 +138,10 @@ export class Notes extends React.Component<Props, State> {
         const openCreate = () => this.setState({ createOpen: true });
         const renderedNotes = [
             ...this.props.notes.map(this.renderOwnNote),
-            <Box key={'addButton'} paddingX="1em" paddingY="1.5em">
-                <ListItem>
-                    <ListItemSecondaryAction>
-                        <IconButton edge="end" color="primary" onClick={openCreate}>
-                            <Add />
-                        </IconButton>
-                    </ListItemSecondaryAction>
-                </ListItem>
+            <Box display="flex" flexDirection="row" justifyContent="center" paddingTop="0.5em" key={'addButton'}>
+                <IconButton onClick={openCreate}>
+                    <Add />
+                </IconButton>
             </Box>
         ];
         return this.renderNotes(renderedNotes);
