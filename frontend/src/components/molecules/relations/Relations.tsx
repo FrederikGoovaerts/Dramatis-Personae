@@ -12,7 +12,6 @@ import {
     Modal,
     Paper,
     Select,
-    TextField,
     Typography
 } from '@material-ui/core';
 import { Add, CompareArrows, Delete } from '@material-ui/icons';
@@ -94,7 +93,9 @@ export const Relations = (props: Props) => {
 
     return (
         <Box className={styles.container}>
-            <Typography variant="h5">Relations</Typography>
+            <Typography variant="h5" gutterBottom>
+                Relations
+            </Typography>
             <Grid container spacing={2}>
                 {props.relations.map(renderRelationGI)}
 
