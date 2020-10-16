@@ -126,7 +126,9 @@ class CharacterController(private val service: CharacterService) {
 }
 
 @Component
-class CharacterService(private val repository: CharacterRepository, private val labelRepository: LabelRepository) {
+class CharacterService(private val repository: CharacterRepository,
+                       private val labelRepository: LabelRepository,
+                       private val relationRepository: CharacterRelationRepository) {
 
     fun getCharacter(user: User, id: UUID): Character? {
         val characterQuery = this.repository.findById(id)
@@ -180,6 +182,28 @@ class CharacterService(private val repository: CharacterRepository, private val 
         sourceCharacter.notes.forEach { note -> note.character = targetCharacter }
         sourceCharacter.notes.clear()
         targetCharacter.description += ("\n\n" + sourceCharacter.description)
+
+        val originRelations = this.relationRepository.findByOrigin(sourceCharacter)
+        val destinationRelations = this.relationRepository.findByDestination(sourceCharacter)
+
+        for (rel in originRelations) {
+            if (rel.destination == targetCharacter) {
+                relationRepository.delete(rel)
+            } else {
+                rel.origin = targetCharacter
+                relationRepository.save(rel)
+            }
+        }
+
+        for (rel in destinationRelations) {
+            if (rel.origin == targetCharacter) {
+                relationRepository.delete(rel)
+            } else {
+                rel.destination = targetCharacter
+                relationRepository.save(rel)
+            }
+        }
+
         this.repository.save(targetCharacter)
         this.repository.delete(sourceCharacter)
         return true

@@ -62,7 +62,8 @@ export const MergeCharacterForm = (props: Props) => {
                 <MergeButton onConfirm={merge} disabled={!target} />
             </Box>
             <Typography variant="caption" color="textSecondary">
-                Merging this character into another will append the descriptions and transfer all notes and labels.
+                Merging this character into another will append the descriptions and transfer all notes, labels and
+                relations.
             </Typography>
         </>
     );
