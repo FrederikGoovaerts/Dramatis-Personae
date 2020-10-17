@@ -115,7 +115,6 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                                     <CampaignCharacters
                                         campaignId={campaign.id}
                                         owner={campaign.owner}
-                                        canManage={campaign.settings.allowPlayerCharacterManagement || campaign.owner}
                                         matchUrl={url}
                                     />
                                 )}
@@ -128,13 +127,7 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                             <Route
                                 path={`${path}${routes.campaign.subpathLabels}`}
                                 exact
-                                render={() => (
-                                    <CampaignLabels
-                                        canManage={campaign.owner || campaign.settings.allowPlayerLabelManagement}
-                                        owner={campaign.owner}
-                                        campaignId={campaign.id}
-                                    />
-                                )}
+                                render={() => <CampaignLabels owner={campaign.owner} campaignId={campaign.id} />}
                             />
                             <Route
                                 path={`${path}${routes.campaign.subpathDetails}`}

@@ -11,7 +11,6 @@ import { AddCharacterLabelForm } from '../../molecules/label/AddCharacterLabelFo
 interface Props {
     campaignId: string;
     character: Character;
-    canChange: boolean;
 }
 
 interface MapProps {
@@ -46,21 +45,16 @@ class CharacterLabelsRaw extends React.Component<AllProps, State> {
                         color="primary"
                         label={label.name}
                         variant={label.visible ? 'default' : 'outlined'}
-                        onDelete={
-                            this.props.canChange
-                                ? () =>
-                                      this.props.removeLabel({
-                                          characterId: this.props.character.id,
-                                          labelId: label.id
-                                      })
-                                : undefined
+                        onDelete={() =>
+                            this.props.removeLabel({
+                                characterId: this.props.character.id,
+                                labelId: label.id
+                            })
                         }
                     />
                 </Box>
             ))}
-            {this.props.canChange && (
-                <Chip avatar={<Add />} label="Add label" onClick={this.onAdd} variant="outlined" />
-            )}
+            <Chip avatar={<Add />} label="Add label" onClick={this.onAdd} variant="outlined" />
             <Modal open={this.state.addOpen} onClose={this.closeAdd}>
                 <div className="modal">
                     <AddCharacterLabelForm

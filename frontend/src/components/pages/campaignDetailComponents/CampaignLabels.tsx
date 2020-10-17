@@ -25,7 +25,6 @@ import { EditLabelForm } from '../../molecules/label/EditLabelForm';
 
 interface Props {
     campaignId: string;
-    canManage: boolean;
     owner: boolean;
 }
 
@@ -106,13 +105,11 @@ class CampaignLabelsRaw extends React.Component<AllProps, State> {
                     <Visibility color={label.visible ? 'primary' : 'disabled'} />
                 </ListItemIcon>
             )}
-            {this.props.canManage && (
-                <ListItemIcon>
-                    <IconButton onClick={() => this.openEdit(label)}>
-                        <Edit />
-                    </IconButton>
-                </ListItemIcon>
-            )}
+            <ListItemIcon>
+                <IconButton onClick={() => this.openEdit(label)}>
+                    <Edit />
+                </IconButton>
+            </ListItemIcon>
         </ListItem>
     );
 
@@ -130,11 +127,9 @@ class CampaignLabelsRaw extends React.Component<AllProps, State> {
                         <Paper elevation={3}>{<List>{labels.map(this.renderLabel)}</List>}</Paper>
                     )}
                 </Box>
-                {this.props.canManage && (
-                    <Fab className="CampaignDetail__createFab" color="primary" onClick={this.openCreate}>
-                        <Add />
-                    </Fab>
-                )}
+                <Fab className="CampaignDetail__createFab" color="primary" onClick={this.openCreate}>
+                    <Add />
+                </Fab>
 
                 <Modal open={this.state.createOpen} onClose={this.closeModals}>
                     <div className="modal">

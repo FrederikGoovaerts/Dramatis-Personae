@@ -86,7 +86,6 @@ class CampaignDetailsRaw extends React.Component<AllProps, State> {
             <EditCampaignForm
                 id={this.props.campaign.id}
                 name={this.props.campaign.name}
-                settings={this.props.campaign.settings}
                 onSubmitComplete={this.closeEdit}
                 onDelete={this.props.onInaccessible}
             />
