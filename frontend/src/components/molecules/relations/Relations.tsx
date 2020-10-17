@@ -68,6 +68,10 @@ export const Relations = (props: Props) => {
         props.onAddRelation(props.self, other, relation);
     };
 
+    if (props.relationCandidates.length === 0) {
+        return null;
+    }
+
     const renderRelationGI = (r: Relation) => (
         <Grid item xs={6} sm={3} md={2} key={`${r.origin.id}${r.relation}${r.destination.id}`}>
             <Card className={styles.card}>
