@@ -126,7 +126,9 @@ class CharacterController(private val service: CharacterService) {
 }
 
 @Component
-class CharacterService(private val repository: CharacterRepository, private val labelRepository: LabelRepository) {
+class CharacterService(private val repository: CharacterRepository,
+                       private val labelRepository: LabelRepository,
+                       private val relationRepository: CharacterRelationRepository) {
 
     fun getCharacter(user: User, id: UUID): Character? {
         val characterQuery = this.repository.findById(id)
@@ -145,7 +147,7 @@ class CharacterService(private val repository: CharacterRepository, private val 
             return false
         }
         val character = characterQuery.get()
-        if (!character.campaign.isOwnedBy(user) && !(character.campaign.allowPlayerCharacterManagement && character.campaign.isAccessibleBy(user))) {
+        if (!character.campaign.isAccessibleBy(user)) {
             return false
         }
         character.name = name
@@ -170,7 +172,7 @@ class CharacterService(private val repository: CharacterRepository, private val 
             return false;
         }
         val isCharacterAllowed = { char: Character ->
-            char.campaign.isOwnedBy(user) || (char.isVisible && char.campaign.allowPlayerCharacterManagement && char.campaign.isAccessibleBy(user))
+            char.campaign.isOwnedBy(user) || (char.isVisible && char.campaign.isAccessibleBy(user))
         }
         if (!isCharacterAllowed(sourceCharacter) || !isCharacterAllowed(targetCharacter)) {
             return false
@@ -180,6 +182,28 @@ class CharacterService(private val repository: CharacterRepository, private val 
         sourceCharacter.notes.forEach { note -> note.character = targetCharacter }
         sourceCharacter.notes.clear()
         targetCharacter.description += ("\n\n" + sourceCharacter.description)
+
+        val originRelations = this.relationRepository.findByOrigin(sourceCharacter)
+        val destinationRelations = this.relationRepository.findByDestination(sourceCharacter)
+
+        for (rel in originRelations) {
+            if (rel.destination == targetCharacter) {
+                relationRepository.delete(rel)
+            } else {
+                rel.origin = targetCharacter
+                relationRepository.save(rel)
+            }
+        }
+
+        for (rel in destinationRelations) {
+            if (rel.origin == targetCharacter) {
+                relationRepository.delete(rel)
+            } else {
+                rel.destination = targetCharacter
+                relationRepository.save(rel)
+            }
+        }
+
         this.repository.save(targetCharacter)
         this.repository.delete(sourceCharacter)
         return true
@@ -191,7 +215,7 @@ class CharacterService(private val repository: CharacterRepository, private val 
             return false
         }
         val character = characterQuery.get()
-        if (!character.campaign.isOwnedBy(user) && !(character.campaign.allowPlayerCharacterManagement && character.campaign.isAccessibleBy(user))) {
+        if (!character.campaign.isAccessibleBy(user)) {
             return false
         }
         repository.delete(characterQuery.get())
@@ -246,7 +270,7 @@ class CharacterService(private val repository: CharacterRepository, private val 
         if (character.labels.any { it.id == labelId }) {
             return false
         }
-        if (!character.campaign.isOwnedBy(user) && !(character.campaign.isAccessibleBy(user) && character.campaign.allowPlayerCharacterLabelManagement)) {
+        if (!character.campaign.isAccessibleBy(user)) {
             return false
         }
         val labelQuery = labelRepository.findById(labelId)
@@ -265,7 +289,7 @@ class CharacterService(private val repository: CharacterRepository, private val 
             return false
         }
         val character = characterQuery.get()
-        if (!character.campaign.isOwnedBy(user) && !(character.campaign.isAccessibleBy(user) && character.campaign.allowPlayerCharacterLabelManagement)) {
+        if (!character.campaign.isAccessibleBy(user)) {
             return false
         }
         val label = character.labels.find { it.id == labelId } ?: return false

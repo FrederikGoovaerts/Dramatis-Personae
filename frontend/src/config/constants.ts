@@ -44,6 +44,7 @@ export const api = {
     CHARACTER_NOTE: {
         PATH: '/characternote'
     },
+    CHARACTER_RELATION: '/charrelation',
     CAMPAIGN_NOTE: {
         PATH: '/campaignnote'
     },

@@ -13,9 +13,6 @@ data class Campaign(
     @OneToMany(mappedBy = "campaign", cascade = [CascadeType.ALL]) var notes: MutableList<CampaignNote> = mutableListOf(),
     @OneToMany(mappedBy = "campaign", cascade = [CascadeType.ALL]) var labels: MutableList<Label> = mutableListOf(),
     var inviteCode: UUID = UUID.randomUUID(),
-    var allowPlayerCharacterManagement: Boolean = false,
-    var allowPlayerLabelManagement: Boolean = false,
-    var allowPlayerCharacterLabelManagement: Boolean = false,
     @Id @GeneratedValue var id: UUID? = null
 ) {
     fun isAccessibleBy(user: User) = members.contains(user)

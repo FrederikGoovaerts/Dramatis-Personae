@@ -12,7 +12,8 @@ import org.springframework.stereotype.Component
 @Profile("dev")
 class LocalDevFixtures(
     private val userRepository: UserRepository,
-    private val campaignRepository: CampaignRepository
+    private val campaignRepository: CampaignRepository,
+    private val characterRelationRepository: CharacterRelationRepository
 ) : CommandLineRunner {
 
     override fun run(vararg args: String?) {
@@ -24,7 +25,6 @@ class LocalDevFixtures(
         val campaign2 = Campaign("Camp2", user2, mutableListOf(user2))
         val campaign3 = Campaign("A campaign with a rather long name", user2, mutableListOf(user1, user2))
         val campaign4 = Campaign("An auto-propose-accepting campaign", user2, mutableListOf(user1, user2))
-        campaign4.allowPlayerCharacterManagement = true
         val char1 = Character("Char1", "A visible char in an owned campaign", true, campaign1, mutableListOf())
         val char2 = Character("Char2", "An invisible char in an owned campaign", false, campaign1, mutableListOf())
         val char3 = Character("Char3", "A visible char in a non-owned campaign", true, campaign3, mutableListOf())
@@ -72,5 +72,8 @@ class LocalDevFixtures(
         this.campaignRepository.save(campaign2)
         this.campaignRepository.save(campaign3)
         this.campaignRepository.save(campaign4)
+
+        this.characterRelationRepository.save(CharacterRelation("is in love with", char1, char2))
+        this.characterRelationRepository.save(CharacterRelation("has friendzoned", char2, char1))
     }
 }

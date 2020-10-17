@@ -106,7 +106,7 @@ function* newCampaign(action: campaignActions.specificTypes['newCampaign']) {
 
 function* editCampaign(action: campaignActions.specificTypes['editCampaign']) {
     try {
-        yield call(campaign.update, action.payload.id, action.payload.name, action.payload.campaignSettings);
+        yield call(campaign.update, action.payload.id, action.payload.name);
         yield put(campaignActions.actions.fetchCampaign(action.payload.id));
     } catch (e) {
         console.error('Unable to delete campaign. Please try again later.');

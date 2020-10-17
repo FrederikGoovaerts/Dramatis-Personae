@@ -44,6 +44,37 @@ function* fetchSharedNotes(action: characterActions.specificTypes['fetchSharedNo
     yield put(characterActions.actions.setSharedNotesLoading(false));
 }
 
+function* fetchRelations(action: characterActions.specificTypes['fetchRelations']) {
+    yield put(characterActions.actions.setRelationsLoading(true));
+    try {
+        const result = yield call(character.getRelations, action.payload);
+        yield put(characterActions.actions.setRelations(result));
+    } catch (e) {
+        console.error('Unable to fetch relations. Please try again later.');
+    }
+    yield put(characterActions.actions.setRelationsLoading(false));
+}
+
+function* createRelation(action: characterActions.specificTypes['createRelation']) {
+    try {
+        yield call(character.createRelation, action.payload.orig, action.payload.dest, action.payload.relation);
+        // Assume we always create from the origin character and thus reload its relations
+        yield put(characterActions.actions.fetchRelations(action.payload.orig));
+    } catch (e) {
+        console.error('Unable to create relation. Please try again later.');
+    }
+}
+
+function* deleteRelation(action: characterActions.specificTypes['deleteRelation']) {
+    try {
+        yield call(character.deleteRelation, action.payload.relationId);
+        // Assume we always create from the origin character and thus reload its relations
+        yield put(characterActions.actions.fetchRelations(action.payload.charId));
+    } catch (e) {
+        console.error('Unable to delete relation. Please try again later.');
+    }
+}
+
 function* createNote(action: characterActions.specificTypes['createNote']) {
     try {
         yield call(character.createNote, action.payload);
@@ -94,6 +125,9 @@ export default function* watcher() {
     yield takeEvery(characterActions.names.mergeCharacter, mergeCharacter);
     yield takeEvery(characterActions.names.fetchNotes, fetchNotes);
     yield takeEvery(characterActions.names.fetchSharedNotes, fetchSharedNotes);
+    yield takeEvery(characterActions.names.fetchRelations, fetchRelations);
+    yield takeEvery(characterActions.names.createRelation, createRelation);
+    yield takeEvery(characterActions.names.deleteRelation, deleteRelation);
     yield takeEvery(characterActions.names.createNote, createNote);
     yield takeEvery(characterActions.names.editCharacter, editCharacter);
     yield takeEvery(characterActions.names.deleteCharacter, deleteCharacter);

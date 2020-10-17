@@ -1,4 +1,5 @@
 import { Label, ListLabel } from './label.types';
+import { Relation } from './relation.types';
 
 export interface Character {
     id: string;
@@ -14,6 +15,10 @@ export interface ListCharacter {
     description: string;
     labels: ListLabel[];
     visible: boolean;
+}
+
+export interface CharacterRelation extends Relation {
+    id: string;
 }
 
 export interface CharacterPrototype {
@@ -32,4 +37,15 @@ export interface CharacterEditPayload {
 export interface MergeCharacterPayload {
     id: string;
     target: string;
+}
+
+export interface CreateRelationPayload {
+    orig: string;
+    dest: string;
+    relation: string;
+}
+
+export interface DeleteRelationPayload {
+    charId: string;
+    relationId: string;
 }
