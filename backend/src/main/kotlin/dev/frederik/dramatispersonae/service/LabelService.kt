@@ -44,7 +44,7 @@ class LabelService(private val repository: LabelRepository, private val characte
             return false
         }
         val label = labelQuery.get()
-        if (!label.campaign.isOwnedBy(user) && !(label.campaign.isAccessibleBy(user) && label.campaign.allowPlayerLabelManagement)) {
+        if (!label.campaign.isAccessibleBy(user)) {
             return false
         }
         // A player is never allow to edit an invisible label
@@ -63,7 +63,7 @@ class LabelService(private val repository: LabelRepository, private val characte
             return false
         }
         val label = labelQuery.get()
-        if (!label.campaign.isOwnedBy(user) && !(label.campaign.isAccessibleBy(user) && label.campaign.allowPlayerLabelManagement)) {
+        if (!label.campaign.isAccessibleBy(user)) {
             return false
         }
         label.characters.forEach {

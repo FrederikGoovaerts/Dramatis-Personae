@@ -100,18 +100,12 @@ export const CharacterDetailScreen = (props: Props) => {
                         </Typography>
                     ))}
                 </Box>
-                <CharacterLabels
-                    character={character}
-                    canChange={campaign.owner || campaign.settings.allowPlayerCharacterLabelManagement}
-                    campaignId={campaign.id}
-                />
-                {(campaign.owner || campaign.settings.allowPlayerCharacterManagement) && (
-                    <Box marginBottom="1em">
-                        <Button size="small" variant="outlined" onClick={() => setEditCharacterOpen(true)}>
-                            Edit character
-                        </Button>
-                    </Box>
-                )}
+                <CharacterLabels character={character} campaignId={campaign.id} />
+                <Box marginBottom="1em">
+                    <Button size="small" variant="outlined" onClick={() => setEditCharacterOpen(true)}>
+                        Edit character
+                    </Button>
+                </Box>
                 <CharacterRelations />
                 <Notes
                     campaignOwner={campaign.owner}

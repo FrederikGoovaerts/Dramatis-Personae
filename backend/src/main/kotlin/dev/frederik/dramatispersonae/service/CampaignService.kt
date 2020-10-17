@@ -8,14 +8,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
 
-data class CampaignSettingsDto(
-    val allowPlayerCharacterManagement: Boolean,
-    val allowPlayerLabelManagement: Boolean,
-    val allowPlayerCharacterLabelManagement: Boolean
-)
-
 data class CreateCampaignDto(val name: String)
-data class UpdateCampaignDto(val name: String, val campaignSettings: CampaignSettingsDto)
+data class UpdateCampaignDto(val name: String)
 data class CreateLabelDto(val name: String, val visible: Boolean)
 
 data class CampaignView(
@@ -23,7 +17,6 @@ data class CampaignView(
     val id: UUID,
     val owner: Boolean,
     val ownerName: String,
-    val settings: CampaignSettingsDto,
     val inviteCode: UUID?
 )
 data class CampaignMemberView(val name: String, val id: UUID, val owner: Boolean)
@@ -42,11 +35,6 @@ class CampaignController(private val service: CampaignService) {
                     it.id!!,
                     it.isOwnedBy(auth.principal),
                     it.owner.fullName,
-                    CampaignSettingsDto(
-                        it.allowPlayerCharacterManagement,
-                        it.allowPlayerLabelManagement,
-                        it.allowPlayerCharacterLabelManagement
-                    ),
                     if (it.isOwnedBy(auth.principal)) it.inviteCode else null
                 )
             }
@@ -62,11 +50,6 @@ class CampaignController(private val service: CampaignService) {
                 campaign.id!!,
                 campaign.isOwnedBy(auth.principal),
                 campaign.owner.fullName,
-                CampaignSettingsDto(
-                    campaign.allowPlayerCharacterManagement,
-                    campaign.allowPlayerLabelManagement,
-                    campaign.allowPlayerCharacterLabelManagement
-                ),
                 if (campaign.isOwnedBy(auth.principal)) campaign.inviteCode else null
             ), HttpStatus.OK)
         }
@@ -84,7 +67,7 @@ class CampaignController(private val service: CampaignService) {
         @PathVariable id: UUID,
         @RequestBody campaign: UpdateCampaignDto
     ): ResponseEntity<Unit> {
-        val success = this.service.updateCampaign(auth.principal, id, campaign.name, campaign.campaignSettings)
+        val success = this.service.updateCampaign(auth.principal, id, campaign.name)
         return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
     }
 
@@ -248,16 +231,13 @@ class CampaignService(private val repository: CampaignRepository, private val la
         return this.repository.save(newCampaign)
     }
 
-    fun updateCampaign(user: User, id: UUID, name: String, campaignSettings: CampaignSettingsDto): Boolean {
+    fun updateCampaign(user: User, id: UUID, name: String): Boolean {
         val campaignQuery = repository.findById(id)
         if (!campaignQuery.isPresent || !campaignQuery.get().isOwnedBy(user)) {
             return false
         }
         val campaign = campaignQuery.get()
         campaign.name = name
-        campaign.allowPlayerCharacterManagement = campaignSettings.allowPlayerCharacterManagement
-        campaign.allowPlayerLabelManagement = campaignSettings.allowPlayerLabelManagement
-        campaign.allowPlayerCharacterLabelManagement = campaignSettings.allowPlayerCharacterLabelManagement
         this.repository.save(campaign)
         return true
     }
@@ -336,7 +316,7 @@ class CampaignService(private val repository: CampaignRepository, private val la
             return false
         }
         val campaign = campaignQuery.get()
-        if (!campaign.isOwnedBy(user) && !(campaign.allowPlayerCharacterManagement && campaign.isAccessibleBy(user))) {
+        if (!campaign.isAccessibleBy(user)) {
             return false
         }
         val newCharacter = Character(name, description, visible, campaign, mutableListOf())
@@ -398,7 +378,7 @@ class CampaignService(private val repository: CampaignRepository, private val la
             return false
         }
         val campaign = campaignQuery.get()
-        if (!campaign.isOwnedBy(user) && !(campaign.isAccessibleBy(user) && campaign.allowPlayerLabelManagement)) {
+        if (!campaign.isAccessibleBy(user)) {
             return false
         }
         // Only owner can create invisible labels

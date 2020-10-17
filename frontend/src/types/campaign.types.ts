@@ -3,7 +3,6 @@ export interface Campaign {
     name: string;
     owner: boolean;
     ownerName: string;
-    settings: CampaignSettings;
     inviteCode?: string;
 }
 
@@ -20,11 +19,4 @@ export interface CampaignMember {
 export interface CampaignEditPayload {
     id: string;
     name: string;
-    campaignSettings: CampaignSettings;
-}
-
-export interface CampaignSettings {
-    allowPlayerCharacterManagement: boolean;
-    allowPlayerLabelManagement: boolean;
-    allowPlayerCharacterLabelManagement: boolean;
 }

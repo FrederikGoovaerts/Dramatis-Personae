@@ -2,7 +2,7 @@ import moment from 'moment';
 
 import { axiosInstance } from '../config/axios';
 import { api } from '../config/constants';
-import { Campaign, CampaignMember, CampaignPrototype, CampaignSettings } from '../types/campaign.types';
+import { Campaign, CampaignMember, CampaignPrototype } from '../types/campaign.types';
 import { CharacterPrototype, ListCharacter } from '../types/character.types';
 import { CreateLabelPayload, Label, ListLabel } from '../types/label.types';
 import { CreateNotePayload, Note } from '../types/note.types';
@@ -32,9 +32,9 @@ export async function create(campaignPrototype: CampaignPrototype): Promise<void
     await axiosInstance.post(url, campaignPrototype);
 }
 
-export async function update(id: string, name: string, campaignSettings: CampaignSettings): Promise<void> {
+export async function update(id: string, name: string): Promise<void> {
     const url = buildPath(`${api.CAMPAIGN.PATH}/${id}`);
-    await axiosInstance.put(url, { name, campaignSettings });
+    await axiosInstance.put(url, { name });
 }
 
 export async function deletePermanently(campaignId: string): Promise<void> {

@@ -33,7 +33,6 @@ import { CreateCharacterForm } from '../../molecules/character/CreateCharacterFo
 interface Props {
     campaignId: string;
     owner: boolean;
-    canManage: boolean;
     matchUrl: string;
 }
 
@@ -204,11 +203,9 @@ export const CampaignCharacters = (props: Props) => {
                     </Paper>
                 )}
             </Box>
-            {props.canManage && (
-                <Fab className="CampaignDetail__createFab" color="primary" onClick={() => setCreateOpen(true)}>
-                    <Add />
-                </Fab>
-            )}
+            <Fab className="CampaignDetail__createFab" color="primary" onClick={() => setCreateOpen(true)}>
+                <Add />
+            </Fab>
             <Modal open={createOpen} onClose={() => setCreateOpen(false)}>
                 <div className="modal">{renderCreateCharacter()}</div>
             </Modal>
