@@ -52,6 +52,10 @@ const useStyles = makeStyles({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    button: {
+        display: 'flex',
+        flexDirection: 'row'
     }
 });
 
@@ -129,6 +133,8 @@ interface ModalProps {
 }
 
 const CreateRelationModal = (props: ModalProps) => {
+    const styles = useStyles();
+
     const [candidateId, setCandidateId] = useState<string>(props.relationCandidates[0].id);
     const [relation, setRelation] = useState<string>('');
 
@@ -172,10 +178,9 @@ const CreateRelationModal = (props: ModalProps) => {
                                 ))}
                             </Select>
                         </Box>
-                        <Box flexDirection="row" justifyContent="flex-end">
-                            <Button onClick={handleAdd}>Create</Button>
-                            <Button onClick={props.onClose}>Cancel</Button>
-                        </Box>
+                        <Button variant="contained" color="primary" onClick={handleAdd} className={styles.button}>
+                            Create
+                        </Button>
                     </Box>
                 </Paper>
             </Box>
