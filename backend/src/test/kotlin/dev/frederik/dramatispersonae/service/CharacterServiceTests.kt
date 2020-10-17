@@ -29,13 +29,13 @@ class CharacterServiceTests {
     }
 
     @Test
-    fun `updateCharacter should persist a character for the owner`() {
+    fun `updateCharacter should persist a character for a member of the campaign`() {
         val user = mockkClass(User::class)
         val char = mockkClass(Character::class, relaxUnitFun = true)
         val camp = mockkClass(Campaign::class)
         every { char.campaign } returns camp
-        every { camp.isOwnedBy(any()) } returns true
-        every { camp.allowPlayerCharacterManagement } returns false
+        every { camp.isOwnedBy(any()) } returns false
+        every { camp.isAccessibleBy(any()) } returns true
         every { characterRepository.findById(any()) } returns Optional.of(char)
         every { characterRepository.save<Character>(any()) } returns char
         val result = characterService.updateCharacter(user, UUID.randomUUID(), "name", "desc", true)
@@ -44,30 +44,13 @@ class CharacterServiceTests {
     }
 
     @Test
-    fun `updateCharacter should persist a character for a member if character management is allowed`() {
+    fun `updateCharacter should not persist a character for a non-member of the campaign`() {
         val user = mockkClass(User::class)
         val char = mockkClass(Character::class, relaxUnitFun = true)
         val camp = mockkClass(Campaign::class)
         every { char.campaign } returns camp
         every { camp.isOwnedBy(any()) } returns false
-        every { camp.isAccessibleBy(any()) } returns true
-        every { camp.allowPlayerCharacterManagement } returns true
-        every { characterRepository.findById(any()) } returns Optional.of(char)
-        every { characterRepository.save<Character>(any()) } returns char
-        val result = characterService.updateCharacter(user, UUID.randomUUID(), "name", "desc", true)
-        verify { characterRepository.save<Character>(any()) }
-        Assertions.assertTrue(result)
-    }
-
-    @Test
-    fun `updateCharacter should not persist a character for a member if character management is not allowed`() {
-        val user = mockkClass(User::class)
-        val char = mockkClass(Character::class, relaxUnitFun = true)
-        val camp = mockkClass(Campaign::class)
-        every { char.campaign } returns camp
-        every { camp.isOwnedBy(any()) } returns false
-        every { camp.isAccessibleBy(any()) } returns true
-        every { camp.allowPlayerCharacterManagement } returns false
+        every { camp.isAccessibleBy(any()) } returns false
         every { characterRepository.findById(any()) } returns Optional.of(char)
         every { characterRepository.save<Character>(any()) } returns char
         val result = characterService.updateCharacter(user, UUID.randomUUID(), "name", "desc", true)
@@ -76,13 +59,13 @@ class CharacterServiceTests {
     }
 
     @Test
-    fun `deleteCharacter should delete a character for the owner`() {
+    fun `deleteCharacter should delete a character for a member of the campaign`() {
         val user = mockkClass(User::class)
         val char = mockkClass(Character::class, relaxUnitFun = true)
         val camp = mockkClass(Campaign::class)
         every { char.campaign } returns camp
-        every { camp.isOwnedBy(any()) } returns true
-        every { camp.allowPlayerCharacterManagement } returns false
+        every { camp.isOwnedBy(any()) } returns false
+        every { camp.isAccessibleBy(any()) } returns true
         every { characterRepository.findById(any()) } returns Optional.of(char)
         val result = characterService.deleteCharacter(user, UUID.randomUUID())
         verify { characterRepository.delete(any()) }
@@ -90,29 +73,13 @@ class CharacterServiceTests {
     }
 
     @Test
-    fun `deleteCharacter should delete a character for a member if character management is allowed`() {
+    fun `deleteCharacter should not delete a character for a non-member of the campaign`() {
         val user = mockkClass(User::class)
         val char = mockkClass(Character::class, relaxUnitFun = true)
         val camp = mockkClass(Campaign::class)
         every { char.campaign } returns camp
         every { camp.isOwnedBy(any()) } returns false
-        every { camp.isAccessibleBy(any()) } returns true
-        every { camp.allowPlayerCharacterManagement } returns true
-        every { characterRepository.findById(any()) } returns Optional.of(char)
-        val result = characterService.deleteCharacter(user, UUID.randomUUID())
-        verify { characterRepository.delete(any()) }
-        Assertions.assertTrue(result)
-    }
-
-    @Test
-    fun `deleteCharacter should not delete a character for a member if character management is not allowed`() {
-        val user = mockkClass(User::class)
-        val char = mockkClass(Character::class, relaxUnitFun = true)
-        val camp = mockkClass(Campaign::class)
-        every { char.campaign } returns camp
-        every { camp.isOwnedBy(any()) } returns false
-        every { camp.isAccessibleBy(any()) } returns true
-        every { camp.allowPlayerCharacterManagement } returns false
+        every { camp.isAccessibleBy(any()) } returns false
         every { characterRepository.findById(any()) } returns Optional.of(char)
         val result = characterService.deleteCharacter(user, UUID.randomUUID())
         verify(inverse = true) { characterRepository.delete(any()) }
