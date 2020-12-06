@@ -12,9 +12,10 @@ data class Character(
     var isVisible: Boolean,
     @ManyToOne var campaign: Campaign,
     @OneToMany(mappedBy = "character", cascade = [CascadeType.ALL]) var notes: MutableList<CharacterNote> = mutableListOf(),
-    @ManyToMany
-    @JoinTable(name = "character_label", joinColumns = [JoinColumn(name = "character_id")], inverseJoinColumns = [JoinColumn(name = "label_id")])
+    @ManyToMany @JoinTable(name = "character_label", joinColumns = [JoinColumn(name = "character_id")], inverseJoinColumns = [JoinColumn(name = "label_id")])
     var labels: MutableList<Label> = mutableListOf(),
+    @ManyToMany @JoinTable(name="event_character", joinColumns=[JoinColumn(name="character_id")], inverseJoinColumns=[JoinColumn(name="event_id")])
+    var events: MutableList<Event> = mutableListOf(),
     var addedOn: Date = Date(),
     @Id @GeneratedValue var id: UUID? = null
 )
