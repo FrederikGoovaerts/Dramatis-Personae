@@ -2,6 +2,8 @@ package dev.frederik.dramatispersonae.service
 
 import dev.frederik.dramatispersonae.auth.GoogleAuthentication
 import dev.frederik.dramatispersonae.model.*
+import dev.frederik.dramatispersonae.model.note.Note
+import dev.frederik.dramatispersonae.model.note.NoteVisibility
 import java.util.*
 import org.springframework.data.repository.CrudRepository
 import org.springframework.http.HttpStatus
@@ -17,7 +19,6 @@ data class NoteView(
     val contents: String,
     val authorName: String,
     val visibility: NoteVisibility,
-    val addedOn: Date,
     val editedOn: Date,
     val owned: Boolean,
     val id: UUID
@@ -32,7 +33,6 @@ fun returnNotes(list: List<Note>?, user: User): ResponseEntity<List<NoteView>> {
                     it.contents,
                     it.author.fullName,
                     it.visibility,
-                    it.addedOn,
                     it.editedOn,
                     it.author == user,
                     it.id!!
@@ -41,7 +41,7 @@ fun returnNotes(list: List<Note>?, user: User): ResponseEntity<List<NoteView>> {
     }
 }
 
-fun <T : Note> sortNotes(list: List<T>) = list.sortedByDescending { note -> note.addedOn }
+fun <T : Note> sortNotes(list: List<T>) = list.sortedByDescending { note -> note.editedOn }
 
 abstract class NoteController<T : Note>(private val service: NoteService<T>) {
 

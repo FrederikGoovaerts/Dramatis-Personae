@@ -5,6 +5,9 @@ import dev.frederik.dramatispersonae.fixtures.getTestCampaign
 import dev.frederik.dramatispersonae.fixtures.getTestCharacter
 import dev.frederik.dramatispersonae.fixtures.getTestUser
 import dev.frederik.dramatispersonae.model.*
+import dev.frederik.dramatispersonae.model.note.CampaignNote
+import dev.frederik.dramatispersonae.model.note.CharacterNote
+import dev.frederik.dramatispersonae.model.note.NoteVisibility
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK

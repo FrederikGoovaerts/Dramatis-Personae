@@ -1,5 +1,6 @@
 package dev.frederik.dramatispersonae.model
 
+import dev.frederik.dramatispersonae.model.note.CampaignNote
 import java.util.*
 import javax.persistence.*
 import org.springframework.data.repository.CrudRepository
@@ -10,6 +11,7 @@ data class Campaign(
     @ManyToOne var owner: User,
     @ManyToMany var members: MutableList<User>,
     @OneToMany(mappedBy = "campaign", cascade = [CascadeType.ALL]) var characters: MutableList<Character> = mutableListOf(),
+    @OneToMany(mappedBy = "campaign", cascade = [CascadeType.ALL]) var location: MutableList<Location> = mutableListOf(),
     @OneToMany(mappedBy = "campaign", cascade = [CascadeType.ALL]) var notes: MutableList<CampaignNote> = mutableListOf(),
     @OneToMany(mappedBy = "campaign", cascade = [CascadeType.ALL]) var labels: MutableList<Label> = mutableListOf(),
     var inviteCode: UUID = UUID.randomUUID(),

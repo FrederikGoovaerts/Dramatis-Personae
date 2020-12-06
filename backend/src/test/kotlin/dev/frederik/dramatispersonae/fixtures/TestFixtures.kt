@@ -1,6 +1,9 @@
 package dev.frederik.dramatispersonae.fixtures
 
 import dev.frederik.dramatispersonae.model.*
+import dev.frederik.dramatispersonae.model.note.CampaignNote
+import dev.frederik.dramatispersonae.model.note.CharacterNote
+import dev.frederik.dramatispersonae.model.note.NoteVisibility
 import java.util.*
 
 fun getTestUser(id: UUID = UUID.randomUUID(),

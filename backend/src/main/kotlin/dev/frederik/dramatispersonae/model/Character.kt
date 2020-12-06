@@ -1,5 +1,6 @@
 package dev.frederik.dramatispersonae.model
 
+import dev.frederik.dramatispersonae.model.note.CharacterNote
 import java.util.*
 import javax.persistence.*
 import org.springframework.data.repository.CrudRepository
