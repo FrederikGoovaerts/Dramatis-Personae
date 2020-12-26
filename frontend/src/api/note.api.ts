@@ -14,21 +14,21 @@ export interface RawNote {
 }
 
 export async function editCharacterNote(payload: EditNotePayload): Promise<void> {
-    const url = buildPath(`${api.CHARACTER_NOTE.PATH}/${payload.noteId}`);
+    const url = buildPath(`${api.CHARACTER_NOTE}/${payload.noteId}`);
     await axiosInstance.put(url, { contents: payload.contents, visibility: payload.visibility });
 }
 
 export async function deleteCharacterNote(id: string): Promise<void> {
-    const url = buildPath(`${api.CHARACTER_NOTE.PATH}/${id}`);
+    const url = buildPath(`${api.CHARACTER_NOTE}/${id}`);
     await axiosInstance.delete(url);
 }
 
 export async function editCampaignNote(payload: EditNotePayload): Promise<void> {
-    const url = buildPath(`${api.CAMPAIGN_NOTE.PATH}/${payload.noteId}`);
+    const url = buildPath(`${api.CAMPAIGN_NOTE}/${payload.noteId}`);
     await axiosInstance.put(url, { contents: payload.contents, visibility: payload.visibility });
 }
 
 export async function deleteCampaignNote(id: string): Promise<void> {
-    const url = buildPath(`${api.CAMPAIGN_NOTE.PATH}/${id}`);
+    const url = buildPath(`${api.CAMPAIGN_NOTE}/${id}`);
     await axiosInstance.delete(url);
 }
