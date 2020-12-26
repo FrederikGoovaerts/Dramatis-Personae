@@ -13,7 +13,7 @@ data class CreateEventDto(val campaignId: UUID, val name: String, val descriptio
 data class UpdateEventDto(val name: String, val description: String)
 
 data class EventView(
-    val title: String,
+    val name: String,
     val description: String,
     val ordinal: Int,
     val id: UUID
@@ -23,12 +23,34 @@ data class EventView(
 @RequestMapping("/api/event")
 class EventController(private val service: EventService) {
 
+    @GetMapping("/{id}")
+    fun getEvents(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID
+    ): ResponseEntity<List<EventView>> {
+        val result = service.getEvents(auth.principal, id)
+
+        return ResponseEntity(result?.map {
+            EventView(it.name, it.description, it.ordinal, it.id!!)
+        }, if (result == null) HttpStatus.FORBIDDEN else HttpStatus.OK)
+    }
+
     @PostMapping("/")
     fun createEvent(
         auth: GoogleAuthentication,
         @RequestBody dto: CreateEventDto
     ): ResponseEntity<Unit> {
         service.createEvent(auth.principal, dto.campaignId, dto.name, dto.description)
+        return ResponseEntity(HttpStatus.OK)
+    }
+
+    @PutMapping("/{id}")
+    fun updateEvent(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID,
+        @RequestBody dto: UpdateEventDto
+    ): ResponseEntity<Unit> {
+        service.updateEvent(auth.principal, id, dto.name, dto.description)
         return ResponseEntity(HttpStatus.OK)
     }
 
@@ -40,7 +62,9 @@ class EventController(private val service: EventService) {
 }
 
 @Component
-class EventService(private val repository: EventRepository, private val campaignRepository: CampaignRepository) {
+class EventService(private val repository: EventRepository,
+                   private val campaignRepository: CampaignRepository,
+                   private val characterRepository: CharacterRepository) {
 
     // TODO: Currently different campaigns impact one another with this
     private val eventListWriteMutex = ReentrantLock()
@@ -61,6 +85,20 @@ class EventService(private val repository: EventRepository, private val campaign
         return true
     }
 
+    fun updateEvent(user: User, id: UUID, name: String, description: String): Boolean {
+        val eventQuery = repository.findById(id)
+        if (!eventQuery.isPresent || !eventQuery.get().campaign.isAccessibleBy(user)) {
+            return false
+        }
+        eventListWriteMutex.lock()
+        val event = eventQuery.get()
+        event.name = name
+        event.description = description
+        repository.save(event)
+        eventListWriteMutex.unlock()
+        return true
+    }
+
     fun deleteEvent(user: User, id: UUID): Boolean {
         val eventQuery = repository.findById(id)
         if (!eventQuery.isPresent || !eventQuery.get().campaign.isAccessibleBy(user)) {
@@ -68,5 +106,14 @@ class EventService(private val repository: EventRepository, private val campaign
         }
         repository.delete(eventQuery.get())
         return true
+    }
+
+    fun getEvents(user: User, campaignId: UUID): List<Event>? {
+        val campaignQuery = campaignRepository.findById(campaignId)
+        if (!campaignQuery.isPresent || !campaignQuery.get().isAccessibleBy(user)) {
+            return null
+        }
+        val campaign = campaignQuery.get()
+        return repository.findAllByCampaignOrderByOrdinalAsc(campaign)
     }
 }
