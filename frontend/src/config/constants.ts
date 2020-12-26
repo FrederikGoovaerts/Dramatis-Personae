@@ -45,6 +45,7 @@ export const routes = {
     campaign: {
         path: '/campaign/',
         subpathCharacters: '/characters',
+        subpathEvents: '/events',
         subpathNotes: '/notes',
         subpathLabels: '/labels',
         subpathDetails: '/details'

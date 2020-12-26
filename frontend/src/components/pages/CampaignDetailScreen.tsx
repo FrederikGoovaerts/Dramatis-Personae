@@ -17,6 +17,7 @@ import { ListItemLink } from '../atoms/ListItemLink';
 import { CampaignHeader } from '../molecules/header/CampaignHeader';
 import { CampaignCharacters } from './campaignDetailComponents/CampaignCharacters';
 import { CampaignDetails } from './campaignDetailComponents/CampaignDetails';
+import { CampaignEvents } from './campaignDetailComponents/CampaignEvents';
 import { CampaignLabels } from './campaignDetailComponents/CampaignLabels';
 import { CampaignNotes } from './campaignDetailComponents/CampaignNotes';
 
@@ -74,6 +75,7 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
         } = this.props;
 
         const characterUrl = `${url}${routes.campaign.subpathCharacters}`;
+        const eventsUrl = `${url}${routes.campaign.subpathEvents}`;
         const notesUrl = `${url}${routes.campaign.subpathNotes}`;
         const labelsUrl = `${url}${routes.campaign.subpathLabels}`;
         const detailsUrl = `${url}${routes.campaign.subpathDetails}`;
@@ -90,6 +92,9 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                     <List>
                         <ListItemLink selected={this.props.path === characterUrl} to={characterUrl}>
                             <ListItemText primary="Characters" />
+                        </ListItemLink>
+                        <ListItemLink selected={this.props.path === eventsUrl} to={eventsUrl}>
+                            <ListItemText primary="Events" />
                         </ListItemLink>
                         <ListItemLink selected={this.props.path === notesUrl} to={notesUrl}>
                             <ListItemText primary="Notes" />
@@ -118,6 +123,11 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
                                         matchUrl={url}
                                     />
                                 )}
+                            />
+                            <Route
+                                path={`${path}${routes.campaign.subpathEvents}`}
+                                exact
+                                render={() => <CampaignEvents campaignId={campaign.id} />}
                             />
                             <Route
                                 path={`${path}${routes.campaign.subpathNotes}`}
