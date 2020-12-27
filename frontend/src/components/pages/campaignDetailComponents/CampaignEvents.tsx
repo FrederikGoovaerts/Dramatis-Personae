@@ -2,6 +2,7 @@ import {
     Box,
     Button,
     CircularProgress,
+    Divider,
     Fab,
     IconButton,
     List,
@@ -67,6 +68,14 @@ export const CampaignEvents = (props: Props) => {
         </ListItem>
     );
 
+    const renderAdd = () => (
+        <Box display="flex" flexDirection="row" justifyContent="center" paddingTop="0.5em" key={'addButton'}>
+            <IconButton onClick={() => setCreateAt(events.length)}>
+                <Add />
+            </IconButton>
+        </Box>
+    );
+
     const renderCreate = () => (
         <ListItem dense={true} key="create">
             <Box display="flex" flex={1} justifyContent="space-between" alignItems="center">
@@ -99,6 +108,11 @@ export const CampaignEvents = (props: Props) => {
         const eventNodes = events.map(renderEvent);
         if (createAt !== undefined) {
             eventNodes.splice(createAt, 0, renderCreate());
+        } else {
+            eventNodes.push(renderAdd());
+        }
+        for (let i = 1; i < eventNodes.length; i += 2) {
+            eventNodes.splice(i, 0, <Divider />);
         }
         return eventNodes;
     };
