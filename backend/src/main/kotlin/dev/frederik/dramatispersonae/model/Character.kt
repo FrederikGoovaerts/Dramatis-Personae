@@ -16,7 +16,6 @@ data class Character(
     var labels: MutableList<Label> = mutableListOf(),
     @ManyToMany @JoinTable(name="event_character", joinColumns=[JoinColumn(name="character_id")], inverseJoinColumns=[JoinColumn(name="event_id")])
     var events: MutableList<Event> = mutableListOf(),
-    var addedOn: Date = Date(),
     @Id @GeneratedValue var id: UUID? = null
 )
 

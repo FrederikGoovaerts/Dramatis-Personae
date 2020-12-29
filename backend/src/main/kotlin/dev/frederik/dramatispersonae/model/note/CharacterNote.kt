@@ -12,7 +12,6 @@ data class CharacterNote(
     @OneToOne override var author: User,
     @ManyToOne var character: Character,
     @Enumerated(EnumType.STRING) override var visibility: NoteVisibility,
-    var addedOn: Date = Date(),
     override var editedOn: Date = Date(),
     @Id @GeneratedValue override var id: UUID? = null
 ) : Note

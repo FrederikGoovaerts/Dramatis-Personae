@@ -17,7 +17,6 @@ data class Location(
     var labels: MutableList<Label> = mutableListOf(),
     @ManyToMany @JoinTable(name="event_location", inverseJoinColumns=[JoinColumn(name="event_id")])
     var events: MutableList<Event> = mutableListOf(),
-    var addedOn: Date = Date(),
     @Id @GeneratedValue var id: UUID? = null
 )
 
