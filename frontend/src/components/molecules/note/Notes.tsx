@@ -94,9 +94,7 @@ export class Notes extends React.Component<Props, State> {
                         }
                         secondary={
                             <Typography variant="body2" color="textSecondary">
-                                {`Created ${note.addedOn.fromNow()}, last edited ${note.editedOn.fromNow()}${
-                                    !own ? `, by ${note.authorName}` : ''
-                                }`}
+                                {`Last edited ${note.editedOn.fromNow()}${!own ? `, by ${note.authorName}` : ''}`}
                             </Typography>
                         }
                     />

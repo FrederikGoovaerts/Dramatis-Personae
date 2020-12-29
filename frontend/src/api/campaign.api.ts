@@ -83,8 +83,7 @@ export async function getNotes(id: string): Promise<Array<Note>> {
     const data: Array<RawNote> = (await axiosInstance.get(url)).data;
     return data.map((rawNote) => ({
         ...rawNote,
-        editedOn: moment(rawNote.editedOn),
-        addedOn: moment(rawNote.addedOn)
+        editedOn: moment(rawNote.editedOn)
     }));
 }
 
@@ -93,8 +92,7 @@ export async function getSharedNotes(id: string): Promise<Array<Note>> {
     const data: Array<RawNote> = (await axiosInstance.get(url)).data;
     return data.map((rawNote) => ({
         ...rawNote,
-        editedOn: moment(rawNote.editedOn),
-        addedOn: moment(rawNote.addedOn)
+        editedOn: moment(rawNote.editedOn)
     }));
 }
 

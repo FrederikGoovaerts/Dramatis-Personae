@@ -7,7 +7,6 @@ export interface RawNote {
     id: string;
     contents: string;
     authorName: string;
-    addedOn: string;
     editedOn: string;
     visibility: NoteVisibility;
     owned: boolean;
