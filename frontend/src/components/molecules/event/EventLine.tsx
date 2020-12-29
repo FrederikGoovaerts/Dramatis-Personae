@@ -18,7 +18,7 @@ export const EventLine = (props: Props) => {
     const [editing, setEditing] = useState<boolean>(false);
     // Used for detail view (soon)
     const [loading, setLoading] = useState<boolean>(false);
-    const [open, setOpen] = useState<boolean>(true);
+    const [open, setOpen] = useState<boolean>(false);
 
     const dispatch = useDispatch();
 
@@ -52,6 +52,10 @@ export const EventLine = (props: Props) => {
         );
     }
 
+    if (loading) {
+        // Show spinner for details
+    }
+
     return (
         <Box key={props.event.ordinal}>
             <ListItem dense={true}>
@@ -63,6 +67,9 @@ export const EventLine = (props: Props) => {
                 </Box>
                 <Box margin>
                     <DeleteButton onConfirm={() => dispatch(eventActions.actions.deleteEvent(props.event.id))} />
+                </Box>
+                <Box margin>
+                    <Button onClick={() => setOpen(!open)}>{open ? 'Less' : 'More'}</Button>
                 </Box>
             </ListItem>
         </Box>
