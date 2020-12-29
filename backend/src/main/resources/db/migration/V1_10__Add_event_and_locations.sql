@@ -1,0 +1,16 @@
+create table if not exists event (id uuid not null, description TEXT, name varchar(255), ordinal int4 not null, campaign_id uuid, primary key (id));
+create table if not exists event_character (event_id uuid not null, character_id uuid not null);
+create table if not exists event_location (location_id uuid not null, event_id uuid not null);
+create table if not exists location (id uuid not null, added_on timestamp, description varchar(255), is_visible boolean not null, name varchar(255), campaign_id uuid, primary key (id));
+create table if not exists location_label (location_id uuid not null, label_id uuid not null);
+create table if not exists location_note (id uuid not null, contents TEXT, edited_on timestamp, visibility varchar(255), author_id uuid, location_id uuid, primary key (id));
+alter table if exists event add constraint FKlh2iq8qd2j9gqnn8b9mvf3ohl foreign key (campaign_id) references campaign;
+alter table if exists event_character add constraint FKl61kc19h1aheeb9flmi61cdo6 foreign key (character_id) references _character;
+alter table if exists event_character add constraint FKk30p85n9lkw44v5aagflkgsei foreign key (event_id) references event;
+alter table if exists event_location add constraint FKbn1d7fexc2sywojnk93i7vvye foreign key (event_id) references event;
+alter table if exists event_location add constraint FKfnf0ki0agbcs5ueu0w0t81x7o foreign key (location_id) references location;
+alter table if exists location add constraint FKb8kymkq40emlf87ccbaaxdnhd foreign key (campaign_id) references campaign;
+alter table if exists location_label add constraint FKir65xt9bd16gev8r9gobhykbd foreign key (label_id) references label;
+alter table if exists location_label add constraint FKc9sfbdhgw5q4t6dtbwr5wr1jk foreign key (location_id) references location;
+alter table if exists location_note add constraint FK45pt2hbns53nesb0fkc4i4te4 foreign key (author_id) references _user;
+alter table if exists location_note add constraint FKmvuke9vedqmuw19nouav42jmu foreign key (location_id) references location;
