@@ -21,12 +21,10 @@ interface Props {
 }
 
 const useStyles = makeStyles({
-    outerContainer: {
-        display: 'flex',
-        justifyContent: 'center'
-    },
-    innerContainer: {
-        width: '90vw'
+    container: {
+        marginRight: 'auto',
+        marginLeft: 'auto',
+        width: '75rem'
     }
 });
 
@@ -50,20 +48,18 @@ const App = (props: Props) => {
 
     if (props.initialized && props.authorized) {
         return (
-            <div className={classes.outerContainer}>
-                <div className={classes.innerContainer}>
-                    <Switch>
-                        <Route path={routes.root} exact render={campaignList} />
-                        <Route
-                            strict
-                            path={`${routes.campaign.path}:campaignId${routes.character}:characterId`}
-                            component={characterDetail}
-                        />
-                        <Route strict path={`${routes.campaign.path}:id`} component={campaignDetail} />
-                        <Route strict path={`${routes.join}:id`} component={joinRedirect} />
-                        <Redirect to={routes.root} />
-                    </Switch>
-                </div>
+            <div className={classes.container}>
+                <Switch>
+                    <Route path={routes.root} exact render={campaignList} />
+                    <Route
+                        strict
+                        path={`${routes.campaign.path}:campaignId${routes.character}:characterId`}
+                        component={characterDetail}
+                    />
+                    <Route strict path={`${routes.campaign.path}:id`} component={campaignDetail} />
+                    <Route strict path={`${routes.join}:id`} component={joinRedirect} />
+                    <Redirect to={routes.root} />
+                </Switch>
             </div>
         );
     }
