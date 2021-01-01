@@ -3,7 +3,7 @@ import React from 'react';
 import { Router } from 'react-router';
 import { create } from 'react-test-renderer';
 
-import { CampaignLink } from '../../../src/components/atoms/CampaignLink';
+import { CampaignLink } from '../../../src/components-old/atoms/CampaignLink';
 
 describe('The ListItemLink', () => {
     it('should render correctly', () => {

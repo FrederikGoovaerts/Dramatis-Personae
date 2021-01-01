@@ -1,17 +1,16 @@
-import './App.scss';
-
-import { makeStyles } from '@material-ui/core';
+import { Box } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 
+import { Landing } from '../components-old/atoms/Landing';
+import { CampaignDetailScreen } from '../components-old/pages/CampaignDetailScreen';
+import { CampaignList } from '../components-old/pages/CampaignList';
+import { CharacterDetailScreen } from '../components-old/pages/CharacterDetailScreen';
 import { routes } from '../config/constants';
 import { applicationActions, campaignActions } from '../store/actions';
 import { RootState } from '../store/reducers';
-import { Landing } from './atoms/Landing';
-import { CampaignDetailScreen } from './pages/CampaignDetailScreen';
-import { CampaignList } from './pages/CampaignList';
-import { CharacterDetailScreen } from './pages/CharacterDetailScreen';
+import { Header } from './molecules/header/Header';
 
 interface Props {
     initialized: boolean;
@@ -20,16 +19,7 @@ interface Props {
     joinCampaign: (id: string) => void;
 }
 
-const useStyles = makeStyles({
-    container: {
-        marginRight: 'auto',
-        marginLeft: 'auto',
-        width: '75rem'
-    }
-});
-
 const App = (props: Props) => {
-    const classes = useStyles();
     useEffect(() => {
         props.initialize();
     });
@@ -48,7 +38,8 @@ const App = (props: Props) => {
 
     if (props.initialized && props.authorized) {
         return (
-            <div className={classes.container}>
+            <Box marginRight="auto" marginLeft="auto" width="75rem">
+                <Header />
                 <Switch>
                     <Route path={routes.root} exact render={campaignList} />
                     <Route
@@ -60,7 +51,7 @@ const App = (props: Props) => {
                     <Route strict path={`${routes.join}:id`} component={joinRedirect} />
                     <Redirect to={routes.root} />
                 </Switch>
-            </div>
+            </Box>
         );
     }
     return (
