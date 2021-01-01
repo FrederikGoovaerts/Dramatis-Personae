@@ -1,6 +1,7 @@
 package dev.frederik.dramatispersonae.model
 
 import dev.frederik.dramatispersonae.fixtures.*
+import dev.frederik.dramatispersonae.model.note.CampaignNoteRepository
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -14,7 +15,8 @@ class CampaignTests constructor(@Autowired val userRepository: UserRepository,
                                 @Autowired val campaignRepository: CampaignRepository,
                                 @Autowired val characterRepository: CharacterRepository,
                                 @Autowired val labelRepository: LabelRepository,
-                                @Autowired val campaignNoteRepository: CampaignNoteRepository) {
+                                @Autowired val campaignNoteRepository: CampaignNoteRepository
+) {
 
     lateinit var player: User
     lateinit var campaign: Campaign

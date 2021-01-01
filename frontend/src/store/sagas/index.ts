@@ -3,6 +3,7 @@ import { fork } from 'redux-saga/effects';
 import applicationSagas from './application.sagas';
 import campaignSagas from './campaign.sagas';
 import characterSagas from './character.sagas';
+import eventSagas from './event.sagas';
 import labelSagas from './label.sagas';
 import noteSagas from './note.sagas';
 
@@ -12,4 +13,5 @@ export function* rootSaga() {
     yield fork(characterSagas);
     yield fork(noteSagas);
     yield fork(labelSagas);
+    yield fork(eventSagas);
 }

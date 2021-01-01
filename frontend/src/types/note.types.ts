@@ -6,7 +6,6 @@ export interface Note {
     id: string;
     contents: string;
     authorName: string;
-    addedOn: Moment;
     editedOn: Moment;
     visibility: NoteVisibility;
     owned: boolean;

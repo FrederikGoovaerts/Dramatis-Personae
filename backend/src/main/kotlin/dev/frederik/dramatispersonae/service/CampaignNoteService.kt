@@ -1,6 +1,9 @@
 package dev.frederik.dramatispersonae.service
 
 import dev.frederik.dramatispersonae.model.*
+import dev.frederik.dramatispersonae.model.note.CampaignNote
+import dev.frederik.dramatispersonae.model.note.CampaignNoteRepository
+import dev.frederik.dramatispersonae.model.note.NoteVisibility
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
 

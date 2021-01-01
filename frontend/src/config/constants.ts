@@ -7,10 +7,6 @@ export const oauth = {
 export const api = {
     API_HOST: process.env.API_HOST ?? 'API_HOST_PLACEHOLDER',
     API_PROTOCOL: process.env.API_PROTOCOL ?? 'API_PROTOCOL_PLACEHOLDER',
-    EXAMPLE_API: {
-        PATH: '/example',
-        SUBPATH_EXAMPLE: '/subexample'
-    },
     AUTH: {
         PATH: '/auth',
         SUBPATH_CODE: '/code',
@@ -37,20 +33,11 @@ export const api = {
         SUBPATH_VISIBLE: '/visible',
         SUBPATH_LABEL: '/label'
     },
-    PROPOSED_CHARACTER: {
-        PATH: '/proposedcharacter',
-        SUBPATH_ACCEPT: '/accept'
-    },
-    CHARACTER_NOTE: {
-        PATH: '/characternote'
-    },
+    CHARACTER_NOTE: '/characternote',
     CHARACTER_RELATION: '/charrelation',
-    CAMPAIGN_NOTE: {
-        PATH: '/campaignnote'
-    },
-    LABEL: {
-        PATH: '/label'
-    }
+    CAMPAIGN_NOTE: '/campaignnote',
+    LABEL: '/label',
+    EVENT: '/event'
 };
 
 export const routes = {
@@ -58,6 +45,7 @@ export const routes = {
     campaign: {
         path: '/campaign/',
         subpathCharacters: '/characters',
+        subpathEvents: '/events',
         subpathNotes: '/notes',
         subpathLabels: '/labels',
         subpathDetails: '/details'

@@ -2,6 +2,8 @@ package dev.frederik.dramatispersonae.service
 
 import dev.frederik.dramatispersonae.auth.GoogleAuthentication
 import dev.frederik.dramatispersonae.model.*
+import dev.frederik.dramatispersonae.model.note.CharacterNote
+import dev.frederik.dramatispersonae.model.note.NoteVisibility
 import java.util.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
