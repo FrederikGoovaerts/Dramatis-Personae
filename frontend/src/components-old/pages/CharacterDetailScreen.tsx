@@ -80,13 +80,7 @@ export const CharacterDetailScreen = (props: Props) => {
         );
     };
 
-    const wrapContent = (contents: React.ReactNode) => (
-        <Box className="CharacterDetail__container">
-            <CharacterHeader campaignId={campaignId} name={character?.name} />
-            <Toolbar />
-            {contents}
-        </Box>
-    );
+    const wrapContent = (contents: React.ReactNode) => <Box className="CharacterDetail__container">{contents}</Box>;
 
     if (!character || !campaign || loading || !loaded) {
         return wrapContent(<CircularProgress />);

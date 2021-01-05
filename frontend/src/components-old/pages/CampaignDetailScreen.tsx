@@ -82,13 +82,11 @@ class CampaignDetailRaw extends React.Component<AllProps, State> {
 
         return (
             <div className={'CampaignDetail__container'}>
-                <CampaignHeader name={this.props.campaign?.name} className={this.props.classes.appBar} />
                 <Drawer
                     variant="permanent"
                     PaperProps={{ elevation: 1 }}
                     classes={{ paper: this.props.classes.drawerPaper }}
                 >
-                    <Toolbar />
                     <List>
                         <ListItemLink selected={this.props.path === characterUrl} to={characterUrl}>
                             <ListItemText primary="Characters" />

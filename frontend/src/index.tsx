@@ -6,17 +6,25 @@ import { Router } from 'react-router-dom';
 
 import App from './components/App';
 import { history, store } from './config/state';
-// import { theme } from './config/theme';
 
-const theme = extendTheme({});
+const theme = extendTheme({
+    fonts: {
+        heading: 'Inter, sans-serif',
+        body: 'Inter, sans-serif'
+    },
+    textStyles: {
+        title: {
+            fontSize: ['24px', '28px'],
+            fontWeight: 'semibold'
+        }
+    }
+});
 
 ReactDOM.render(
     <Provider store={store}>
         <Router history={history}>
             <ChakraProvider theme={theme}>
-                {/* <MuiThemeProvider theme={theme}> */}
                 <App />
-                {/* </MuiThemeProvider> */}
             </ChakraProvider>
         </Router>
     </Provider>,

@@ -70,8 +70,6 @@ class CampaignListRaw extends React.Component<AllProps> {
 
         return (
             <div className="CampaignList__container">
-                <Header />
-                <Toolbar />
                 <Box marginY="1em">
                     <Typography variant="h4">Campaigns</Typography>
                 </Box>

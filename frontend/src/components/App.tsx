@@ -3,14 +3,14 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 
-import { Landing } from '../components-old/atoms/Landing';
 import { CampaignDetailScreen } from '../components-old/pages/CampaignDetailScreen';
-import { CampaignList } from '../components-old/pages/CampaignList';
 import { CharacterDetailScreen } from '../components-old/pages/CharacterDetailScreen';
 import { routes } from '../config/constants';
 import { applicationActions, campaignActions } from '../store/actions';
 import { RootState } from '../store/reducers';
+import { Loader } from './atoms/Loader';
 import { Header } from './molecules/header/Header';
+import { CampaignList } from './pages/CampaignList';
 
 interface Props {
     initialized: boolean;
@@ -24,7 +24,7 @@ const App = (props: Props) => {
         props.initialize();
     });
 
-    const campaignList = ({ match }: RouteComponentProps) => <CampaignList match={match} />;
+    const campaignList = () => <CampaignList />;
     const campaignDetail = ({ match, location }: RouteComponentProps<{ id: string }>) => (
         <CampaignDetailScreen match={match} path={location.pathname} />
     );
@@ -38,7 +38,7 @@ const App = (props: Props) => {
 
     if (props.initialized && props.authorized) {
         return (
-            <Box marginRight="auto" marginLeft="auto" width="75rem">
+            <Box marginRight="auto" marginLeft="auto" maxWidth="75rem">
                 <Header />
                 <Switch>
                     <Route path={routes.root} exact render={campaignList} />
@@ -54,11 +54,7 @@ const App = (props: Props) => {
             </Box>
         );
     }
-    return (
-        <div>
-            <Landing />
-        </div>
-    );
+    return <Loader />;
 };
 
 const mapStateToProps = (state: RootState) => ({
