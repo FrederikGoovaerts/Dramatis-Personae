@@ -6,6 +6,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { routes } from '../../config/constants';
 import { campaignActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
+import { ConfirmableButton } from '../atoms/ConfirmableButton';
 import { Loader } from '../atoms/Loader';
 import { NewCampaignForm } from '../molecules/campaign/NewCampaignForm';
 
@@ -72,7 +73,10 @@ export const CampaignList = () => {
                             </Td>
                             <Td>{c.ownerName}</Td>
                             <Td>
-                                <Button>Leave</Button>
+                                <ConfirmableButton
+                                    defaultText="Leave"
+                                    onConfirm={() => dispatch(campaignActions.actions.leaveCampaign(c.id))}
+                                />
                             </Td>
                         </Tr>
                     ))}
