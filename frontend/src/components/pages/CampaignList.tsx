@@ -7,6 +7,7 @@ import { routes } from '../../config/constants';
 import { campaignActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
 import { Loader } from '../atoms/Loader';
+import { NewCampaignForm } from '../molecules/campaign/NewCampaignForm';
 
 export const CampaignList = () => {
     const campaigns = useSelector((state: RootState) => state.campaign.campaigns);
@@ -51,6 +52,7 @@ export const CampaignList = () => {
                     ))}
                 </Tbody>
             </Table>
+            <NewCampaignForm />
             <Heading size="lg">Campaigns you play</Heading>
             <Table variant="simple" fontFamily="Inter,sans-serif">
                 <Thead>
