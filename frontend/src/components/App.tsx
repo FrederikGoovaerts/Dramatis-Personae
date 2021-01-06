@@ -1,10 +1,8 @@
 import { Box } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 
-import { CampaignDetailScreen } from '../components-old/pages/CampaignDetailScreen';
-import { CharacterDetailScreen } from '../components-old/pages/CharacterDetailScreen';
 import { routes } from '../config/constants';
 import { applicationActions, campaignActions } from '../store/actions';
 import { RootState } from '../store/reducers';
@@ -12,31 +10,29 @@ import { Loader } from './atoms/Loader';
 import { Header } from './molecules/header/Header';
 import { CampaignList } from './pages/CampaignList';
 
-interface Props {
-    initialized: boolean;
-    authorized: boolean;
-    initialize: () => void;
-    joinCampaign: (id: string) => void;
-}
-
-const App = (props: Props) => {
+const App = () => {
+    const dispatch = useDispatch();
+    const authorized = useSelector((state: RootState) => state.application.authorized);
+    const initialized = useSelector((state: RootState) => state.application.initialized);
     useEffect(() => {
-        props.initialize();
+        dispatch(applicationActions.actions.initialize());
     });
 
     const campaignList = () => <CampaignList />;
     const campaignDetail = ({ match, location }: RouteComponentProps<{ id: string }>) => (
-        <CampaignDetailScreen match={match} path={location.pathname} />
+        // <CampaignDetailScreen match={match} path={location.pathname} />
+        <Box>Nuffin</Box>
     );
     const characterDetail = ({ match }: RouteComponentProps<{ campaignId: string; characterId: string }>) => (
-        <CharacterDetailScreen match={match} />
+        // <CharacterDetailScreen match={match} />
+        <Box>Nuffin</Box>
     );
     const joinRedirect = ({ match }: RouteComponentProps<{ id: string }>) => {
-        props.joinCampaign(match.params.id);
+        dispatch(campaignActions.actions.joinCampaign(match.params.id));
         return <Redirect to={routes.root} />;
     };
 
-    if (props.initialized && props.authorized) {
+    if (initialized && authorized) {
         return (
             <Box marginRight="auto" marginLeft="auto" maxWidth="75rem">
                 <Header />
@@ -57,14 +53,4 @@ const App = (props: Props) => {
     return <Loader />;
 };
 
-const mapStateToProps = (state: RootState) => ({
-    authorized: state.application.authorized,
-    initialized: state.application.initialized
-});
-
-export default withRouter(
-    connect(mapStateToProps, {
-        initialize: applicationActions.actions.initialize,
-        joinCampaign: campaignActions.actions.joinCampaign
-    })(App)
-);
+export default withRouter(App);
