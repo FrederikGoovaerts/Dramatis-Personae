@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 
-import { routes } from '../../config/constants';
+import { campaignRoute } from '../../config/constants';
 import { campaignActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
 import { ConfirmableButton } from '../atoms/ConfirmableButton';
@@ -42,7 +42,7 @@ export const CampaignList = () => {
                     {ownCampaigns.map((c) => (
                         <Tr key={c.id}>
                             <Td>
-                                <Link as={RouterLink} to={`${routes.campaign.path}${c.id}`}>
+                                <Link as={RouterLink} to={campaignRoute(c.id)}>
                                     {c.name}
                                 </Link>
                             </Td>
@@ -67,7 +67,7 @@ export const CampaignList = () => {
                     {otherCampaigns.map((c) => (
                         <Tr key={c.id}>
                             <Td>
-                                <Link as={RouterLink} to={`${routes.campaign.path}${c.id}`}>
+                                <Link as={RouterLink} to={campaignRoute(c.id)}>
                                     {c.name}
                                 </Link>
                             </Td>

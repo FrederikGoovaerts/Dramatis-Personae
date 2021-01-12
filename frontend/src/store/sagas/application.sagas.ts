@@ -5,7 +5,7 @@ import { put, takeEvery } from 'redux-saga/effects';
 
 import { exchangeCode, refresh } from '../../api/authentication.api';
 import { removeAxiosAuthToken, setAxiosAuthToken } from '../../config/axios';
-import { oauth, routes, storage } from '../../config/constants';
+import { oauth, rootRoute, storage } from '../../config/constants';
 import { history } from '../../config/state';
 import { TokenResponse } from '../../types/auth.types';
 import { applicationActions } from '../actions';
@@ -56,7 +56,7 @@ function* initializeApplication() {
                 const preRedirectPath = localStorage.getItem(storage.preRedirectPath);
                 console.log(preRedirectPath);
                 localStorage.removeItem(storage.preRedirectPath);
-                history.replace(preRedirectPath || routes.root);
+                history.replace(preRedirectPath || rootRoute());
             }
         }
     }
