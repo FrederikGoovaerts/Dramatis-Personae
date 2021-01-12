@@ -59,7 +59,7 @@
     "dependencies": {
         "@material-ui/core": "^4.11.0",
         "@material-ui/icons": "^4.9.1",
-        "axios": "^0.20.0",
+        "axios": "^0.21.1",
         "axios-auth-refresh": "^3.0.0",
         "jsonwebtoken": "^8.5.1",
         "moment": "^2.29.0",
