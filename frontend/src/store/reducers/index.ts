@@ -6,16 +6,10 @@ import campaign, { CampaignState } from './campaign.reducers';
 import character, { CharacterState } from './character.reducers';
 import events, { EventState } from './event.reducers';
 
-const campaignLoadingSelector = (state: RootState) => state.campaign.loading;
-const campaignCharactersLoadingSelector = (state: RootState) => state.campaign.charactersLoading;
+export const campaignLoadingSelector = (state: RootState) => state.campaign.loading;
+export const campaignCharactersLoadingSelector = (state: RootState) => state.campaign.charactersLoading;
 const campaignNotesLoadingSelector = (state: RootState) => state.campaign.notesLoading;
 const campaignSharedNotesLoadingSelector = (state: RootState) => state.campaign.sharedNotesLoading;
-
-export const campaignViewLoadingSelector = createSelector(
-    campaignLoadingSelector,
-    campaignCharactersLoadingSelector,
-    (loading, charLoading) => loading || charLoading
-);
 
 export const campaignAllNotesLoadingSelector = createSelector(
     campaignNotesLoadingSelector,

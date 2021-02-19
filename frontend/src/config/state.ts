@@ -18,6 +18,7 @@ export const store = configureStore({});
 
 // Browser history state
 export const history = createBrowserHistory();
+export const pushToHistory = (path: string) => history.push(path);
 
 export const localStorageKeys = {
     characterFilters: 'characterFilters'

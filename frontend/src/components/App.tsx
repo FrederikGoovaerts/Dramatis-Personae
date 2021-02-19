@@ -23,10 +23,6 @@ const App = () => {
     const campaignView = ({ match }: RouteComponentProps<{ id: string }>) => (
         <CampaignView campaignId={match.params.id} />
     );
-    const characterDetail = ({ match }: RouteComponentProps<{ campaignId: string; characterId: string }>) => (
-        // <CharacterDetailScreen match={match} />
-        <Box>Nuffin</Box>
-    );
     const joinRedirect = ({ match }: RouteComponentProps<{ id: string }>) => {
         dispatch(campaignActions.actions.joinCampaign(match.params.id));
         return <Redirect to={rootRoute()} />;
@@ -38,7 +34,6 @@ const App = () => {
                 <Header />
                 <Switch>
                     <Route path={rootRoute()} exact render={campaignList} />
-                    <Route strict path={characterRoute(':campaignId', ':characterId')} component={characterDetail} />
                     <Route strict path={campaignRoute(':id')} component={campaignView} />
                     <Route strict exact path={joinRoute(':id')} component={joinRedirect} />
                     <Redirect to={rootRoute()} />
