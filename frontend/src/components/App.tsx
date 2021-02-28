@@ -3,10 +3,9 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 
-import { campaignRoute, characterRoute, joinRoute, rootRoute } from '../config/constants';
+import { campaignRoute, joinRoute, rootRoute } from '../config/constants';
 import { applicationActions, campaignActions } from '../store/actions';
 import { RootState } from '../store/reducers';
-import { Loader } from './atoms/Loader';
 import { Header } from './molecules/header/Header';
 import { CampaignList } from './pages/CampaignList';
 import { CampaignView } from './pages/CampaignView';
@@ -41,7 +40,7 @@ const App = () => {
             </Box>
         );
     }
-    return <Loader />;
+    return <></>;
 };
 
 export default withRouter(App);

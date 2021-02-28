@@ -4,7 +4,13 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 
-import { campaignCharactersRoute, campaignNotesRoute, rootRoute } from '../../config/constants';
+import {
+    campaignCharactersRoute,
+    campaignEventsRoute,
+    campaignLocationsRoute,
+    campaignNotesRoute,
+    rootRoute
+} from '../../config/constants';
 import { pushToHistory } from '../../config/state';
 import { RootState } from '../../store/reducers';
 
@@ -21,23 +27,29 @@ export const CampaignSidebar = (props: Props) => {
 
     return (
         <Box maxWidth="18rem">
-            <Button onClick={() => pushToHistory(rootRoute())} leftIcon={<ArrowBackIcon />}>
-                Campaign list
-            </Button>
             <Heading size="md" marginTop="1em" marginY="1em">
                 {campaign.name}
             </Heading>
             <Text>Run by {campaign.ownerName}</Text>
-            <Box marginTop="2em">
+            <Box marginY="1em">
                 <UnorderedList>
-                    <Link as={RouterLink} to={campaignNotesRoute(props.id)}>
-                        <ListItem>Campaign notes</ListItem>
-                    </Link>
                     <Link as={RouterLink} to={campaignCharactersRoute(props.id)}>
                         <ListItem>Characters</ListItem>
                     </Link>
+                    <Link as={RouterLink} to={campaignLocationsRoute(props.id)}>
+                        <ListItem>Locations</ListItem>
+                    </Link>
+                    <Link as={RouterLink} to={campaignEventsRoute(props.id)}>
+                        <ListItem>Events</ListItem>
+                    </Link>
+                    <Link as={RouterLink} to={campaignNotesRoute(props.id)}>
+                        <ListItem>Campaign notes</ListItem>
+                    </Link>
                 </UnorderedList>
             </Box>
+            <Button onClick={() => pushToHistory(rootRoute())} leftIcon={<ArrowBackIcon />}>
+                Campaign list
+            </Button>
         </Box>
     );
 };

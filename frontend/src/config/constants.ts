@@ -44,6 +44,7 @@ export const rootRoute = () => '/';
 export const joinRoute = (joinId: string) => `/join/${joinId}`;
 export const campaignRoute = (campaignId: string) => `/campaign/${campaignId}`;
 export const campaignCharactersRoute = (campaignId: string) => `/campaign/${campaignId}/characters`;
+export const campaignLocationsRoute = (campaignId: string) => `/campaign/${campaignId}/locations`;
 export const campaignEventsRoute = (campaignId: string) => `/campaign/${campaignId}/events`;
 export const campaignNotesRoute = (campaignId: string) => `/campaign/${campaignId}/notes`;
 export const campaignLabelsRoute = (campaignId: string) => `/campaign/${campaignId}/labels`;
