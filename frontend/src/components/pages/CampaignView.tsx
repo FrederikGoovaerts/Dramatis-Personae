@@ -1,4 +1,4 @@
-import { Button, Fade, HStack } from '@chakra-ui/react';
+import { Box, Button, Fade, Flex, HStack } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
@@ -27,26 +27,32 @@ export const CampaignView = (props: Props) => {
     }
 
     return (
-        <Fade in={true}>
-            <HStack marginTop="2em" alignItems="flex-start" spacing={8}>
-                <CampaignSidebar id={props.campaignId} />
-                <Switch>
-                    <Route
-                        strict
-                        path={campaignCharactersRoute(':campaignId')}
-                        render={({ match }: RouteComponentProps<{ campaignId: string }>) => (
-                            <CampaignCharacterList campaignId={match.params.campaignId} />
-                        )}
-                    />
-                    <Route strict path={campaignNotesRoute(':campaignId')} component={() => <Button>notes</Button>} />
-                    <Route
-                        strict
-                        path={characterRoute(':campaignId', ':characterId')}
-                        component={() => <Button>specific</Button>}
-                    />
-                    <Redirect to={campaignCharactersRoute(props.campaignId)} />
-                </Switch>
-            </HStack>
-        </Fade>
+        <HStack marginTop="2em" alignItems="flex-start" spacing={8}>
+            <CampaignSidebar id={props.campaignId} />
+            <Flex flex={1} border="1px">
+                <Fade in={true}>
+                    <Switch>
+                        <Route
+                            strict
+                            path={campaignCharactersRoute(':campaignId')}
+                            render={({ match }: RouteComponentProps<{ campaignId: string }>) => (
+                                <CampaignCharacterList campaignId={match.params.campaignId} owner={campaign.owner} />
+                            )}
+                        />
+                        <Route
+                            strict
+                            path={campaignNotesRoute(':campaignId')}
+                            component={() => <Button>notes</Button>}
+                        />
+                        <Route
+                            strict
+                            path={characterRoute(':campaignId', ':characterId')}
+                            component={() => <Button>specific</Button>}
+                        />
+                        <Redirect to={campaignCharactersRoute(props.campaignId)} />
+                    </Switch>
+                </Fade>
+            </Flex>
+        </HStack>
     );
 };

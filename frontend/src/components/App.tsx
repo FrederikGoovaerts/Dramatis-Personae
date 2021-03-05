@@ -31,12 +31,14 @@ const App = () => {
         return (
             <Box marginRight="auto" marginLeft="auto" maxWidth="75rem">
                 <Header />
-                <Switch>
-                    <Route path={rootRoute()} exact render={campaignList} />
-                    <Route strict path={campaignRoute(':id')} component={campaignView} />
-                    <Route strict exact path={joinRoute(':id')} component={joinRedirect} />
-                    <Redirect to={rootRoute()} />
-                </Switch>
+                <Box paddingX="1em">
+                    <Switch>
+                        <Route path={rootRoute()} exact render={campaignList} />
+                        <Route strict path={campaignRoute(':id')} component={campaignView} />
+                        <Route strict exact path={joinRoute(':id')} component={joinRedirect} />
+                        <Redirect to={rootRoute()} />
+                    </Switch>
+                </Box>
             </Box>
         );
     }

@@ -26,8 +26,8 @@ export const CampaignSidebar = (props: Props) => {
     }
 
     return (
-        <Box maxWidth="18rem">
-            <Heading size="md" marginTop="1em" marginY="1em">
+        <Box maxWidth="18rem" border="1px" padding="1em">
+            <Heading size="md" marginBottom="1em">
                 {campaign.name}
             </Heading>
             <Text>Run by {campaign.ownerName}</Text>

@@ -1,12 +1,14 @@
-import { Fade, Text } from '@chakra-ui/react';
+import { Fade, Flex, Text } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { campaignActions } from '../../store/actions';
 import { campaignCharactersLoadingSelector, RootState } from '../../store/reducers';
+import { CharacterLine } from '../molecules/character/CharacterLine';
 
 interface Props {
     campaignId: string;
+    owner: boolean;
 }
 
 export const CampaignCharacterList = (props: Props) => {
@@ -25,7 +27,9 @@ export const CampaignCharacterList = (props: Props) => {
     return (
         <Fade in={true}>
             {characters.map((c) => (
-                <Text key={c.id}>{c.name}</Text>
+                <>
+                    <CharacterLine key={c.id} character={c} campaignId={props.campaignId} />
+                </>
             ))}
         </Fade>
     );
