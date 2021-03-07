@@ -1,4 +1,3 @@
-import { Fade, Flex, Text } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -25,12 +24,12 @@ export const CampaignCharacterList = (props: Props) => {
         return <></>;
     }
     return (
-        <Fade in={true}>
+        <>
             {characters.map((c) => (
                 <>
                     <CharacterLine key={c.id} character={c} campaignId={props.campaignId} />
                 </>
             ))}
-        </Fade>
+        </>
     );
 };

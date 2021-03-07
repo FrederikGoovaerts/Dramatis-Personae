@@ -1,7 +1,7 @@
-import { Button, Fade, Heading, Link, Stack, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
+import { Button, Fade, Heading, Stack, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { campaignRoute } from '../../config/constants';
 import { campaignActions } from '../../store/actions';
@@ -42,9 +42,7 @@ export const CampaignList = () => {
                         {ownCampaigns.map((c) => (
                             <Tr key={c.id}>
                                 <Td>
-                                    <Link as={RouterLink} to={campaignRoute(c.id)}>
-                                        {c.name}
-                                    </Link>
+                                    <Link to={campaignRoute(c.id)}>{c.name}</Link>
                                 </Td>
                                 <Td>
                                     <Button>Edit</Button>
@@ -67,9 +65,7 @@ export const CampaignList = () => {
                         {otherCampaigns.map((c) => (
                             <Tr key={c.id}>
                                 <Td>
-                                    <Link as={RouterLink} to={campaignRoute(c.id)}>
-                                        {c.name}
-                                    </Link>
+                                    <Link to={campaignRoute(c.id)}>{c.name}</Link>
                                 </Td>
                                 <Td>{c.ownerName}</Td>
                                 <Td>

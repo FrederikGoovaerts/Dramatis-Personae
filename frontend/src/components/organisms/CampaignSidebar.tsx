@@ -1,8 +1,8 @@
 import { ArrowBackIcon } from '@chakra-ui/icons';
-import { Box, Button, Heading, Link, ListItem, Text, UnorderedList } from '@chakra-ui/react';
+import { Box, Button, Heading, Text } from '@chakra-ui/react';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import {
     campaignCharactersRoute,
@@ -26,28 +26,25 @@ export const CampaignSidebar = (props: Props) => {
     }
 
     return (
-        <Box maxWidth="18rem" border="1px" padding="1em">
+        <Box maxWidth="18rem" paddingX="1em">
             <Heading size="md" marginBottom="1em">
                 {campaign.name}
             </Heading>
-            <Text>Run by {campaign.ownerName}</Text>
             <Box marginY="1em">
-                <UnorderedList>
-                    <Link as={RouterLink} to={campaignCharactersRoute(props.id)}>
-                        <ListItem>Characters</ListItem>
+                {[
+                    { title: 'Characters', route: campaignCharactersRoute(props.id) },
+                    { title: 'Locations', route: campaignLocationsRoute(props.id) },
+                    { title: 'Events', route: campaignEventsRoute(props.id) },
+                    { title: 'Campaign notes', route: campaignNotesRoute(props.id) }
+                ].map((el) => (
+                    <Link to={el.route} key={el.title}>
+                        <Text fontSize="lg" marginBottom="0.5em">
+                            {el.title}
+                        </Text>
                     </Link>
-                    <Link as={RouterLink} to={campaignLocationsRoute(props.id)}>
-                        <ListItem>Locations</ListItem>
-                    </Link>
-                    <Link as={RouterLink} to={campaignEventsRoute(props.id)}>
-                        <ListItem>Events</ListItem>
-                    </Link>
-                    <Link as={RouterLink} to={campaignNotesRoute(props.id)}>
-                        <ListItem>Campaign notes</ListItem>
-                    </Link>
-                </UnorderedList>
+                ))}
             </Box>
-            <Button onClick={() => pushToHistory(rootRoute())} leftIcon={<ArrowBackIcon />}>
+            <Button onClick={() => pushToHistory(rootRoute())} leftIcon={<ArrowBackIcon />} marginTop="2em">
                 Campaign list
             </Button>
         </Box>

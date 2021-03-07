@@ -1,7 +1,7 @@
 import { ViewOffIcon } from '@chakra-ui/icons';
-import { Box, HStack, Link, Tag, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, Flex, HStack, Tag, Text } from '@chakra-ui/react';
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { characterRoute } from '../../../config/constants';
 import { ListCharacter } from '../../../types/character.types';
@@ -12,10 +12,12 @@ interface Props {
 }
 
 export const CharacterLine = (props: Props) => (
-    <Box marginBottom="1.5em">
-        <Link as={RouterLink} to={characterRoute(props.campaignId, props.character.id)}>
+    <Flex marginBottom="1.5em" justifyContent="space-between">
+        <Box>
             <HStack marginBottom="0,5em">
-                <Text fontSize="lg">{props.character.name}</Text>
+                <Link to={characterRoute(props.campaignId, props.character.id)}>
+                    <Text fontSize="lg">{props.character.name}</Text>
+                </Link>
                 {!props.character.visible && <ViewOffIcon />}
             </HStack>
             <Text fontSize="sm">{props.character.description}</Text>
@@ -28,6 +30,9 @@ export const CharacterLine = (props: Props) => (
                     ))}
                 </HStack>
             )}
-        </Link>
-    </Box>
+        </Box>
+        <Flex alignItems="center">
+            <Button>Edit</Button>
+        </Flex>
+    </Flex>
 );

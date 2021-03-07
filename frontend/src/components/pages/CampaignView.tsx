@@ -1,4 +1,4 @@
-import { Box, Button, Fade, Flex, HStack } from '@chakra-ui/react';
+import { Button, Fade, Flex, HStack } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
@@ -29,8 +29,8 @@ export const CampaignView = (props: Props) => {
     return (
         <HStack marginTop="2em" alignItems="flex-start" spacing={8}>
             <CampaignSidebar id={props.campaignId} />
-            <Flex flex={1} border="1px">
-                <Fade in={true}>
+            <Fade in={true} style={{ width: '100%' }}>
+                <Flex flex={1} direction="column">
                     <Switch>
                         <Route
                             strict
@@ -51,8 +51,8 @@ export const CampaignView = (props: Props) => {
                         />
                         <Redirect to={campaignCharactersRoute(props.campaignId)} />
                     </Switch>
-                </Fade>
-            </Flex>
+                </Flex>
+            </Fade>
         </HStack>
     );
 };

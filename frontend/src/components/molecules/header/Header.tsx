@@ -23,7 +23,7 @@ export const Header = () => {
     const colorIcon = useColorModeValue(<SunIcon />, <MoonIcon />);
 
     return (
-        <Box position="sticky" background="brand" top="0" backgroundColor={bgColor} border="1px">
+        <Box position="sticky" background="brand" top="0" backgroundColor={bgColor}>
             <header>
                 <Flex direction="column">
                     <HStack direction="row" justify="space-between">
