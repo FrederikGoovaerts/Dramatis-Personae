@@ -1,9 +1,9 @@
-import { Button, Fade, Flex, HStack } from '@chakra-ui/react';
+import { Fade, Flex, HStack } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 
-import { campaignCharactersRoute, campaignNotesRoute, characterRoute } from '../../config/constants';
+import { campaignCharactersRoute, campaignNotesRoute } from '../../config/constants';
 import { campaignActions } from '../../store/actions';
 import { campaignLoadingSelector, RootState } from '../../store/reducers';
 import { CampaignCharacterList } from '../organisms/CampaignCharacterList';
@@ -46,11 +46,6 @@ export const CampaignView = (props: Props) => {
                             render={({ match }: RouteComponentProps<{ campaignId: string }>) => (
                                 <CampaignNotesList campaignId={match.params.campaignId} owner={campaign.owner} />
                             )}
-                        />
-                        <Route
-                            strict
-                            path={characterRoute(':campaignId', ':characterId')}
-                            component={() => <Button>specific</Button>}
                         />
                         <Redirect to={campaignCharactersRoute(props.campaignId)} />
                     </Switch>
