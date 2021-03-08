@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { campaignActions } from '../../store/actions';
 import { campaignAllNotesLoadingSelector, RootState } from '../../store/reducers';
+import { NoteVisibility } from '../../types/note.types';
 import { Notes } from './Notes';
 
 interface Props {
@@ -22,16 +23,14 @@ export const CampaignNotesList = (props: Props) => {
         dispatch(campaignActions.actions.fetchSharedNotes(props.campaignId));
     }, [dispatch, props.campaignId]);
 
+    const create = (contents: string, visibility: NoteVisibility) => {
+        dispatch(campaignActions.actions.createNote({ id: props.campaignId, contents, visibility }));
+    };
+
     if (loading || props.campaignId !== campaign?.id) {
         return <></>;
     }
     return (
-        <Notes
-            notes={notes}
-            sharedNotes={sharedNotes}
-            onCreate={console.log}
-            onEdit={console.log}
-            onDelete={console.log}
-        />
+        <Notes notes={notes} sharedNotes={sharedNotes} onCreate={create} onEdit={console.log} onDelete={console.log} />
     );
 };

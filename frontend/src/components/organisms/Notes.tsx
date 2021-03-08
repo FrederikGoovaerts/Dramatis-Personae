@@ -22,9 +22,13 @@ export const Notes = (props: Props) => {
             <>
                 <Box key={note.id} padding="1em">
                     <Flex justify="space-between">
-                        {note.contents.split('\n').map((el, index) => (
-                            <Text key={index}>{el}</Text>
-                        ))}
+                        <Box>
+                            {note.contents
+                                .split('\n')
+                                .map((el, index) =>
+                                    el === '' ? <Box height="0.5em" /> : <Text key={index}>{el}</Text>
+                                )}
+                        </Box>
                         <Flex direction="column">
                             <Button onClick={() => setEditNote(note)} marginBottom="0.5em">
                                 Edit
