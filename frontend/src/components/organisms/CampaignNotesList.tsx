@@ -29,9 +29,9 @@ export const CampaignNotesList = (props: Props) => {
         <Notes
             notes={notes}
             sharedNotes={sharedNotes}
-            createNote={console.log}
-            editNote={console.log}
-            deleteNote={console.log}
+            onCreate={console.log}
+            onEdit={console.log}
+            onDelete={console.log}
         />
     );
 };

@@ -2,17 +2,17 @@ import { Box, Button, Divider, Flex, Heading, Text } from '@chakra-ui/react';
 import React, { useState } from 'react';
 
 import { Note, NoteVisibility } from '../../types/note.types';
+import { NotesCreateDrawer } from './NotesCreateDrawer';
 
 interface Props {
     notes: Note[];
     sharedNotes: Note[];
-    createNote: (contents: string, visibility: NoteVisibility) => void;
-    editNote: (id: string, contents: string, visibility: NoteVisibility) => void;
-    deleteNote: (id: string) => void;
+    onCreate: (contents: string, visibility: NoteVisibility) => void;
+    onEdit: (id: string, contents: string, visibility: NoteVisibility) => void;
+    onDelete: (id: string) => void;
 }
 
 export const Notes = (props: Props) => {
-    const [createOpen, setCreateOpen] = useState(false);
     const [editNote, setEditNote] = useState<Note | undefined>(undefined);
 
     const renderNote = (note: Note) => {
@@ -42,9 +42,9 @@ export const Notes = (props: Props) => {
         <Box>
             <Flex marginBottom="1em" alignItems="center">
                 <Heading>Your notes</Heading>
-                <Button onClick={() => setCreateOpen(true)} size="sm" marginLeft="1em">
-                    Add
-                </Button>
+                <Box marginLeft="0.5em">
+                    <NotesCreateDrawer onCreate={props.onCreate} />
+                </Box>
             </Flex>
             <Box marginBottom="2em">{props.notes.map(renderNote)}</Box>
             {props.sharedNotes.length > 0 && (
