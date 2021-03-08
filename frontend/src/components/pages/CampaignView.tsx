@@ -7,6 +7,7 @@ import { campaignCharactersRoute, campaignNotesRoute, characterRoute } from '../
 import { campaignActions } from '../../store/actions';
 import { campaignLoadingSelector, RootState } from '../../store/reducers';
 import { CampaignCharacterList } from '../organisms/CampaignCharacterList';
+import { CampaignNotesList } from '../organisms/CampaignNotesList';
 import { CampaignSidebar } from '../organisms/CampaignSidebar';
 
 interface Props {
@@ -42,7 +43,9 @@ export const CampaignView = (props: Props) => {
                         <Route
                             strict
                             path={campaignNotesRoute(':campaignId')}
-                            component={() => <Button>notes</Button>}
+                            render={({ match }: RouteComponentProps<{ campaignId: string }>) => (
+                                <CampaignNotesList campaignId={match.params.campaignId} owner={campaign.owner} />
+                            )}
                         />
                         <Route
                             strict
