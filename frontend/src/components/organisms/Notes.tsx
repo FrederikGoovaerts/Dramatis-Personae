@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 
 import { Note, NoteVisibility } from '../../types/note.types';
 import { NotesCreateDrawer } from './NotesCreateDrawer';
+import { NotesEditDrawer } from './NotesEditDrawer';
 
 interface Props {
     notes: Note[];
@@ -14,6 +15,10 @@ interface Props {
 
 export const Notes = (props: Props) => {
     const [editNote, setEditNote] = useState<Note | undefined>(undefined);
+
+    const edit = (id: string, contents: string, visibility: NoteVisibility) => {
+        props.onEdit(id, contents, visibility);
+    };
 
     const renderNote = (note: Note) => {
         const visibility =
@@ -45,7 +50,7 @@ export const Notes = (props: Props) => {
     return (
         <Box>
             <Flex marginBottom="1em" alignItems="center">
-                <Heading>Your notes</Heading>
+                <Heading size="lg">Your notes</Heading>
                 <Box marginLeft="0.5em">
                     <NotesCreateDrawer onCreate={props.onCreate} />
                 </Box>
@@ -53,10 +58,18 @@ export const Notes = (props: Props) => {
             <Box marginBottom="2em">{props.notes.map(renderNote)}</Box>
             {props.sharedNotes.length > 0 && (
                 <Box marginBottom="1em">
-                    <Heading>Notes by others</Heading>
+                    <Heading size="lg">Notes by others</Heading>
                 </Box>
             )}
             {props.sharedNotes.length > 0 && <Box marginBottom="2em">{props.sharedNotes.map(renderNote)}</Box>}
+            {editNote !== undefined && (
+                <NotesEditDrawer
+                    note={editNote}
+                    onEdit={edit}
+                    onClose={() => setEditNote(undefined)}
+                    onDelete={props.onDelete}
+                />
+            )}
         </Box>
     );
 };

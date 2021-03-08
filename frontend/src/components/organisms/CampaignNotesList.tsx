@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { campaignActions } from '../../store/actions';
+import { campaignActions, noteActions } from '../../store/actions';
 import { campaignAllNotesLoadingSelector, RootState } from '../../store/reducers';
 import { NoteVisibility } from '../../types/note.types';
 import { Notes } from './Notes';
@@ -27,10 +27,16 @@ export const CampaignNotesList = (props: Props) => {
         dispatch(campaignActions.actions.createNote({ id: props.campaignId, contents, visibility }));
     };
 
+    const edit = (id: string, contents: string, visibility: NoteVisibility) => {
+        dispatch(noteActions.actions.editCampaignNote({ id: props.campaignId, noteId: id, contents, visibility }));
+    };
+
+    const del = (id: string) => {
+        dispatch(noteActions.actions.deleteCampaignNote({ id: props.campaignId, noteId: id }));
+    };
+
     if (loading || props.campaignId !== campaign?.id) {
         return <></>;
     }
-    return (
-        <Notes notes={notes} sharedNotes={sharedNotes} onCreate={create} onEdit={console.log} onDelete={console.log} />
-    );
+    return <Notes notes={notes} sharedNotes={sharedNotes} onCreate={create} onEdit={edit} onDelete={del} />;
 };
