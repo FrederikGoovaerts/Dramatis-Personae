@@ -27,7 +27,7 @@ export const CampaignSidebar = (props: Props) => {
 
     const renderLink = (el: { title: string; route: string; disabled?: boolean }) =>
         el.disabled ? (
-            <Text fontSize="lg" marginBottom="0.5em" color="gray.500">
+            <Text fontSize="lg" marginBottom="0.5em" color="gray.500" key={el.title}>
                 {el.title}
             </Text>
         ) : (

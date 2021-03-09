@@ -24,26 +24,28 @@ export const Notes = (props: Props) => {
         const visibility =
             note.visibility === 'PUBLIC' ? 'Public' : note.visibility === 'PRIVATE' ? 'Private' : 'Shared with DM';
         return (
-            <>
-                <Box key={note.id} padding="1em">
+            <Box key={note.id}>
+                <Box padding="1em">
                     <Flex justify="space-between">
                         <Box>
                             {note.contents
                                 .split('\n')
                                 .map((el, index) =>
-                                    el === '' ? <Box height="0.5em" /> : <Text key={index}>{el}</Text>
+                                    el === '' ? <Box height="0.5em" key={index} /> : <Text key={index}>{el}</Text>
                                 )}
                         </Box>
-                        <Flex direction="column">
-                            <Button onClick={() => setEditNote(note)} marginBottom="0.5em">
-                                Edit
-                            </Button>
+                        <Box>
+                            <Flex justify="flex-end">
+                                <Button onClick={() => setEditNote(note)} marginBottom="0.5em">
+                                    Edit
+                                </Button>
+                            </Flex>
                             <Text fontStyle="italic">{visibility}</Text>
-                        </Flex>
+                        </Box>
                     </Flex>
                 </Box>
                 <Divider key={`divider-${note.id}`} />
-            </>
+            </Box>
         );
     };
 
