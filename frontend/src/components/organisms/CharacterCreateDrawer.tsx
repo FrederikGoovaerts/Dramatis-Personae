@@ -66,7 +66,7 @@ export const CharacterCreateDrawer = (props: Props) => {
                 </DrawerOverlay>
             </Drawer>
             <Button onClick={() => setOpen(true)} size="sm">
-                Add
+                Add character
             </Button>
         </>
     );

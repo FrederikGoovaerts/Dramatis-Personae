@@ -25,6 +25,19 @@ export const CampaignSidebar = (props: Props) => {
         return <Box />;
     }
 
+    const renderLink = (el: { title: string; route: string; disabled?: boolean }) =>
+        el.disabled ? (
+            <Text fontSize="lg" marginBottom="0.5em" color="gray.500">
+                {el.title}
+            </Text>
+        ) : (
+            <Link to={el.route} key={el.title}>
+                <Text fontSize="lg" marginBottom="0.5em">
+                    {el.title}
+                </Text>
+            </Link>
+        );
+
     return (
         <Box maxWidth="18rem" paddingX="1em">
             <Heading size="md" marginBottom="1em">
@@ -33,16 +46,10 @@ export const CampaignSidebar = (props: Props) => {
             <Box marginY="1em">
                 {[
                     { title: 'Characters', route: campaignCharactersRoute(props.id) },
-                    { title: 'Locations', route: campaignLocationsRoute(props.id) },
-                    { title: 'Events', route: campaignEventsRoute(props.id) },
+                    { title: 'Locations', route: campaignLocationsRoute(props.id), disabled: true },
+                    { title: 'Events', route: campaignEventsRoute(props.id), disabled: true },
                     { title: 'Campaign notes', route: campaignNotesRoute(props.id) }
-                ].map((el) => (
-                    <Link to={el.route} key={el.title}>
-                        <Text fontSize="lg" marginBottom="0.5em">
-                            {el.title}
-                        </Text>
-                    </Link>
-                ))}
+                ].map(renderLink)}
             </Box>
             <Button onClick={() => pushToHistory(rootRoute())} leftIcon={<ArrowBackIcon />} marginTop="2em">
                 Campaign list

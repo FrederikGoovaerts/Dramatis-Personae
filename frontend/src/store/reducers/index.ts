@@ -10,11 +10,18 @@ export const campaignLoadingSelector = (state: RootState) => state.campaign.load
 export const campaignCharactersLoadingSelector = (state: RootState) => state.campaign.charactersLoading;
 const campaignNotesLoadingSelector = (state: RootState) => state.campaign.notesLoading;
 const campaignSharedNotesLoadingSelector = (state: RootState) => state.campaign.sharedNotesLoading;
+const campaignLabelsLoadingSelector = (state: RootState) => state.campaign.labelsLoading;
 
 export const campaignAllNotesLoadingSelector = createSelector(
     campaignNotesLoadingSelector,
     campaignSharedNotesLoadingSelector,
     (notesLoading, sharedNotesLoading) => notesLoading || sharedNotesLoading
+);
+
+export const campaignCharacterListLoadingSelector = createSelector(
+    campaignCharactersLoadingSelector,
+    campaignLabelsLoadingSelector,
+    (chars, labels) => chars || labels
 );
 
 export interface RootState {
