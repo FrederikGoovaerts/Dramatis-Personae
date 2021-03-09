@@ -26,7 +26,7 @@ function getPersistedFilters(): PersistedFilters | undefined {
         return undefined;
     }
     const filters = JSON.parse(filterString);
-    if (filters.filterName && filters.filterLabelIds) {
+    if (filters.filterName || filters.filterLabelIds) {
         return filters as PersistedFilters;
     }
 }
@@ -118,9 +118,7 @@ export const CampaignCharacterList = (props: Props) => {
             <Divider mb={3} />
 
             {filteredCharacters.map((c) => (
-                <>
-                    <CharacterLine key={c.id} character={c} campaignId={props.campaignId} />
-                </>
+                <CharacterLine key={c.id} character={c} campaignId={props.campaignId} />
             ))}
         </Box>
     );
