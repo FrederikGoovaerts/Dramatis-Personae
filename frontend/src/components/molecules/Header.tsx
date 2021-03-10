@@ -16,13 +16,14 @@ import React from 'react';
 import { PersonaeIcon } from '../../assets/svg/PersonaeIcon';
 
 export const Header = () => {
-    const { toggleColorMode } = useColorMode();
+    const { toggleColorMode, colorMode } = useColorMode();
 
     const iconColor = useColorModeValue('teal.500', 'teal.400');
     const colorIcon = useColorModeValue(<SunIcon />, <MoonIcon />);
+    const bgColor = colorMode === 'light' ? 'white' : 'gray.800';
 
     return (
-        <header>
+        <Box position="sticky" top="0" bgColor={bgColor} zIndex={3}>
             <Box marginRight="auto" marginLeft="auto" maxWidth="75rem" height="6em">
                 <HStack direction="row" justify="space-between">
                     <Flex alignItems="center" direction="row">
@@ -38,6 +39,6 @@ export const Header = () => {
                 </HStack>
             </Box>
             <Divider />
-        </header>
+        </Box>
     );
 };

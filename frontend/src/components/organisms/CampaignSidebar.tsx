@@ -40,7 +40,7 @@ export const CampaignSidebar = (props: Props) => {
         );
 
     return (
-        <Box maxWidth="18rem" paddingX="1em">
+        <Box position="sticky" top="8em" maxWidth="18rem" paddingX="1em">
             <Heading size="md" marginBottom="1em">
                 {campaign.name}
             </Heading>
