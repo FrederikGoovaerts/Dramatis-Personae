@@ -36,7 +36,7 @@ export const CharacterCreateDrawer = (props: Props) => {
             <Drawer isOpen={open} onClose={() => setOpen(false)} size="lg">
                 <DrawerOverlay>
                     <DrawerContent>
-                        <DrawerHeader>Create a new note</DrawerHeader>
+                        <DrawerHeader>Create a new character</DrawerHeader>
                         <DrawerBody>
                             <Text marginY="1em">Name:</Text>
                             <Input

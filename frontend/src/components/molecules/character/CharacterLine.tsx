@@ -1,14 +1,19 @@
 import { ViewOffIcon } from '@chakra-ui/icons';
-import { Box, Button, Flex, HStack, Tag, Text } from '@chakra-ui/react';
+import { Box, Flex, HStack, Tag, Text } from '@chakra-ui/react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { characterRoute } from '../../../config/constants';
 import { ListCharacter } from '../../../types/character.types';
+import { CharacterEditDrawer } from '../../organisms/CharacterEditDrawer';
 
 interface Props {
     campaignId: string;
     character: ListCharacter;
+    onEdit: (id: string, name: string, description: string) => void;
+    onDelete: (id: string) => void;
+    onAddLabel: (id: string, labelId: string) => void;
+    onRemoveLabel: (id: string, labelId: string) => void;
 }
 
 export const CharacterLine = (props: Props) => (
@@ -32,7 +37,13 @@ export const CharacterLine = (props: Props) => (
             )}
         </Box>
         <Flex alignItems="center">
-            <Button>Edit</Button>
+            <CharacterEditDrawer
+                character={props.character}
+                onEdit={props.onEdit}
+                onDelete={props.onDelete}
+                onAddLabel={props.onAddLabel}
+                onRemoveLabel={props.onRemoveLabel}
+            />
         </Flex>
     </Flex>
 );

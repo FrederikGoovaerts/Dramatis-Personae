@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { localStorageKeys } from '../../config/state';
-import { campaignActions } from '../../store/actions';
+import { campaignActions, characterActions } from '../../store/actions';
 import { campaignCharacterListLoadingSelector, RootState } from '../../store/reducers';
 import { CharacterLine } from '../molecules/character/CharacterLine';
 import { CharacterCreateDrawer } from './CharacterCreateDrawer';
@@ -86,6 +86,27 @@ export const CampaignCharacterList = (props: Props) => {
         );
     };
 
+    const edit = (id: string, name: string, description: string) => {
+        dispatch(
+            characterActions.actions.editCharacter({
+                campaignId: props.campaignId,
+                edit: { characterId: id, name, description, visible: true }
+            })
+        );
+    };
+
+    const del = (id: string) => {
+        dispatch(characterActions.actions.deleteCharacter({ id, campaignId: props.campaignId }));
+    };
+
+    const addLabel = (characterId: string, labelId: string) => {
+        dispatch(characterActions.actions.addLabel({ campaignId: props.campaignId, characterId, labelId }));
+    };
+
+    const removeLabel = (characterId: string, labelId: string) => {
+        dispatch(characterActions.actions.removeLabel({ campaignId: props.campaignId, characterId, labelId }));
+    };
+
     if (loading || props.campaignId !== campaign?.id) {
         return <></>;
     }
@@ -118,7 +139,15 @@ export const CampaignCharacterList = (props: Props) => {
             <Divider mb={3} />
 
             {filteredCharacters.map((c) => (
-                <CharacterLine key={c.id} character={c} campaignId={props.campaignId} />
+                <CharacterLine
+                    key={c.id}
+                    character={c}
+                    campaignId={props.campaignId}
+                    onEdit={edit}
+                    onDelete={del}
+                    onAddLabel={addLabel}
+                    onRemoveLabel={removeLabel}
+                />
             ))}
         </Box>
     );

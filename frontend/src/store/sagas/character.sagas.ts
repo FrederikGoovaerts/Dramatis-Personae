@@ -1,7 +1,7 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
 
 import * as character from '../../api/character.api';
-import { characterActions } from '../actions';
+import { campaignActions, characterActions } from '../actions';
 
 function* fetchCharacter(action: characterActions.specificTypes['fetchCharacter']) {
     yield put(characterActions.actions.setCharacterLoading(true));
@@ -86,9 +86,9 @@ function* createNote(action: characterActions.specificTypes['createNote']) {
 
 function* editCharacter(action: characterActions.specificTypes['editCharacter']) {
     try {
-        const { characterId, name, description, visible } = action.payload;
+        const { characterId, name, description, visible } = action.payload.edit;
         yield call(character.update, characterId, name, description, visible);
-        yield put(characterActions.actions.fetchCharacter(action.payload.characterId));
+        yield put(campaignActions.actions.fetchCharacters(action.payload.campaignId));
     } catch (e) {
         console.error('Unable to update character. Please try again later.');
     }
@@ -96,7 +96,8 @@ function* editCharacter(action: characterActions.specificTypes['editCharacter'])
 
 function* deleteCharacter(action: characterActions.specificTypes['deleteCharacter']) {
     try {
-        yield call(character.deletePermanently, action.payload);
+        yield call(character.deletePermanently, action.payload.id);
+        yield put(campaignActions.actions.fetchCharacters(action.payload.campaignId));
     } catch (e) {
         console.error('Unable to delete character. Please try again later.');
     }
@@ -105,7 +106,7 @@ function* deleteCharacter(action: characterActions.specificTypes['deleteCharacte
 function* addLabel(action: characterActions.specificTypes['addLabel']) {
     try {
         yield call(character.addLabel, action.payload);
-        yield put(characterActions.actions.fetchCharacter(action.payload.characterId));
+        yield put(campaignActions.actions.fetchCharacters(action.payload.campaignId));
     } catch (e) {
         console.error('Unable to add label. Please try again later.');
     }
@@ -114,7 +115,7 @@ function* addLabel(action: characterActions.specificTypes['addLabel']) {
 function* removeLabel(action: characterActions.specificTypes['removeLabel']) {
     try {
         yield call(character.removeLabel, action.payload);
-        yield put(characterActions.actions.fetchCharacter(action.payload.characterId));
+        yield put(campaignActions.actions.fetchCharacters(action.payload.campaignId));
     } catch (e) {
         console.error('Unable to remove label. Please try again later.');
     }
