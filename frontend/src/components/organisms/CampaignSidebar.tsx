@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import {
     campaignCharactersRoute,
     campaignEventsRoute,
+    campaignLabelsRoute,
     campaignLocationsRoute,
     campaignNotesRoute,
     rootRoute
@@ -48,7 +49,8 @@ export const CampaignSidebar = (props: Props) => {
                     { title: 'Characters', route: campaignCharactersRoute(props.id) },
                     { title: 'Locations', route: campaignLocationsRoute(props.id), disabled: true },
                     { title: 'Events', route: campaignEventsRoute(props.id), disabled: true },
-                    { title: 'Campaign notes', route: campaignNotesRoute(props.id) }
+                    { title: 'Notes', route: campaignNotesRoute(props.id) },
+                    { title: 'Labels', route: campaignLabelsRoute(props.id) }
                 ].map(renderLink)}
             </Box>
             <Button onClick={() => pushToHistory(rootRoute())} leftIcon={<ArrowBackIcon />} marginTop="2em">

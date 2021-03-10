@@ -2,14 +2,18 @@ import { Box, Button, Input, InputGroup, InputRightAddon } from '@chakra-ui/reac
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { campaignActions } from '../../../store/actions';
+import { campaignActions } from '../../store/actions';
 
-export const NewCampaignForm = () => {
+interface Props {
+    campaignId: string;
+}
+
+export const LabelNewForm = (props: Props) => {
     const [name, setName] = useState('');
     const dispatch = useDispatch();
 
     const create = () => {
-        dispatch(campaignActions.actions.newCampaign(name));
+        dispatch(campaignActions.actions.createLabel({ id: props.campaignId, name, visible: true }));
         setName('');
     };
 
@@ -19,7 +23,7 @@ export const NewCampaignForm = () => {
                 <Input
                     onChange={(e) => setName(e.target.value)}
                     value={name}
-                    placeholder="New campaign name"
+                    placeholder="New label name"
                     focusBorderColor="teal.500"
                     width="30%"
                 />

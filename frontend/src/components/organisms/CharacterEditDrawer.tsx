@@ -9,6 +9,8 @@ import {
     DrawerOverlay,
     Flex,
     Input,
+    InputGroup,
+    InputRightAddon,
     Link,
     ListItem,
     Select,
@@ -90,20 +92,30 @@ export const CharacterEditDrawer = (props: Props) => {
                                     <Text marginY="1em">Labels:</Text>
                                     {applicableLabels.length > 0 && (
                                         <Flex>
-                                            <Select
-                                                placeholder="Choose a label to add"
-                                                value={label}
-                                                onChange={(e) => setLabel(e.target.value)}
-                                            >
-                                                {applicableLabels.map((l) => (
-                                                    <option key={l.id} value={l.id}>
-                                                        {l.name}
-                                                    </option>
-                                                ))}
-                                            </Select>
-                                            <Button ml={3} disabled={label === undefined} onClick={addLabel}>
-                                                Add
-                                            </Button>
+                                            <InputGroup>
+                                                <Select
+                                                    placeholder="Choose a label to add"
+                                                    value={label}
+                                                    onChange={(e) => setLabel(e.target.value)}
+                                                    borderEndRadius="0"
+                                                >
+                                                    {applicableLabels.map((l) => (
+                                                        <option key={l.id} value={l.id}>
+                                                            {l.name}
+                                                        </option>
+                                                    ))}
+                                                </Select>
+                                                <InputRightAddon padding="0">
+                                                    <Button
+                                                        disabled={label === undefined}
+                                                        onClick={addLabel}
+                                                        variant="ghost"
+                                                        borderRadius="0"
+                                                    >
+                                                        Add
+                                                    </Button>
+                                                </InputRightAddon>
+                                            </InputGroup>
                                         </Flex>
                                     )}
                                     <UnorderedList mt={3}>
