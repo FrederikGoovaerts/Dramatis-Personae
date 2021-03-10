@@ -24,7 +24,7 @@ export const NewCampaignForm = () => {
                     width="30%"
                 />
                 <InputRightAddon padding="0">
-                    <Button onClick={create} variant="ghost" borderRadius="0">
+                    <Button onClick={create} disabled={name === ''} variant="ghost" borderRadius="0">
                         Create
                     </Button>
                 </InputRightAddon>
