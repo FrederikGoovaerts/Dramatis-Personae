@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { characterActions } from '../../store/actions';
 import { campaignLoadingSelector, RootState } from '../../store/reducers';
+import { CharacterNotesList } from '../organisms/CharacterNotesList';
 import { CharacterSidebar } from '../organisms/CharacterSidebar';
 
 interface Props {
@@ -30,7 +31,7 @@ export const CharacterView = (props: Props) => {
         <HStack marginTop="2em" alignItems="flex-start" spacing={8}>
             <CharacterSidebar campaignId={props.campaignId} characterId={props.characterId} />
             <Fade in={true} style={{ width: '100%' }}>
-                Stuff
+                <CharacterNotesList characterId={props.characterId} />
             </Fade>
         </HStack>
     );

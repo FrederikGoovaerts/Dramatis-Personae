@@ -36,11 +36,16 @@ export const Notes = (props: Props) => {
                         </Box>
                         <Box>
                             <Flex justify="flex-end">
-                                <Button onClick={() => setEditNote(note)} marginBottom="0.5em">
-                                    Edit
-                                </Button>
+                                <Button onClick={() => setEditNote(note)}>Edit</Button>
                             </Flex>
-                            <Text fontStyle="italic">{visibility}</Text>
+                            <Flex justify="flex-end" my={3}>
+                                <Text fontStyle="italic" textAlign="end">
+                                    {visibility}
+                                </Text>
+                            </Flex>
+                            <Flex justify="flex-end">
+                                <Text textAlign="end">By {note.authorName}</Text>
+                            </Flex>
                         </Box>
                     </Flex>
                 </Box>

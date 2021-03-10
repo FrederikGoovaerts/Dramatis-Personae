@@ -56,20 +56,26 @@ export const NotesEditDrawer = (props: Props) => {
                             size="lg"
                             height="75%"
                         />
-                        <Text marginTop="1em">Note visibility:</Text>
-                        <Select value={vis} onChange={(e) => setVis(e.target.value as NoteVisibility)}>
-                            <option value="PRIVATE">Private</option>
-                            <option value="DM_SHARED">Shared with DM</option>
-                            <option value="PUBLIC">Public</option>
-                        </Select>
+                        {props.note.owned && (
+                            <>
+                                <Text marginTop="1em">Note visibility:</Text>
+                                <Select value={vis} onChange={(e) => setVis(e.target.value as NoteVisibility)}>
+                                    <option value="PRIVATE">Private</option>
+                                    <option value="DM_SHARED">Shared with DM</option>
+                                    <option value="PUBLIC">Public</option>
+                                </Select>
+                            </>
+                        )}
                     </DrawerBody>
                     <DrawerFooter>
                         <Button variant="outline" mr={3} onClick={close}>
                             Close
                         </Button>
-                        <Box mr={3}>
-                            <ConfirmableButton onConfirm={del} defaultText="Delete" />
-                        </Box>
+                        {props.note.owned && (
+                            <Box mr={3}>
+                                <ConfirmableButton onConfirm={del} defaultText="Delete" />
+                            </Box>
+                        )}
                         <Button onClick={edit}>Save</Button>
                     </DrawerFooter>
                 </DrawerContent>
