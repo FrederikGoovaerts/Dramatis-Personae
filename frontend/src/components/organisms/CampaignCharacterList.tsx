@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { localStorageKeys } from '../../config/state';
 import { campaignActions, characterActions } from '../../store/actions';
 import { campaignCharacterListLoadingSelector, RootState } from '../../store/reducers';
-import { CharacterLine } from '../molecules/character/CharacterLine';
+import { CharacterLine } from '../molecules/CharacterLine';
 import { CharacterCreateDrawer } from './CharacterCreateDrawer';
 import { CharacterFilterDrawer } from './CharacterFilterDrawer';
 

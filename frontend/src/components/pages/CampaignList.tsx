@@ -8,7 +8,7 @@ import { campaignActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
 import { Campaign } from '../../types/campaign.types';
 import { ConfirmableButton } from '../atoms/ConfirmableButton';
-import { NewCampaignForm } from '../molecules/campaign/NewCampaignForm';
+import { NewCampaignForm } from '../molecules/NewCampaignForm';
 import { CampaignEditDrawer } from '../organisms/CampaignEditDrawer';
 
 export const CampaignList = () => {

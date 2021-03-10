@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import React from 'react';
 
-import { PersonaeIcon } from '../../../assets/svg/PersonaeIcon';
+import { PersonaeIcon } from '../../assets/svg/PersonaeIcon';
 
 export const Header = () => {
     const { toggleColorMode } = useColorMode();

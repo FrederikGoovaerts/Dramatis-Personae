@@ -2,7 +2,7 @@ import { Box, Button, Input, InputGroup, InputRightAddon } from '@chakra-ui/reac
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { campaignActions } from '../../../store/actions';
+import { campaignActions } from '../../store/actions';
 
 export const NewCampaignForm = () => {
     const [name, setName] = useState('');

@@ -3,9 +3,9 @@ import { Box, Flex, HStack, Tag, Text } from '@chakra-ui/react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { characterRoute } from '../../../config/constants';
-import { ListCharacter } from '../../../types/character.types';
-import { CharacterEditDrawer } from '../../organisms/CharacterEditDrawer';
+import { characterRoute } from '../../config/constants';
+import { ListCharacter } from '../../types/character.types';
+import { CharacterEditDrawer } from '../organisms/CharacterEditDrawer';
 
 interface Props {
     campaignId: string;
