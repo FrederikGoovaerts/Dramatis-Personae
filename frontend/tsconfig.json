@@ -8,8 +8,8 @@
         "target": "es2017",
         "jsx": "react",
         "esModuleInterop": true,
-        "types": ["jest"]
+        "skipLibCheck": true,
+        "types": []
     },
-    "include": ["src/**/*"],
-    "exclude": ["src/components-old/**/*", "test/**/*"]
+    "include": ["src/**/*"]
 }
