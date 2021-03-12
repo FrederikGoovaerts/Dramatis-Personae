@@ -5,7 +5,7 @@ import {
     AccordionItem,
     AccordionPanel,
     Box,
-    Button,
+    Fade,
     Heading,
     Skeleton,
     Stack,
@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { characterActions } from '../../store/actions';
 import { RootState } from '../../store/reducers';
 import { CharacterRelationListItem } from '../molecules/CharacterRelationLine';
+import { CharacterRelationCreateDrawer } from './CharacterRelationCreateDrawer';
 
 interface Props {
     campaignId: string;
@@ -32,19 +33,9 @@ export const CharacterRelations = (props: Props) => {
         dispatch(characterActions.actions.fetchRelations(props.characterId));
     }, [dispatch, props.characterId]);
 
-    if (loading) {
-        return (
-            <>
-                <Heading size="lg" mb={6}>
-                    Character interactions
-                </Heading>
-                <Stack>
-                    <Skeleton height="40px" />
-                    <Skeleton height="40px" />
-                </Stack>
-            </>
-        );
-    }
+    const deleteCharacterRelation = (relId: string) => {
+        dispatch(characterActions.actions.deleteRelation({ charId: props.characterId, relationId: relId }));
+    };
 
     const sortedCharacterRelations = [...characterRelations].sort((r1) =>
         r1.origin.id === props.characterId ? -1 : 1
@@ -66,18 +57,25 @@ export const CharacterRelations = (props: Props) => {
                         </AccordionButton>
                     </h2>
                     <AccordionPanel pb={4}>
-                        <UnorderedList ml={3}>
-                            {sortedCharacterRelations.map((r) => (
-                                <CharacterRelationListItem
-                                    campaignId={props.campaignId}
-                                    characterId={props.characterId}
-                                    relation={r}
-                                    onDelete={console.log}
-                                    key={r.id}
-                                />
-                            ))}
-                        </UnorderedList>
-                        <Button mt={3}>Add new relation</Button>
+                        <Fade in={!loading}>
+                            <UnorderedList ml={3}>
+                                {sortedCharacterRelations.map((r) => (
+                                    <CharacterRelationListItem
+                                        campaignId={props.campaignId}
+                                        characterId={props.characterId}
+                                        relation={r}
+                                        onDelete={() => deleteCharacterRelation(r.id)}
+                                        key={r.id}
+                                    />
+                                ))}
+                            </UnorderedList>
+                        </Fade>
+                        <Box mt={3}>
+                            <CharacterRelationCreateDrawer
+                                campaignId={props.campaignId}
+                                characterId={props.characterId}
+                            />
+                        </Box>
                     </AccordionPanel>
                 </AccordionItem>
 

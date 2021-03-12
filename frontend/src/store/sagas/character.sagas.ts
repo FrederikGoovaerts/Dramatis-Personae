@@ -68,7 +68,7 @@ function* createRelation(action: characterActions.specificTypes['createRelation'
 function* deleteRelation(action: characterActions.specificTypes['deleteRelation']) {
     try {
         yield call(character.deleteRelation, action.payload.relationId);
-        // Assume we always create from the origin character and thus reload its relations
+        // Assume we always delete from the origin character and thus reload its relations
         yield put(characterActions.actions.fetchRelations(action.payload.charId));
     } catch (e) {
         console.error('Unable to delete relation. Please try again later.');
