@@ -70,7 +70,7 @@ function* joinCampaign(action: campaignActions.specificTypes['joinCampaign']) {
 function* rotateInviteCode(action: campaignActions.specificTypes['rotateInviteCode']) {
     try {
         yield call(campaign.rotateInviteCode, action.payload);
-        yield put(campaignActions.actions.fetchCampaign(action.payload));
+        yield put(campaignActions.actions.fetchCampaigns());
     } catch (e) {
         console.error('Unable to rotate invite code. Please try again later.');
     }
@@ -107,9 +107,9 @@ function* newCampaign(action: campaignActions.specificTypes['newCampaign']) {
 function* editCampaign(action: campaignActions.specificTypes['editCampaign']) {
     try {
         yield call(campaign.update, action.payload.id, action.payload.name);
-        yield put(campaignActions.actions.fetchCampaign(action.payload.id));
+        yield put(campaignActions.actions.fetchCampaigns());
     } catch (e) {
-        console.error('Unable to delete campaign. Please try again later.');
+        console.error('Unable to edit campaign. Please try again later.');
     }
 }
 

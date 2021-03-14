@@ -2,6 +2,12 @@
 
 The backend is written in [Kotlin](https://kotlinlang.org/) and uses the [Spring Boot](https://spring.io/projects/spring-boot) framework. It uses a [PostgreSQL](https://www.postgresql.org/) database for persistent storage.
 
+## Quick start
+
+Run `./gradlew bootRun --args='--spring.profiles.active=dev'` to run the backend in development mode.
+
+## Running the backend
+
 The application is available as automatically built [Docker](https://docs.docker.com/) images on [Docker Hub](https://hub.docker.com/r/frederikgoovaerts/dramatis-personae-backend). The application can be run by spinning up one of these images, or by downloading the source code and using [Gradle](https://gradle.org/) with the command `./gradlew bootRun`. Alternatively, run `./gradlew bootJar` to create a runnable `.jar` file. In each case, the necessary environment variables must be provided to the application, as detailed below.
 
 ## Environment variables

@@ -40,19 +40,17 @@ export const api = {
     EVENT: '/event'
 };
 
-export const routes = {
-    character: '/character/',
-    campaign: {
-        path: '/campaign/',
-        subpathCharacters: '/characters',
-        subpathEvents: '/events',
-        subpathNotes: '/notes',
-        subpathLabels: '/labels',
-        subpathDetails: '/details'
-    },
-    join: '/join/',
-    root: '/'
-};
+export const rootRoute = () => '/';
+export const joinRoute = (joinId: string) => `/join/${joinId}`;
+export const campaignRoute = (campaignId: string) => `/campaign/${campaignId}`;
+export const campaignCharactersRoute = (campaignId: string) => `/campaign/${campaignId}/characters`;
+export const campaignLocationsRoute = (campaignId: string) => `/campaign/${campaignId}/locations`;
+export const campaignEventsRoute = (campaignId: string) => `/campaign/${campaignId}/events`;
+export const campaignNotesRoute = (campaignId: string) => `/campaign/${campaignId}/notes`;
+export const campaignLabelsRoute = (campaignId: string) => `/campaign/${campaignId}/labels`;
+export const campaignMgmtRoute = (campaignId: string) => `/campaign/${campaignId}/mgmt`;
+export const characterRoute = (campaignId: string, characterId: string) =>
+    `/campaign/${campaignId}/character/${characterId}`;
 
 export const storage = {
     idToken: 'idToken',

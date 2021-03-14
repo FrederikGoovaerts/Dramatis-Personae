@@ -29,11 +29,13 @@ export interface DeleteLabelPayload {
 }
 
 export interface AddLabelPayload {
+    campaignId: string;
     characterId: string;
     labelId: string;
 }
 
 export interface RemoveLabelPayload {
+    campaignId: string;
     characterId: string;
     labelId: string;
 }

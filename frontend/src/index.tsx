@@ -1,4 +1,4 @@
-import { MuiThemeProvider } from '@material-ui/core';
+import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -6,14 +6,26 @@ import { Router } from 'react-router-dom';
 
 import App from './components/App';
 import { history, store } from './config/state';
-import { theme } from './config/theme';
+
+const theme = extendTheme({
+    fonts: {
+        heading: 'Inter, sans-serif',
+        body: 'Inter, sans-serif'
+    },
+    textStyles: {
+        title: {
+            fontSize: ['24px', '28px'],
+            fontWeight: 'semibold'
+        }
+    }
+});
 
 ReactDOM.render(
     <Provider store={store}>
         <Router history={history}>
-            <MuiThemeProvider theme={theme}>
+            <ChakraProvider theme={theme}>
                 <App />
-            </MuiThemeProvider>
+            </ChakraProvider>
         </Router>
     </Provider>,
     document.getElementById('root')
