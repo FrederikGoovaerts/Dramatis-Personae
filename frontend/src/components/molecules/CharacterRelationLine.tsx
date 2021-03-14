@@ -15,9 +15,9 @@ interface Props {
 export const CharacterRelationListItem = (props: Props) => {
     const { origin, destination } = props.relation;
 
-    const transformCharacterName = (can: RelationCandidate, capitalize: boolean) =>
+    const transformCharacterName = (can: RelationCandidate) =>
         can.id === props.characterId ? (
-            <Text>{capitalize ? 'T' : 't'}his character</Text>
+            <Text>{can.name}</Text>
         ) : (
             <Link to={characterRoute(props.campaignId, can.id)}>
                 <Text as="u">{can.name}</Text>
@@ -27,9 +27,9 @@ export const CharacterRelationListItem = (props: Props) => {
     return (
         <ListItem>
             <Flex>
-                {transformCharacterName(origin, true)}
+                {transformCharacterName(origin)}
                 <Text mx={1}>{props.relation.relation}</Text>
-                {transformCharacterName(destination, false)}
+                {transformCharacterName(destination)}
                 <Text ml={1}>
                     (
                     {

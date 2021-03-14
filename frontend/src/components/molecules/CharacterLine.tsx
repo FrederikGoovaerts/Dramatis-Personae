@@ -17,7 +17,7 @@ interface Props {
 }
 
 export const CharacterLine = (props: Props) => (
-    <Flex marginBottom="1.5em" justifyContent="space-between">
+    <Flex marginBottom="1.5em" justifyContent="space-between" borderLeft="2px" pl={3} borderColor="gray.500">
         <Box>
             <HStack marginBottom="0,5em">
                 <Link to={characterRoute(props.campaignId, props.character.id)}>

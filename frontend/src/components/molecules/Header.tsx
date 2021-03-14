@@ -5,6 +5,7 @@ import {
     ButtonGroup,
     Divider,
     Flex,
+    Heading,
     HStack,
     IconButton,
     Text,
@@ -30,7 +31,7 @@ export const Header = () => {
                         <Box margin="1em">
                             <PersonaeIcon boxSize="3em" color={iconColor} />
                         </Box>
-                        <Text textStyle="title">Dramatis Personae</Text>
+                        <Heading size="lg">Dramatis Personae</Heading>
                     </Flex>
                     <ButtonGroup spacing="2" marginRight="1em">
                         <IconButton aria-label="Toggle color mode" onClick={toggleColorMode} icon={colorIcon} />
