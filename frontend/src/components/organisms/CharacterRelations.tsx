@@ -7,8 +7,6 @@ import {
     Box,
     Fade,
     Heading,
-    Skeleton,
-    Stack,
     UnorderedList
 } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
