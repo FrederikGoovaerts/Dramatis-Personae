@@ -50,8 +50,8 @@ export const actions = {
     createRelation: (p: CreateRelationPayload) => createAction(names.createRelation, p),
     deleteRelation: (p: DeleteRelationPayload) => createAction(names.deleteRelation, p),
     createNote: (p: CreateNotePayload) => createAction(names.createNote, p),
-    editCharacter: (p: CharacterEditPayload) => createAction(names.editCharacter, p),
-    deleteCharacter: (p: string) => createAction(names.deleteCharacter, p),
+    editCharacter: (p: { campaignId: string; edit: CharacterEditPayload }) => createAction(names.editCharacter, p),
+    deleteCharacter: (p: { id: string; campaignId: string }) => createAction(names.deleteCharacter, p),
     addLabel: (p: AddLabelPayload) => createAction(names.addLabel, p),
     removeLabel: (p: RemoveLabelPayload) => createAction(names.removeLabel, p)
 };

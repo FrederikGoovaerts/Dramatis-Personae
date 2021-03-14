@@ -5,6 +5,9 @@ import dev.frederik.dramatispersonae.fixtures.getTestCampaign
 import dev.frederik.dramatispersonae.fixtures.getTestCharacter
 import dev.frederik.dramatispersonae.fixtures.getTestUser
 import dev.frederik.dramatispersonae.model.*
+import dev.frederik.dramatispersonae.model.note.CampaignNote
+import dev.frederik.dramatispersonae.model.note.CharacterNote
+import dev.frederik.dramatispersonae.model.note.NoteVisibility
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -366,11 +369,11 @@ class CampaignServiceTests {
         val note2 = mockkClass(CampaignNote::class, relaxUnitFun = true)
         every { note2.author } returns otherUser
         every { note2.visibility } returns NoteVisibility.DM_SHARED
-        every { note2.addedOn } returns Date(2)
+        every { note2.editedOn } returns Date(2)
         val note3 = mockkClass(CampaignNote::class, relaxUnitFun = true)
         every { note3.author } returns otherUser
         every { note3.visibility } returns NoteVisibility.PUBLIC
-        every { note3.addedOn } returns Date(1)
+        every { note3.editedOn } returns Date(1)
         val camp = mockkClass(Campaign::class)
         every { camp.notes } returns mutableListOf(note1, note2, note3)
         every { camp.members } returns mutableListOf(user, otherUser)

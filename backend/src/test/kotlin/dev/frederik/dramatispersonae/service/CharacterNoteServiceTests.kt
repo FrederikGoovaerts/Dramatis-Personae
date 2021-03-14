@@ -1,9 +1,9 @@
 package dev.frederik.dramatispersonae.service
 
-import dev.frederik.dramatispersonae.fixtures.getTestCampaignNote
-import dev.frederik.dramatispersonae.fixtures.getTestCharacterNote
-import dev.frederik.dramatispersonae.fixtures.getTestUser
 import dev.frederik.dramatispersonae.model.*
+import dev.frederik.dramatispersonae.model.note.CharacterNote
+import dev.frederik.dramatispersonae.model.note.CharacterNoteRepository
+import dev.frederik.dramatispersonae.model.note.NoteVisibility
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK

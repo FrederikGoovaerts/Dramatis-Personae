@@ -1,6 +1,9 @@
 package dev.frederik.dramatispersonae
 
 import dev.frederik.dramatispersonae.model.*
+import dev.frederik.dramatispersonae.model.note.CampaignNote
+import dev.frederik.dramatispersonae.model.note.CharacterNote
+import dev.frederik.dramatispersonae.model.note.NoteVisibility
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component

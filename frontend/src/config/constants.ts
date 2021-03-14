@@ -7,10 +7,6 @@ export const oauth = {
 export const api = {
     API_HOST: process.env.API_HOST ?? 'API_HOST_PLACEHOLDER',
     API_PROTOCOL: process.env.API_PROTOCOL ?? 'API_PROTOCOL_PLACEHOLDER',
-    EXAMPLE_API: {
-        PATH: '/example',
-        SUBPATH_EXAMPLE: '/subexample'
-    },
     AUTH: {
         PATH: '/auth',
         SUBPATH_CODE: '/code',
@@ -37,34 +33,24 @@ export const api = {
         SUBPATH_VISIBLE: '/visible',
         SUBPATH_LABEL: '/label'
     },
-    PROPOSED_CHARACTER: {
-        PATH: '/proposedcharacter',
-        SUBPATH_ACCEPT: '/accept'
-    },
-    CHARACTER_NOTE: {
-        PATH: '/characternote'
-    },
+    CHARACTER_NOTE: '/characternote',
     CHARACTER_RELATION: '/charrelation',
-    CAMPAIGN_NOTE: {
-        PATH: '/campaignnote'
-    },
-    LABEL: {
-        PATH: '/label'
-    }
+    CAMPAIGN_NOTE: '/campaignnote',
+    LABEL: '/label',
+    EVENT: '/event'
 };
 
-export const routes = {
-    character: '/character/',
-    campaign: {
-        path: '/campaign/',
-        subpathCharacters: '/characters',
-        subpathNotes: '/notes',
-        subpathLabels: '/labels',
-        subpathDetails: '/details'
-    },
-    join: '/join/',
-    root: '/'
-};
+export const rootRoute = () => '/';
+export const joinRoute = (joinId: string) => `/join/${joinId}`;
+export const campaignRoute = (campaignId: string) => `/campaign/${campaignId}`;
+export const campaignCharactersRoute = (campaignId: string) => `/campaign/${campaignId}/characters`;
+export const campaignLocationsRoute = (campaignId: string) => `/campaign/${campaignId}/locations`;
+export const campaignEventsRoute = (campaignId: string) => `/campaign/${campaignId}/events`;
+export const campaignNotesRoute = (campaignId: string) => `/campaign/${campaignId}/notes`;
+export const campaignLabelsRoute = (campaignId: string) => `/campaign/${campaignId}/labels`;
+export const campaignMgmtRoute = (campaignId: string) => `/campaign/${campaignId}/mgmt`;
+export const characterRoute = (campaignId: string, characterId: string) =>
+    `/campaign/${campaignId}/character/${characterId}`;
 
 export const storage = {
     idToken: 'idToken',

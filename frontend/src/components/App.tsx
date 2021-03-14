@@ -1,87 +1,54 @@
-import './App.scss';
-
-import { makeStyles } from '@material-ui/core';
+import { Box } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 
-import { routes } from '../config/constants';
+import { campaignRoute, characterRoute, joinRoute, rootRoute } from '../config/constants';
 import { applicationActions, campaignActions } from '../store/actions';
 import { RootState } from '../store/reducers';
-import { Landing } from './atoms/Landing';
-import { CampaignDetailScreen } from './pages/CampaignDetailScreen';
+import { Header } from './molecules/Header';
 import { CampaignList } from './pages/CampaignList';
-import { CharacterDetailScreen } from './pages/CharacterDetailScreen';
+import { CampaignView } from './pages/CampaignView';
+import { CharacterView } from './pages/CharacterView';
 
-interface Props {
-    initialized: boolean;
-    authorized: boolean;
-    initialize: () => void;
-    joinCampaign: (id: string) => void;
-}
+const App = () => {
+    const dispatch = useDispatch();
 
-const useStyles = makeStyles({
-    outerContainer: {
-        display: 'flex',
-        justifyContent: 'center'
-    },
-    innerContainer: {
-        width: '90vw'
-    }
-});
-
-const App = (props: Props) => {
-    const classes = useStyles();
+    const authorized = useSelector((state: RootState) => state.application.authorized);
+    const initialized = useSelector((state: RootState) => state.application.initialized);
     useEffect(() => {
-        props.initialize();
-    });
+        dispatch(applicationActions.actions.initialize());
+    }, [dispatch]);
 
-    const campaignList = ({ match }: RouteComponentProps) => <CampaignList match={match} />;
-    const campaignDetail = ({ match, location }: RouteComponentProps<{ id: string }>) => (
-        <CampaignDetailScreen match={match} path={location.pathname} />
+    const campaignList = () => <CampaignList />;
+    const campaignView = ({ match }: RouteComponentProps<{ id: string }>) => (
+        <CampaignView campaignId={match.params.id} />
     );
-    const characterDetail = ({ match }: RouteComponentProps<{ campaignId: string; characterId: string }>) => (
-        <CharacterDetailScreen match={match} />
+    const characterView = ({ match }: RouteComponentProps<{ campaignid: string; characterid: string }>) => (
+        <CharacterView campaignId={match.params.campaignid} characterId={match.params.characterid} />
     );
     const joinRedirect = ({ match }: RouteComponentProps<{ id: string }>) => {
-        props.joinCampaign(match.params.id);
-        return <Redirect to={routes.root} />;
+        dispatch(campaignActions.actions.joinCampaign(match.params.id));
+        return <Redirect to={rootRoute()} />;
     };
 
-    if (props.initialized && props.authorized) {
+    if (initialized && authorized) {
         return (
-            <div className={classes.outerContainer}>
-                <div className={classes.innerContainer}>
+            <Box>
+                <Header />
+                <Box paddingX="1em" marginRight="auto" marginLeft="auto" maxWidth="75rem">
                     <Switch>
-                        <Route path={routes.root} exact render={campaignList} />
-                        <Route
-                            strict
-                            path={`${routes.campaign.path}:campaignId${routes.character}:characterId`}
-                            component={characterDetail}
-                        />
-                        <Route strict path={`${routes.campaign.path}:id`} component={campaignDetail} />
-                        <Route strict path={`${routes.join}:id`} component={joinRedirect} />
-                        <Redirect to={routes.root} />
+                        <Route path={rootRoute()} exact render={campaignList} />
+                        <Route strict path={characterRoute(':campaignid', ':characterid')} component={characterView} />
+                        <Route strict path={campaignRoute(':id')} component={campaignView} />
+                        <Route strict exact path={joinRoute(':id')} component={joinRedirect} />
+                        <Redirect to={rootRoute()} />
                     </Switch>
-                </div>
-            </div>
+                </Box>
+            </Box>
         );
     }
-    return (
-        <div>
-            <Landing />
-        </div>
-    );
+    return <></>;
 };
 
-const mapStateToProps = (state: RootState) => ({
-    authorized: state.application.authorized,
-    initialized: state.application.initialized
-});
-
-export default withRouter(
-    connect(mapStateToProps, {
-        initialize: applicationActions.actions.initialize,
-        joinCampaign: campaignActions.actions.joinCampaign
-    })(App)
-);
+export default withRouter(App);
