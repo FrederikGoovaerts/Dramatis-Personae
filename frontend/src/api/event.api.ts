@@ -18,6 +18,11 @@ export async function editEvent(payload: EditEventPayload): Promise<void> {
     await axiosInstance.put(url, { name: payload.name, description: payload.description });
 }
 
+export async function editEventOrdinal(eventId: string, ordinal: number): Promise<void> {
+    const url = buildPath(`${api.EVENT}/${eventId}/ordinal`);
+    await axiosInstance.put(url, ordinal);
+}
+
 export async function deleteEvent(id: string): Promise<void> {
     const url = buildPath(`${api.EVENT}/${id}`);
     await axiosInstance.delete(url);

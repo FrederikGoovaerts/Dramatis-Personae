@@ -54,6 +54,16 @@ class EventController(private val service: EventService) {
         return ResponseEntity(HttpStatus.OK)
     }
 
+    @PutMapping("/{id}/ordinal")
+    fun updateOrdinal(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID,
+        @RequestBody ord: Int
+    ): ResponseEntity<Unit> {
+        service.moveEvent(auth.principal, id, ord)
+        return ResponseEntity(HttpStatus.OK)
+    }
+
     @DeleteMapping("/{id}")
     fun deleteEvent(auth: GoogleAuthentication, @PathVariable id: UUID): ResponseEntity<Unit> {
         val success = this.service.deleteEvent(auth.principal, id)
