@@ -2,7 +2,9 @@ package dev.frederik.dramatispersonae.service
 
 import dev.frederik.dramatispersonae.auth.GoogleAuthentication
 import dev.frederik.dramatispersonae.model.UserRepository
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 data class UserView(val name: String, val email: String)
 

@@ -47,6 +47,6 @@ class DummyWebSecurity(
 
     override fun configure(http: HttpSecurity) {
         http.cors().and().csrf().disable().authorizeRequests().anyRequest().permitAll()
-                .and().addFilter(DummyJwtAuthorizationFilter(authenticationManager(), userRepository))
+            .and().addFilter(DummyJwtAuthorizationFilter(authenticationManager(), userRepository))
     }
 }

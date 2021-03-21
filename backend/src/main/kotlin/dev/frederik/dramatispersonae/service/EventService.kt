@@ -2,11 +2,11 @@ package dev.frederik.dramatispersonae.service
 
 import dev.frederik.dramatispersonae.auth.GoogleAuthentication
 import dev.frederik.dramatispersonae.model.*
-import java.util.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
+import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 
 data class CreateEventDto(val campaignId: UUID, val name: String, val description: String)
@@ -27,7 +27,7 @@ class EventController(private val service: EventService) {
     fun getEvents(
         auth: GoogleAuthentication,
         @PathVariable id: UUID
-    ): ResponseEntity<List<EventView>> {
+    ): ResponseEntity<List<EventView>?> {
         val result = service.getEvents(auth.principal, id)
 
         return ResponseEntity(result?.map {
@@ -72,40 +72,67 @@ class EventController(private val service: EventService) {
 }
 
 @Component
-class EventService(private val repository: EventRepository,
-                   private val campaignRepository: CampaignRepository,
-                   private val characterRepository: CharacterRepository) {
+class EventService(
+    private val repository: EventRepository,
+    private val campaignRepository: CampaignRepository,
+    private val characterRepository: CharacterRepository
+) {
 
-    // TODO: Currently different campaigns impact one another with this
-    private val eventListWriteMutex = ReentrantLock()
+    private val listWriteMutexMap = mutableMapOf<UUID, ReentrantLock>()
+
+    @Synchronized
+    private fun getLock(campaignId: UUID): ReentrantLock {
+        if (!listWriteMutexMap.containsKey(campaignId)) {
+            listWriteMutexMap[campaignId] = ReentrantLock()
+        }
+        return listWriteMutexMap[campaignId]!!
+    }
 
     fun createEvent(user: User, campaignId: UUID, name: String, description: String): Boolean {
+        val lock = getLock(campaignId)
         val campaignQuery = campaignRepository.findById(campaignId)
         if (!campaignQuery.isPresent || !campaignQuery.get().isAccessibleBy(user)) {
             return false
         }
         val campaign = campaignQuery.get()
-        eventListWriteMutex.lock()
+        lock.lock()
         val nextOrdinal = repository.findTopByCampaignOrderByOrdinalDesc(campaign).map { it.ordinal + 1 }.orElse(0)
         val event = Event(name, nextOrdinal, description, campaign)
         repository.save(event)
         campaign.events.add(event)
         campaignRepository.save(campaign)
-        eventListWriteMutex.unlock()
+        lock.unlock()
         return true
     }
 
-    fun updateEvent(user: User, id: UUID, name: String, description: String): Boolean {
-        val eventQuery = repository.findById(id)
+    fun updateEvent(user: User, eventId: UUID, name: String, description: String): Boolean {
+        val eventQuery = repository.findById(eventId)
         if (!eventQuery.isPresent || !eventQuery.get().campaign.isAccessibleBy(user)) {
             return false
         }
-        eventListWriteMutex.lock()
         val event = eventQuery.get()
         event.name = name
         event.description = description
         repository.save(event)
-        eventListWriteMutex.unlock()
+        return true
+    }
+
+    fun moveEvent(user: User, eventId: UUID, newPos: Int): Boolean {
+        val eventQuery = repository.findById(eventId)
+        if (!eventQuery.isPresent || !eventQuery.get().campaign.isAccessibleBy(user)) {
+            return false
+        }
+        val event = eventQuery.get()
+        val oldPos = event.ordinal
+        val events = repository.findAllByCampaignOrderByOrdinalAsc(event.campaign)
+        for (e in events) {
+            if (e.id === eventId) {
+                e.ordinal = newPos
+            } else if (e.ordinal in newPos..oldPos) {
+                e.ordinal++
+            }
+        }
+        repository.saveAll(events)
         return true
     }
 
