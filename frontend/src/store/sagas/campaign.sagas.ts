@@ -3,6 +3,8 @@ import { call, put, takeEvery } from 'redux-saga/effects';
 import * as campaign from '../../api/campaign.api';
 import { Campaign, CampaignMember, CampaignPrototype } from '../../types/campaign.types';
 import { ListCharacter } from '../../types/character.types';
+import { Label } from '../../types/label.types';
+import { Note } from '../../types/note.types';
 import { campaignActions } from '../actions';
 
 function* fetchCampaigns() {
@@ -125,7 +127,7 @@ function* deleteCampaign(action: campaignActions.specificTypes['deleteCampaign']
 function* fetchNotes(action: campaignActions.specificTypes['fetchNotes']) {
     yield put(campaignActions.actions.setNotesLoading(true));
     try {
-        const result = yield call(campaign.getNotes, action.payload);
+        const result: Note[] = yield call(campaign.getNotes, action.payload);
         yield put(campaignActions.actions.setNotes(result));
     } catch (e) {
         console.error('Unable to fetch notes. Please try again later.');
@@ -136,7 +138,7 @@ function* fetchNotes(action: campaignActions.specificTypes['fetchNotes']) {
 function* fetchSharedNotes(action: campaignActions.specificTypes['fetchSharedNotes']) {
     yield put(campaignActions.actions.setSharedNotesLoading(true));
     try {
-        const result = yield call(campaign.getSharedNotes, action.payload);
+        const result: Note[] = yield call(campaign.getSharedNotes, action.payload);
         yield put(campaignActions.actions.setSharedNotes(result));
     } catch (e) {
         console.error('Unable to fetch shared notes. Please try again later.');
@@ -165,7 +167,7 @@ function* createLabel(action: campaignActions.specificTypes['createLabel']) {
 function* fetchLabels(action: campaignActions.specificTypes['fetchLabels']) {
     yield put(campaignActions.actions.setLabelsLoading(true));
     try {
-        const result = yield call(campaign.getLabels, action.payload);
+        const result: Label[] = yield call(campaign.getLabels, action.payload);
         yield put(campaignActions.actions.setLabels(result));
     } catch (e) {
         console.error('Unable to fetch labels. Please try again later.');
