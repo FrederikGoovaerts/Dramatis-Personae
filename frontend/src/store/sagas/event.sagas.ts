@@ -33,9 +33,18 @@ function* deleteEvent(action: eventActions.specificTypes['deleteEvent']) {
     }
 }
 
+function* editEventOrdinal(action: eventActions.specificTypes['editEventOrdinal']) {
+    yield call(event.editEventOrdinal, action.payload.id, action.payload.newOrdinal);
+    const campaignId: string | undefined = yield select((state: RootState) => state.campaign.campaign?.id);
+    if (campaignId) {
+        yield put(eventActions.actions.fetchEvents(campaignId));
+    }
+}
+
 export default function* watcher() {
     yield takeEvery(eventActions.names.fetchEvents, fetchEvents);
     yield takeEvery(eventActions.names.createEvent, createEvent);
     yield takeEvery(eventActions.names.editEvent, editEvent);
     yield takeEvery(eventActions.names.deleteEvent, deleteEvent);
+    yield takeEvery(eventActions.names.editEventOrdinal, editEventOrdinal);
 }

@@ -128,8 +128,12 @@ class EventService(
         for (e in events) {
             if (e.id === eventId) {
                 e.ordinal = newPos
-            } else if (e.ordinal in newPos..oldPos) {
-                e.ordinal++
+            } else if (e.ordinal in oldPos.coerceAtMost(newPos)..oldPos.coerceAtLeast(newPos)) {
+                if (newPos > oldPos) {
+                    e.ordinal--
+                } else {
+                    e.ordinal++
+                }
             }
         }
         repository.saveAll(events)

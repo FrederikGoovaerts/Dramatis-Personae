@@ -12,7 +12,7 @@ interface Props {
 }
 
 export const EventLine = (props: Props) => (
-    <Flex marginBottom="1.5em" justifyContent="space-between" pl={3}>
+    <Flex justifyContent="space-between" pl={3} borderLeft="2px" borderColor="gray.500">
         <Box>
             <Text>{props.event.name}</Text>
             <Text fontSize="sm">{props.event.description}</Text>

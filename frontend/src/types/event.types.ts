@@ -16,3 +16,8 @@ export interface EditEventPayload {
     name: string;
     description: string;
 }
+
+export interface EditEventOrdinalPayload {
+    id: string;
+    newOrdinal: number;
+}
