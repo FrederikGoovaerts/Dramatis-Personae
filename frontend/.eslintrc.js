@@ -3,7 +3,7 @@ const WARN_AND_CI_ERROR = CI_ENV ? 1 : 2;
 
 module.exports = {
     parser: '@typescript-eslint/parser',
-    plugins: ['@typescript-eslint', 'prettier', 'import', 'react', 'simple-import-sort'],
+    plugins: ['@typescript-eslint', 'import', 'react', 'simple-import-sort'],
     parserOptions: {
         ecmaVersion: 2018,
         ecmaFeatures: {
@@ -25,8 +25,8 @@ module.exports = {
         'plugin:react-hooks/recommended'
     ],
     rules: {
-        'prettier/prettier': 'error',
-        'simple-import-sort/sort': 'error',
+        'simple-import-sort/imports': 'error',
+        'simple-import-sort/exports': 'error',
         '@typescript-eslint/no-explicit-any': 'error',
         '@typescript-eslint/no-unused-vars': WARN_AND_CI_ERROR,
         '@typescript-eslint/explicit-member-accessibility': 0,
