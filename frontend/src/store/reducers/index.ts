@@ -8,6 +8,7 @@ import events, { EventState } from './event.reducers';
 
 export const campaignLoadingSelector = (state: RootState) => state.campaign.loading;
 export const campaignCharactersLoadingSelector = (state: RootState) => state.campaign.charactersLoading;
+export const eventsLoadingSelector = (state: RootState) => state.events.loading;
 const campaignNotesLoadingSelector = (state: RootState) => state.campaign.notesLoading;
 const campaignSharedNotesLoadingSelector = (state: RootState) => state.campaign.sharedNotesLoading;
 const characterNotesLoadingSelector = (state: RootState) => state.character.notesLoading;

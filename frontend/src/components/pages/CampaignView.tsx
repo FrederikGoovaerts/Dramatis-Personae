@@ -3,10 +3,16 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 
-import { campaignCharactersRoute, campaignLabelsRoute, campaignNotesRoute } from '../../config/constants';
+import {
+    campaignCharactersRoute,
+    campaignEventsRoute,
+    campaignLabelsRoute,
+    campaignNotesRoute
+} from '../../config/constants';
 import { campaignActions } from '../../store/actions';
 import { campaignLoadingSelector, RootState } from '../../store/reducers';
 import { CampaignCharacterList } from '../organisms/CampaignCharacterList';
+import { CampaignEventList } from '../organisms/CampaignEventList';
 import { CampaignLabels } from '../organisms/CampaignLabels';
 import { CampaignNotesList } from '../organisms/CampaignNotesList';
 import { CampaignSidebar } from '../organisms/CampaignSidebar';
@@ -39,6 +45,13 @@ export const CampaignView = (props: Props) => {
                             path={campaignCharactersRoute(':campaignId')}
                             render={({ match }: RouteComponentProps<{ campaignId: string }>) => (
                                 <CampaignCharacterList campaignId={match.params.campaignId} owner={campaign.owner} />
+                            )}
+                        />
+                        <Route
+                            strict
+                            path={campaignEventsRoute(':campaignId')}
+                            render={({ match }: RouteComponentProps<{ campaignId: string }>) => (
+                                <CampaignEventList campaignId={match.params.campaignId} />
                             )}
                         />
                         <Route

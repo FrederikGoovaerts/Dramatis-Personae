@@ -23,5 +23,6 @@ data class Event(
 
 interface EventRepository : CrudRepository<Event, UUID> {
     fun findAllByCampaignOrderByOrdinalAsc(campaign: Campaign): List<Event>
+    fun findAllByCampaignOrderByOrdinalDesc(campaign: Campaign): List<Event>
     fun findTopByCampaignOrderByOrdinalDesc(campaign: Campaign): Optional<Event>
 }

@@ -3,7 +3,7 @@ import { api } from '../config/constants';
 import { CreateEventPayload, EditEventPayload, Event } from '../types/event.types';
 import { buildPath } from './base.api';
 
-export async function getEvents(campaignId: string): Promise<Event[]> {
+export async function fetchEvents(campaignId: string): Promise<Event[]> {
     const url = buildPath(`${api.EVENT}/${campaignId}`);
     return (await axiosInstance.get(url)).data;
 }

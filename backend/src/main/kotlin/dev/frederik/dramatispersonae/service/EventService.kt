@@ -151,6 +151,6 @@ class EventService(
             return null
         }
         val campaign = campaignQuery.get()
-        return repository.findAllByCampaignOrderByOrdinalAsc(campaign)
+        return repository.findAllByCampaignOrderByOrdinalDesc(campaign)
     }
 }

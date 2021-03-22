@@ -2,7 +2,7 @@ import { CreateEventPayload, EditEventPayload, Event } from '../../types/event.t
 import { ActionTypeMapping, ActionUnion, createAction } from './base';
 
 export enum names {
-    getEvents = 'GET_EVENTS',
+    fetchEvents = 'FETCH_EVENTS',
     createEvent = 'CREATE_EVENT',
     editEvent = 'EDIT_EVENT',
     deleteEvent = 'DELETE_EVENT',
@@ -11,7 +11,7 @@ export enum names {
 }
 
 export const actions = {
-    getEvents: (p: string) => createAction(names.getEvents, p),
+    fetchEvents: (p: string) => createAction(names.fetchEvents, p),
     createEvent: (p: CreateEventPayload) => createAction(names.createEvent, p),
     editEvent: (p: EditEventPayload) => createAction(names.editEvent, p),
     deleteEvent: (p: string) => createAction(names.deleteEvent, p),
