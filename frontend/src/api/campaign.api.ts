@@ -1,5 +1,3 @@
-import moment from 'moment';
-
 import { axiosInstance } from '../config/axios';
 import { api } from '../config/constants';
 import { Campaign, CampaignMember, CampaignPrototype } from '../types/campaign.types';
@@ -7,7 +5,6 @@ import { CharacterPrototype, ListCharacter } from '../types/character.types';
 import { CreateLabelPayload, Label, ListLabel } from '../types/label.types';
 import { CreateNotePayload, Note } from '../types/note.types';
 import { buildPath } from './base.api';
-import { RawNote } from './note.api';
 
 interface RawListCharacter {
     name: string;
@@ -80,20 +77,12 @@ export async function kick(campaignId: string, userId: string): Promise<void> {
 
 export async function getNotes(id: string): Promise<Array<Note>> {
     const url = buildPath(`${api.CAMPAIGN.PATH}/${id}${api.CAMPAIGN.SUBPATH_NOTE}`);
-    const data: Array<RawNote> = (await axiosInstance.get(url)).data;
-    return data.map((rawNote) => ({
-        ...rawNote,
-        editedOn: moment(rawNote.editedOn)
-    }));
+    return (await axiosInstance.get(url)).data;
 }
 
 export async function getSharedNotes(id: string): Promise<Array<Note>> {
     const url = buildPath(`${api.CAMPAIGN.PATH}/${id}${api.CAMPAIGN.SUBPATH_SHARED_NOTES}`);
-    const data: Array<RawNote> = (await axiosInstance.get(url)).data;
-    return data.map((rawNote) => ({
-        ...rawNote,
-        editedOn: moment(rawNote.editedOn)
-    }));
+    return (await axiosInstance.get(url)).data;
 }
 
 export async function createNote(payload: CreateNotePayload): Promise<void> {

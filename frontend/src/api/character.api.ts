@@ -1,12 +1,9 @@
-import moment from 'moment';
-
 import { axiosInstance } from '../config/axios';
 import { api } from '../config/constants';
 import { Character, CharacterRelation } from '../types/character.types';
 import { AddLabelPayload, Label, RemoveLabelPayload } from '../types/label.types';
 import { CreateNotePayload, Note } from '../types/note.types';
 import { buildPath } from './base.api';
-import { RawNote } from './note.api';
 
 interface RawCharacter {
     id: string;
@@ -39,20 +36,12 @@ export async function deletePermanently(id: string): Promise<void> {
 
 export async function getNotes(id: string): Promise<Array<Note>> {
     const url = buildPath(`${api.CHARACTER.PATH}/${id}${api.CHARACTER.SUBPATH_NOTE}`);
-    const data: Array<RawNote> = (await axiosInstance.get(url)).data;
-    return data.map((rawNote) => ({
-        ...rawNote,
-        editedOn: moment(rawNote.editedOn)
-    }));
+    return (await axiosInstance.get(url)).data;
 }
 
 export async function getSharedNotes(id: string): Promise<Array<Note>> {
     const url = buildPath(`${api.CHARACTER.PATH}/${id}${api.CHARACTER.SUBPATH_SHARED_NOTES}`);
-    const data: Array<RawNote> = (await axiosInstance.get(url)).data;
-    return data.map((rawNote) => ({
-        ...rawNote,
-        editedOn: moment(rawNote.editedOn)
-    }));
+    return (await axiosInstance.get(url)).data;
 }
 
 export async function createNote(payload: CreateNotePayload): Promise<void> {
