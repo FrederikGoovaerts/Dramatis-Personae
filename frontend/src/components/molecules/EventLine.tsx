@@ -1,7 +1,9 @@
 import { Box, Divider, Flex, Link, ListItem, Text, UnorderedList, useColorModeValue } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { Link as RouterLink } from 'react-router-dom';
 
+import { characterRoute } from '../../config/constants';
 import { eventActions } from '../../store/actions';
 import { Event } from '../../types/event.types';
 import { EventEditDrawer } from '../organisms/EventEditDrawer';
@@ -39,12 +41,15 @@ export const EventLine = (props: Props) => {
                 {props.event.characters.length > 0 && (
                     <Box maxWidth="15em">
                         <Divider />
-                        <Text mt={1}>Related characters</Text>
+                        <Text marginY={1}>Related characters</Text>
                         <UnorderedList>
                             {props.event.characters.map((c) => (
                                 <ListItem key={c.id}>
                                     <Text fontSize="sm">
-                                        {c.name} (<Link onClick={() => removeCharRelation(c.id)}>remove</Link>)
+                                        <RouterLink to={characterRoute(props.campaignId, c.id)}>
+                                            <Link>{c.name}</Link>
+                                        </RouterLink>{' '}
+                                        (<Link onClick={() => removeCharRelation(c.id)}>remove</Link>)
                                     </Text>
                                 </ListItem>
                             ))}
@@ -55,7 +60,7 @@ export const EventLine = (props: Props) => {
             <Box>
                 <Link onClick={() => setRelationOpen(true)}>
                     <Text fontSize="xs" color={secondaryTextColor} as="u" onClick={console.log}>
-                        Add a related character or location
+                        Add a related character
                     </Text>
                 </Link>
                 <EventRelationDrawer

@@ -32,7 +32,7 @@ const EventDraggable = (p: DraggableProps) => {
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                     key={p.event.id}
-                    mb={4}
+                    mb={6}
                 >
                     <EventLine event={p.event} campaignId={p.campaignId} onDelete={p.onDelete} onEdit={p.onEdit} />
                 </Box>
@@ -103,7 +103,7 @@ export const CampaignEventList = (props: Props) => {
     if (swapping) {
         return wrapContent(
             events.map((e) => (
-                <Skeleton key={e.id} mb={4}>
+                <Skeleton key={e.id} mb={6}>
                     <EventLine event={e} campaignId={props.campaignId} onDelete={del} onEdit={edit} />
                 </Skeleton>
             ))

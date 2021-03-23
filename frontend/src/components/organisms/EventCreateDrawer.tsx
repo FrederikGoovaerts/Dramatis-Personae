@@ -7,7 +7,8 @@ import {
     DrawerHeader,
     DrawerOverlay,
     Input,
-    Text
+    Text,
+    Textarea
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 
@@ -41,10 +42,12 @@ export const EventCreateDrawer = (props: Props) => {
                             <Text marginY="1em">Title:</Text>
                             <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Event title" />
                             <Text marginY="1em">Description:</Text>
-                            <Input
+                            <Textarea
                                 value={desc}
                                 onChange={(e) => setDesc(e.target.value)}
-                                placeholder="Event description"
+                                placeholder="Event details here"
+                                size="lg"
+                                height="75%"
                             />
                         </DrawerBody>
                         <DrawerFooter>
