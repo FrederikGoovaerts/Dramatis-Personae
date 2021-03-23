@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const config = {
     entry: './src/index.tsx',
     output: {
-        filename: 'bundle.[hash].js',
+        filename: 'bundle.[contenthash].js',
         path: `${__dirname}/build`,
         publicPath: '/'
     },
