@@ -1,5 +1,5 @@
 import { Box } from '@chakra-ui/layout';
-import { Divider } from '@chakra-ui/react';
+import { Divider, Flex, Text } from '@chakra-ui/react';
 import { Skeleton } from '@chakra-ui/skeleton';
 import React, { useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
@@ -111,6 +111,13 @@ export const CampaignEventList = (props: Props) => {
     }
     if (loading || props.campaignId !== campaign?.id) {
         return <></>;
+    }
+    if (events.length === 0) {
+        return wrapContent(
+            <Flex justify="center" pt={12}>
+                <Text fontSize="xl">No events found.</Text>
+            </Flex>
+        );
     }
     return wrapContent(
         <DragDropContext onDragEnd={onDragEnd}>
