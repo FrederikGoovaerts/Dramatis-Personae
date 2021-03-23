@@ -22,7 +22,6 @@
     "license": "MIT",
     "devDependencies": {
         "@types/history": "^4.7.8",
-        "@types/jsonwebtoken": "^8.5.1",
         "@types/react-beautiful-dnd": "^13.0.0",
         "@types/react-dom": "^17.0.2",
         "@types/react-redux": "^7.1.16",
@@ -61,8 +60,6 @@
         "axios": "^0.21.1",
         "axios-auth-refresh": "^3.1.0",
         "framer-motion": "^4.0.0",
-        "jsonwebtoken": "^8.5.1",
-        "moment": "^2.29.0",
         "query-string": "^6.13.2",
         "react": "^17.0.2",
         "react-beautiful-dnd": "^13.1.0",

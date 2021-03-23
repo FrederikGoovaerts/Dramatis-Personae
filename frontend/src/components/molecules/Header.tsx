@@ -12,11 +12,14 @@ import {
     useColorModeValue
 } from '@chakra-ui/react';
 import React from 'react';
+import { useDispatch } from 'react-redux';
 
 import { PersonaeIcon } from '../../assets/svg/PersonaeIcon';
+import { applicationActions } from '../../store/actions';
 
 export const Header = () => {
     const { toggleColorMode, colorMode } = useColorMode();
+    const dispatch = useDispatch();
 
     const iconColor = useColorModeValue('teal.500', 'teal.400');
     const colorIcon = useColorModeValue(<SunIcon />, <MoonIcon />);
@@ -34,7 +37,9 @@ export const Header = () => {
                     </Flex>
                     <ButtonGroup spacing="2" marginRight="1em">
                         <IconButton aria-label="Toggle color mode" onClick={toggleColorMode} icon={colorIcon} />
-                        <Button colorScheme="teal">Log out</Button>
+                        <Button colorScheme="teal" onClick={() => dispatch(applicationActions.actions.logout())}>
+                            Log out
+                        </Button>
                     </ButtonGroup>
                 </HStack>
             </Box>
