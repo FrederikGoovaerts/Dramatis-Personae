@@ -64,6 +64,26 @@ class EventController(private val service: EventService) {
         return ResponseEntity(HttpStatus.OK)
     }
 
+    @PostMapping("/{id}/characters")
+    fun addEventCharacter(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID,
+        @RequestBody characterId: UUID
+    ): ResponseEntity<Unit> {
+        val success = this.service.addEventCharacter(auth.principal, id, characterId)
+        return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
+    }
+
+    @DeleteMapping("/{id}/characters")
+    fun removeEventCharacter(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID,
+        @RequestBody characterId: UUID
+    ): ResponseEntity<Unit> {
+        val success = this.service.removeEventCharacter(auth.principal, id, characterId)
+        return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
+    }
+
     @DeleteMapping("/{id}")
     fun deleteEvent(auth: GoogleAuthentication, @PathVariable id: UUID): ResponseEntity<Unit> {
         val success = this.service.deleteEvent(auth.principal, id)
@@ -146,6 +166,37 @@ class EventService(
             return false
         }
         repository.delete(eventQuery.get())
+        return true
+    }
+
+    fun addEventCharacter(user: User, id: UUID, characterId: UUID): Boolean {
+        val eventQuery = repository.findById(id)
+        if (!eventQuery.isPresent || !eventQuery.get().campaign.isAccessibleBy(user)) {
+            return false
+        }
+        val event = eventQuery.get()
+        val characterQuery = characterRepository.findById(characterId)
+        if (!characterQuery.isPresent || characterQuery.get().campaign != event.campaign) {
+            return false
+        }
+        val character = characterQuery.get()
+        event.characters.add(character)
+        repository.save(event)
+        return true
+    }
+
+    fun removeEventCharacter(user: User, id: UUID, characterId: UUID): Boolean {
+        val eventQuery = repository.findById(id)
+        if (!eventQuery.isPresent || !eventQuery.get().campaign.isAccessibleBy(user)) {
+            return false
+        }
+        val event = eventQuery.get()
+        val character = event.characters.find { it.id === characterId }
+        if (character === null) {
+            return false
+        }
+        event.characters.remove(character)
+        repository.save(event)
         return true
     }
 

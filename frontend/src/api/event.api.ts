@@ -20,11 +20,17 @@ export async function editEvent(payload: EditEventPayload): Promise<void> {
 
 export async function editEventOrdinal(eventId: string, ordinal: number): Promise<void> {
     const url = buildPath(`${api.EVENT}/${eventId}/ordinal`);
-    await axiosInstance.put(url, JSON.stringify(ordinal), {
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
+    await axiosInstance.put(url, JSON.stringify(ordinal), { headers: { 'Content-Type': 'application/json' } });
+}
+
+export async function addEventCharacter(id: string, characterId: string): Promise<void> {
+    const url = buildPath(`${api.EVENT}/${id}/character`);
+    await axiosInstance.post(url, characterId, { headers: { 'Content-Type': 'application/json' } });
+}
+
+export async function removeEventCharacter(id: string, characterId: string): Promise<void> {
+    const url = buildPath(`${api.EVENT}/${id}/character`);
+    await axiosInstance.delete(url, { data: characterId });
 }
 
 export async function deleteEvent(id: string): Promise<void> {
