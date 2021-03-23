@@ -1,72 +1,17 @@
-import {
-    Button,
-    Drawer,
-    DrawerBody,
-    DrawerContent,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerOverlay,
-    Input,
-    Text,
-    Textarea
-} from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React from 'react';
+
+import { CreateDrawer } from './CreateDrawer';
 
 interface Props {
     onCreate: (name: string, description: string) => void;
 }
 
-export const EventCreateDrawer = (props: Props) => {
-    const [open, setOpen] = useState(false);
-    const [name, setName] = useState('');
-    const [desc, setDesc] = useState('');
-
-    const reset = () => {
-        setName('');
-        setDesc('');
-    };
-
-    const create = () => {
-        props.onCreate(name, desc);
-        reset();
-        setOpen(false);
-    };
-
-    return (
-        <>
-            <Drawer isOpen={open} onClose={() => setOpen(false)} size="lg">
-                <DrawerOverlay>
-                    <DrawerContent>
-                        <DrawerHeader>Create a new event</DrawerHeader>
-                        <DrawerBody>
-                            <Text marginY="1em">Title:</Text>
-                            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Event title" />
-                            <Text marginY="1em">Description:</Text>
-                            <Textarea
-                                value={desc}
-                                onChange={(e) => setDesc(e.target.value)}
-                                placeholder="Event details here"
-                                size="lg"
-                                height="75%"
-                            />
-                        </DrawerBody>
-                        <DrawerFooter>
-                            <Button variant="outline" mr={3} onClick={() => setOpen(false)}>
-                                Close
-                            </Button>
-                            <Button variant="outline" mr={3} onClick={reset}>
-                                Clear
-                            </Button>
-                            <Button onClick={create} disabled={name === ''}>
-                                Save
-                            </Button>
-                        </DrawerFooter>
-                    </DrawerContent>
-                </DrawerOverlay>
-            </Drawer>
-            <Button onClick={() => setOpen(true)} size="sm">
-                Add Event
-            </Button>
-        </>
-    );
-};
+export const EventCreateDrawer = (props: Props) => (
+    <CreateDrawer
+        onCreate={props.onCreate}
+        entity="Event"
+        nameString="Title"
+        namePlaceholder="Event title"
+        textarea={true}
+    />
+);
