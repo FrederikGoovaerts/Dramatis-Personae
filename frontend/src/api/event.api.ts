@@ -24,13 +24,16 @@ export async function editEventOrdinal(eventId: string, ordinal: number): Promis
 }
 
 export async function addEventCharacter(id: string, characterId: string): Promise<void> {
-    const url = buildPath(`${api.EVENT}/${id}/character`);
-    await axiosInstance.post(url, characterId, { headers: { 'Content-Type': 'application/json' } });
+    const url = buildPath(`${api.EVENT}/${id}/characters`);
+    await axiosInstance.post(url, JSON.stringify(characterId), { headers: { 'Content-Type': 'application/json' } });
 }
 
 export async function removeEventCharacter(id: string, characterId: string): Promise<void> {
-    const url = buildPath(`${api.EVENT}/${id}/character`);
-    await axiosInstance.delete(url, { data: characterId });
+    const url = buildPath(`${api.EVENT}/${id}/characters`);
+    await axiosInstance.delete(url, {
+        data: JSON.stringify(characterId),
+        headers: { 'Content-Type': 'application/json' }
+    });
 }
 
 export async function deleteEvent(id: string): Promise<void> {

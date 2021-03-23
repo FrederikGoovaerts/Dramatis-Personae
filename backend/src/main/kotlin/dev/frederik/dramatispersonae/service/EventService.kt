@@ -12,10 +12,16 @@ import java.util.concurrent.locks.ReentrantLock
 data class CreateEventDto(val campaignId: UUID, val name: String, val description: String)
 data class UpdateEventDto(val name: String, val description: String)
 
+data class EventCharacterView(
+    val name: String,
+    val id: UUID
+)
+
 data class EventView(
     val name: String,
     val description: String,
     val ordinal: Int,
+    val characters: List<EventCharacterView>,
     val id: UUID
 )
 
@@ -31,7 +37,13 @@ class EventController(private val service: EventService) {
         val result = service.getEvents(auth.principal, id)
 
         return ResponseEntity(result?.map {
-            EventView(it.name, it.description, it.ordinal, it.id!!)
+            EventView(
+                it.name,
+                it.description,
+                it.ordinal,
+                it.characters.map { c -> EventCharacterView(c.name, c.id!!) },
+                it.id!!
+            )
         }, if (result == null) HttpStatus.FORBIDDEN else HttpStatus.OK)
     }
 
@@ -191,7 +203,7 @@ class EventService(
             return false
         }
         val event = eventQuery.get()
-        val character = event.characters.find { it.id === characterId }
+        val character = event.characters.find { it.id == characterId }
         if (character === null) {
             return false
         }
