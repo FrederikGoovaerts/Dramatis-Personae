@@ -1,10 +1,9 @@
 package dev.frederik.dramatispersonae.service
 
 import dev.frederik.dramatispersonae.auth.GoogleAuthentication
-import dev.frederik.dramatispersonae.model.*
+import dev.frederik.dramatispersonae.model.User
 import dev.frederik.dramatispersonae.model.note.Note
 import dev.frederik.dramatispersonae.model.note.NoteVisibility
-import java.util.*
 import org.springframework.data.repository.CrudRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
+import java.util.*
 
 data class CreateNoteDto(val contents: String, val visibility: String)
 
@@ -30,12 +30,12 @@ fun returnNotes(list: List<Note>?, user: User): ResponseEntity<List<NoteView>> {
     } else {
         ResponseEntity(list.map {
             NoteView(
-                    it.contents,
-                    it.author.fullName,
-                    it.visibility,
-                    it.editedOn,
-                    it.author == user,
-                    it.id!!
+                it.contents,
+                it.author.fullName,
+                it.visibility,
+                it.editedOn,
+                it.author == user,
+                it.id!!
             )
         }, HttpStatus.OK)
     }
@@ -79,7 +79,11 @@ abstract class NoteService<T : Note>(private val repository: CrudRepository<T, U
         note.contents = contents
         note.editedOn = Date()
         if (note.author == user) {
-            val visibility = try { NoteVisibility.valueOf(rawVisibility) } catch (e: IllegalArgumentException) { return false }
+            val visibility = try {
+                NoteVisibility.valueOf(rawVisibility)
+            } catch (e: IllegalArgumentException) {
+                return false
+            }
             note.visibility = visibility
         }
         this.repository.save(note)

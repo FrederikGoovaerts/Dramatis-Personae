@@ -1,16 +1,7 @@
 import { axiosInstance } from '../config/axios';
 import { api } from '../config/constants';
-import { EditNotePayload, NoteVisibility } from '../types/note.types';
+import { EditNotePayload } from '../types/note.types';
 import { buildPath } from './base.api';
-
-export interface RawNote {
-    id: string;
-    contents: string;
-    authorName: string;
-    editedOn: string;
-    visibility: NoteVisibility;
-    owned: boolean;
-}
 
 export async function editCharacterNote(payload: EditNotePayload): Promise<void> {
     const url = buildPath(`${api.CHARACTER_NOTE}/${payload.noteId}`);

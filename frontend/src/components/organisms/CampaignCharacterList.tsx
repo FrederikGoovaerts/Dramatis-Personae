@@ -138,17 +138,23 @@ export const CampaignCharacterList = (props: Props) => {
             )}
             <Divider mb={3} />
 
-            {filteredCharacters.map((c) => (
-                <CharacterLine
-                    key={c.id}
-                    character={c}
-                    campaignId={props.campaignId}
-                    onEdit={edit}
-                    onDelete={del}
-                    onAddLabel={addLabel}
-                    onRemoveLabel={removeLabel}
-                />
-            ))}
+            {filteredCharacters.length === 0 ? (
+                <Flex justify="center" pt={12}>
+                    <Text fontSize="xl">No characters found.</Text>
+                </Flex>
+            ) : (
+                filteredCharacters.map((c) => (
+                    <CharacterLine
+                        key={c.id}
+                        character={c}
+                        campaignId={props.campaignId}
+                        onEdit={edit}
+                        onDelete={del}
+                        onAddLabel={addLabel}
+                        onRemoveLabel={removeLabel}
+                    />
+                ))
+            )}
         </Box>
     );
 };

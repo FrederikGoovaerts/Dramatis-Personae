@@ -4,11 +4,11 @@ import dev.frederik.dramatispersonae.auth.GoogleAuthentication
 import dev.frederik.dramatispersonae.model.*
 import dev.frederik.dramatispersonae.model.note.CampaignNote
 import dev.frederik.dramatispersonae.model.note.NoteVisibility
-import java.util.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 data class CreateCampaignDto(val name: String)
 data class UpdateCampaignDto(val name: String)
@@ -21,6 +21,7 @@ data class CampaignView(
     val ownerName: String,
     val inviteCode: UUID?
 )
+
 data class CampaignMemberView(val name: String, val id: UUID, val owner: Boolean)
 
 fun sortCampaigns(list: List<Campaign>) = list.sortedBy { campaign -> campaign.name.toLowerCase() }
@@ -31,15 +32,15 @@ class CampaignController(private val service: CampaignService) {
 
     @GetMapping
     fun getCampaigns(auth: GoogleAuthentication) =
-            service.getCampaignsForUser(auth.principal).map {
-                CampaignView(
-                    it.name,
-                    it.id!!,
-                    it.isOwnedBy(auth.principal),
-                    it.owner.fullName,
-                    if (it.isOwnedBy(auth.principal)) it.inviteCode else null
-                )
-            }
+        service.getCampaignsForUser(auth.principal).map {
+            CampaignView(
+                it.name,
+                it.id!!,
+                it.isOwnedBy(auth.principal),
+                it.owner.fullName,
+                if (it.isOwnedBy(auth.principal)) it.inviteCode else null
+            )
+        }
 
     @GetMapping("/{id}")
     fun getCampaign(auth: GoogleAuthentication, @PathVariable id: UUID): ResponseEntity<CampaignView> {
@@ -47,13 +48,15 @@ class CampaignController(private val service: CampaignService) {
         return if (campaign === null) {
             ResponseEntity(HttpStatus.FORBIDDEN)
         } else {
-            ResponseEntity(CampaignView(
-                campaign.name,
-                campaign.id!!,
-                campaign.isOwnedBy(auth.principal),
-                campaign.owner.fullName,
-                if (campaign.isOwnedBy(auth.principal)) campaign.inviteCode else null
-            ), HttpStatus.OK)
+            ResponseEntity(
+                CampaignView(
+                    campaign.name,
+                    campaign.id!!,
+                    campaign.isOwnedBy(auth.principal),
+                    campaign.owner.fullName,
+                    if (campaign.isOwnedBy(auth.principal)) campaign.inviteCode else null
+                ), HttpStatus.OK
+            )
         }
     }
 
@@ -95,7 +98,8 @@ class CampaignController(private val service: CampaignService) {
                     it.labels.map { l -> LabelListView(l.name, l.id!!, l.isVisible) },
                     it.isVisible,
                     it.id!!
-                ) },HttpStatus.OK)
+                )
+            }, HttpStatus.OK)
         }
     }
 
@@ -119,8 +123,8 @@ class CampaignController(private val service: CampaignService) {
             ResponseEntity(HttpStatus.FORBIDDEN)
         } else {
             ResponseEntity(map
-                    .map { CampaignMemberView(it.key.fullName, it.key.id!!, it.value) }
-                    .toList(), HttpStatus.OK)
+                .map { CampaignMemberView(it.key.fullName, it.key.id!!, it.value) }
+                .toList(), HttpStatus.OK)
         }
     }
 
@@ -218,7 +222,8 @@ class CampaignController(private val service: CampaignService) {
 @Component
 class CampaignService(private val repository: CampaignRepository, private val labelRepository: LabelRepository) {
 
-    fun getCampaignsForUser(user: User): List<Campaign> = sortCampaigns(repository.findAll().filter { it.isAccessibleBy(user) })
+    fun getCampaignsForUser(user: User): List<Campaign> =
+        sortCampaigns(repository.findAll().filter { it.isAccessibleBy(user) })
 
     fun getCampaign(user: User, id: UUID): Campaign? {
         val campaignQuery = repository.findById(id)
@@ -269,8 +274,9 @@ class CampaignService(private val repository: CampaignRepository, private val la
     fun leaveCampaign(user: User, id: UUID): Boolean {
         val campaignQuery = repository.findById(id)
         if (!campaignQuery.isPresent ||
-                !campaignQuery.get().members.contains(user) ||
-                campaignQuery.get().isOwnedBy(user)) {
+            !campaignQuery.get().members.contains(user) ||
+            campaignQuery.get().isOwnedBy(user)
+        ) {
             return false
         }
         val campaign = campaignQuery.get()
@@ -282,9 +288,10 @@ class CampaignService(private val repository: CampaignRepository, private val la
     fun kickFromCampaign(user: User, campaignId: UUID, userId: UUID): Boolean {
         val campaignQuery = repository.findById(campaignId)
         if (!campaignQuery.isPresent ||
-                campaignQuery.get().members.find { it.id == userId } == null ||
-                campaignQuery.get().owner.id == userId ||
-                !campaignQuery.get().isOwnedBy(user)) {
+            campaignQuery.get().members.find { it.id == userId } == null ||
+            campaignQuery.get().owner.id == userId ||
+            !campaignQuery.get().isOwnedBy(user)
+        ) {
             return false
         }
         val campaign = campaignQuery.get()
@@ -308,7 +315,8 @@ class CampaignService(private val repository: CampaignRepository, private val la
             return null
         }
         val campaign = campaignQuery.get()
-        val characters = campaign.characters.filter { campaign.isOwnedBy(user) || it.isVisible }.map { it.copy (labels = it.labels.filter { l -> l.isVisible || campaign.isOwnedBy(user) }.toMutableList())}
+        val characters = campaign.characters.filter { campaign.isOwnedBy(user) || it.isVisible }
+            .map { it.copy(labels = it.labels.filter { l -> l.isVisible || campaign.isOwnedBy(user) }.toMutableList()) }
         return sortCharacters(characters)
     }
 
@@ -366,7 +374,11 @@ class CampaignService(private val repository: CampaignRepository, private val la
         if (!campaignQuery.isPresent || !campaignQuery.get().members.contains(user)) {
             return false
         }
-        val visibility = try { NoteVisibility.valueOf(rawVisibility) } catch (e: IllegalArgumentException) { return false }
+        val visibility = try {
+            NoteVisibility.valueOf(rawVisibility)
+        } catch (e: IllegalArgumentException) {
+            return false
+        }
         val campaign = campaignQuery.get()
         val newNote = CampaignNote(contents, user, campaign, visibility)
         campaign.notes.add(newNote)

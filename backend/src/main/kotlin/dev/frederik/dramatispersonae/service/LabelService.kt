@@ -1,13 +1,15 @@
 package dev.frederik.dramatispersonae.service
 
 import dev.frederik.dramatispersonae.auth.GoogleAuthentication
-import dev.frederik.dramatispersonae.model.*
-import java.util.*
-import org.springframework.data.repository.CrudRepository
+import dev.frederik.dramatispersonae.model.CharacterRepository
+import dev.frederik.dramatispersonae.model.Label
+import dev.frederik.dramatispersonae.model.LabelRepository
+import dev.frederik.dramatispersonae.model.User
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 data class LabelListView(val name: String, val id: UUID, val visible: Boolean)
 data class LabelView(val name: String, val id: UUID, val visible: Boolean)

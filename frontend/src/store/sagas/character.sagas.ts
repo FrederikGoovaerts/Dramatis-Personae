@@ -1,12 +1,15 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
 
 import * as character from '../../api/character.api';
+import { Character } from '../../types/character.types';
+import { Note } from '../../types/note.types';
+import { Relation } from '../../types/relation.types';
 import { campaignActions, characterActions } from '../actions';
 
 function* fetchCharacter(action: characterActions.specificTypes['fetchCharacter']) {
     yield put(characterActions.actions.setCharacterLoading(true));
     try {
-        const result = yield call(character.get, action.payload);
+        const result: Character = yield call(character.get, action.payload);
         yield put(characterActions.actions.setCharacter(result));
     } catch (e) {
         console.error('Unable to fetch character. Please try again later.');
@@ -25,7 +28,7 @@ function* mergeCharacter(action: characterActions.specificTypes['mergeCharacter'
 function* fetchNotes(action: characterActions.specificTypes['fetchNotes']) {
     yield put(characterActions.actions.setNotesLoading(true));
     try {
-        const result = yield call(character.getNotes, action.payload);
+        const result: Note[] = yield call(character.getNotes, action.payload);
         yield put(characterActions.actions.setNotes(result));
     } catch (e) {
         console.error('Unable to fetch notes. Please try again later.');
@@ -36,7 +39,7 @@ function* fetchNotes(action: characterActions.specificTypes['fetchNotes']) {
 function* fetchSharedNotes(action: characterActions.specificTypes['fetchSharedNotes']) {
     yield put(characterActions.actions.setSharedNotesLoading(true));
     try {
-        const result = yield call(character.getSharedNotes, action.payload);
+        const result: Note[] = yield call(character.getSharedNotes, action.payload);
         yield put(characterActions.actions.setSharedNotes(result));
     } catch (e) {
         console.error('Unable to fetch shared notes. Please try again later.');
@@ -47,7 +50,7 @@ function* fetchSharedNotes(action: characterActions.specificTypes['fetchSharedNo
 function* fetchRelations(action: characterActions.specificTypes['fetchRelations']) {
     yield put(characterActions.actions.setRelationsLoading(true));
     try {
-        const result = yield call(character.getRelations, action.payload);
+        const result: Relation[] = yield call(character.getRelations, action.payload);
         yield put(characterActions.actions.setRelations(result));
     } catch (e) {
         console.error('Unable to fetch relations. Please try again later.');

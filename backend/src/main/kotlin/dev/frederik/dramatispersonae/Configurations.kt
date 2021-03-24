@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration
 class AuthenticationConfig {
     @Value("\${spring.googleAuth.clientId}")
     val clientId: String = ""
+
     @Value("\${spring.googleAuth.clientSecret}")
     val clientSecret: String = ""
 }

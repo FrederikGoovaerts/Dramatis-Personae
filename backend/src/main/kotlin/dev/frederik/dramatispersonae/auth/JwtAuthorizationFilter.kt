@@ -7,14 +7,14 @@ import com.google.api.client.json.jackson2.JacksonFactory
 import dev.frederik.dramatispersonae.AuthenticationConfig
 import dev.frederik.dramatispersonae.model.User
 import dev.frederik.dramatispersonae.model.UserRepository
-import java.security.GeneralSecurityException
-import javax.servlet.FilterChain
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
+import java.security.GeneralSecurityException
+import javax.servlet.FilterChain
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 const val AUTHORIZATION_HEADER_KEY = "Authorization"
 const val TOKEN_PREFIX = "Bearer "
@@ -33,9 +33,9 @@ class JwtAuthorizationFilter(
     private val userRepository: UserRepository
 ) : BasicAuthenticationFilter(authenticationManager) {
     private val jwtVerifier: GoogleIdTokenVerifier = GoogleIdTokenVerifier
-            .Builder(NetHttpTransport(), JacksonFactory())
-            .setAudience(listOf(authenticationConfig.clientId))
-            .build()
+        .Builder(NetHttpTransport(), JacksonFactory())
+        .setAudience(listOf(authenticationConfig.clientId))
+        .build()
 
     override fun doFilterInternal(req: HttpServletRequest, res: HttpServletResponse, chain: FilterChain) {
         val authorizationHeader: String? = req.getHeader(AUTHORIZATION_HEADER_KEY)
