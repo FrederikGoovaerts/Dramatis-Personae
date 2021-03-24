@@ -1,5 +1,6 @@
 const DotEnv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ProvidePlugin = require('webpack').ProvidePlugin;
 
 const config = {
     entry: './src/index.tsx',
@@ -48,7 +49,10 @@ module.exports = (env, argv) => {
             historyApiFallback: true,
             port: 8081
         };
+        config.plugins.push(new ProvidePlugin({ confEnv: `${__dirname}/src/config/env.dev.ts` }));
         config.plugins.push(new DotEnv());
+    } else {
+        config.plugins.push(new ProvidePlugin({ confEnv: `${__dirname}/src/config/env.prod.ts` }));
     }
 
     return config;

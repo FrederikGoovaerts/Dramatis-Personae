@@ -1,12 +1,12 @@
 export const oauth = {
-    AUTH_NOT_REQUIRED: (process.env.AUTH_NOT_REQUIRED ?? 'AUTH_NOT_REQUIRED_PLACEHOLDER') === 'true',
-    CLIENT_ID: process.env.OAUTH_CLIENT_ID ?? 'OAUTH_CLIENT_ID_PLACEHOLDER',
-    REDIRECT_URI: process.env.OAUTH_REDIRECT_URI ?? 'OAUTH_REDIRECT_URI_PLACEHOLDER'
+    AUTH_NOT_REQUIRED: confEnv.ENV_AUTH_NOT_REQUIRED,
+    CLIENT_ID: confEnv.ENV_CLIENT_ID,
+    REDIRECT_URI: confEnv.ENV_REDIRECT_URI
 };
 
 export const api = {
-    API_HOST: process.env.API_HOST ?? 'API_HOST_PLACEHOLDER',
-    API_PROTOCOL: process.env.API_PROTOCOL ?? 'API_PROTOCOL_PLACEHOLDER',
+    API_HOST: confEnv.ENV_API_HOST,
+    API_PROTOCOL: confEnv.ENV_API_PROTOCOL,
     AUTH: {
         PATH: '/auth',
         SUBPATH_CODE: '/code',
