@@ -34,4 +34,4 @@ The Client ID should match the one used in the API backend contacted by the fron
 
 ### Disabling authentication
 
-While developing, when the backend is running in `dev` mode, set the `AUTH_NOT_REQUIRED` environment variable to the value `"true"` to disable all authentication logic. This makes local development a lot easier.
+While developing, when the backend is running in `dev` mode, set the `AUTH_NOT_REQUIRED` environment variable to the value `"true"` to disable all authentication logic. This makes local development a lot easier. This variable does not work when running the production bundle.

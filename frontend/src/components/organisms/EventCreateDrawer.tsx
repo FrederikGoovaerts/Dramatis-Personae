@@ -6,12 +6,12 @@ interface Props {
     onCreate: (name: string, description: string) => void;
 }
 
-export const CharacterCreateDrawer = (props: Props) => (
+export const EventCreateDrawer = (props: Props) => (
     <CreateDrawer
         onCreate={props.onCreate}
-        entity="Character"
-        nameString="Name"
-        namePlaceholder="Character name"
-        textarea={false}
+        entity="Event"
+        nameString="Title"
+        namePlaceholder="Event title"
+        textarea={true}
     />
 );

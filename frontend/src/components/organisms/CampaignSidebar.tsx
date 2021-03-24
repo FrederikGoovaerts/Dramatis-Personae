@@ -48,7 +48,7 @@ export const CampaignSidebar = (props: Props) => {
                 {[
                     { title: 'Characters', route: campaignCharactersRoute(props.id) },
                     { title: 'Locations', route: campaignLocationsRoute(props.id), disabled: true },
-                    { title: 'Events', route: campaignEventsRoute(props.id), disabled: true },
+                    { title: 'Events', route: campaignEventsRoute(props.id) },
                     { title: 'Notes', route: campaignNotesRoute(props.id) },
                     { title: 'Labels', route: campaignLabelsRoute(props.id) }
                 ].map(renderLink)}

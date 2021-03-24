@@ -2,20 +2,26 @@ package dev.frederik.dramatispersonae.service
 
 import dev.frederik.dramatispersonae.auth.GoogleAuthentication
 import dev.frederik.dramatispersonae.model.*
-import java.util.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
+import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 
 data class CreateEventDto(val campaignId: UUID, val name: String, val description: String)
 data class UpdateEventDto(val name: String, val description: String)
 
+data class EventCharacterView(
+    val name: String,
+    val id: UUID
+)
+
 data class EventView(
     val name: String,
     val description: String,
     val ordinal: Int,
+    val characters: List<EventCharacterView>,
     val id: UUID
 )
 
@@ -27,11 +33,17 @@ class EventController(private val service: EventService) {
     fun getEvents(
         auth: GoogleAuthentication,
         @PathVariable id: UUID
-    ): ResponseEntity<List<EventView>> {
+    ): ResponseEntity<List<EventView>?> {
         val result = service.getEvents(auth.principal, id)
 
         return ResponseEntity(result?.map {
-            EventView(it.name, it.description, it.ordinal, it.id!!)
+            EventView(
+                it.name,
+                it.description,
+                it.ordinal,
+                it.characters.map { c -> EventCharacterView(c.name, c.id!!) },
+                it.id!!
+            )
         }, if (result == null) HttpStatus.FORBIDDEN else HttpStatus.OK)
     }
 
@@ -54,6 +66,36 @@ class EventController(private val service: EventService) {
         return ResponseEntity(HttpStatus.OK)
     }
 
+    @PutMapping("/{id}/ordinal")
+    fun updateOrdinal(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID,
+        @RequestBody ord: Int
+    ): ResponseEntity<Unit> {
+        service.moveEvent(auth.principal, id, ord)
+        return ResponseEntity(HttpStatus.OK)
+    }
+
+    @PostMapping("/{id}/characters")
+    fun addEventCharacter(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID,
+        @RequestBody characterId: UUID
+    ): ResponseEntity<Unit> {
+        val success = this.service.addEventCharacter(auth.principal, id, characterId)
+        return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
+    }
+
+    @DeleteMapping("/{id}/characters")
+    fun removeEventCharacter(
+        auth: GoogleAuthentication,
+        @PathVariable id: UUID,
+        @RequestBody characterId: UUID
+    ): ResponseEntity<Unit> {
+        val success = this.service.removeEventCharacter(auth.principal, id, characterId)
+        return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
+    }
+
     @DeleteMapping("/{id}")
     fun deleteEvent(auth: GoogleAuthentication, @PathVariable id: UUID): ResponseEntity<Unit> {
         val success = this.service.deleteEvent(auth.principal, id)
@@ -62,40 +104,71 @@ class EventController(private val service: EventService) {
 }
 
 @Component
-class EventService(private val repository: EventRepository,
-                   private val campaignRepository: CampaignRepository,
-                   private val characterRepository: CharacterRepository) {
+class EventService(
+    private val repository: EventRepository,
+    private val campaignRepository: CampaignRepository,
+    private val characterRepository: CharacterRepository
+) {
 
-    // TODO: Currently different campaigns impact one another with this
-    private val eventListWriteMutex = ReentrantLock()
+    private val listWriteMutexMap = mutableMapOf<UUID, ReentrantLock>()
+
+    @Synchronized
+    private fun getLock(campaignId: UUID): ReentrantLock {
+        if (!listWriteMutexMap.containsKey(campaignId)) {
+            listWriteMutexMap[campaignId] = ReentrantLock()
+        }
+        return listWriteMutexMap[campaignId]!!
+    }
 
     fun createEvent(user: User, campaignId: UUID, name: String, description: String): Boolean {
+        val lock = getLock(campaignId)
         val campaignQuery = campaignRepository.findById(campaignId)
         if (!campaignQuery.isPresent || !campaignQuery.get().isAccessibleBy(user)) {
             return false
         }
         val campaign = campaignQuery.get()
-        eventListWriteMutex.lock()
+        lock.lock()
         val nextOrdinal = repository.findTopByCampaignOrderByOrdinalDesc(campaign).map { it.ordinal + 1 }.orElse(0)
         val event = Event(name, nextOrdinal, description, campaign)
         repository.save(event)
         campaign.events.add(event)
         campaignRepository.save(campaign)
-        eventListWriteMutex.unlock()
+        lock.unlock()
         return true
     }
 
-    fun updateEvent(user: User, id: UUID, name: String, description: String): Boolean {
-        val eventQuery = repository.findById(id)
+    fun updateEvent(user: User, eventId: UUID, name: String, description: String): Boolean {
+        val eventQuery = repository.findById(eventId)
         if (!eventQuery.isPresent || !eventQuery.get().campaign.isAccessibleBy(user)) {
             return false
         }
-        eventListWriteMutex.lock()
         val event = eventQuery.get()
         event.name = name
         event.description = description
         repository.save(event)
-        eventListWriteMutex.unlock()
+        return true
+    }
+
+    fun moveEvent(user: User, eventId: UUID, newPos: Int): Boolean {
+        val eventQuery = repository.findById(eventId)
+        if (!eventQuery.isPresent || !eventQuery.get().campaign.isAccessibleBy(user)) {
+            return false
+        }
+        val event = eventQuery.get()
+        val oldPos = event.ordinal
+        val events = repository.findAllByCampaignOrderByOrdinalAsc(event.campaign)
+        for (e in events) {
+            if (e.id === eventId) {
+                e.ordinal = newPos
+            } else if (e.ordinal in oldPos.coerceAtMost(newPos)..oldPos.coerceAtLeast(newPos)) {
+                if (newPos > oldPos) {
+                    e.ordinal--
+                } else {
+                    e.ordinal++
+                }
+            }
+        }
+        repository.saveAll(events)
         return true
     }
 
@@ -108,12 +181,43 @@ class EventService(private val repository: EventRepository,
         return true
     }
 
+    fun addEventCharacter(user: User, id: UUID, characterId: UUID): Boolean {
+        val eventQuery = repository.findById(id)
+        if (!eventQuery.isPresent || !eventQuery.get().campaign.isAccessibleBy(user)) {
+            return false
+        }
+        val event = eventQuery.get()
+        val characterQuery = characterRepository.findById(characterId)
+        if (!characterQuery.isPresent || characterQuery.get().campaign != event.campaign) {
+            return false
+        }
+        val character = characterQuery.get()
+        event.characters.add(character)
+        repository.save(event)
+        return true
+    }
+
+    fun removeEventCharacter(user: User, id: UUID, characterId: UUID): Boolean {
+        val eventQuery = repository.findById(id)
+        if (!eventQuery.isPresent || !eventQuery.get().campaign.isAccessibleBy(user)) {
+            return false
+        }
+        val event = eventQuery.get()
+        val character = event.characters.find { it.id == characterId }
+        if (character === null) {
+            return false
+        }
+        event.characters.remove(character)
+        repository.save(event)
+        return true
+    }
+
     fun getEvents(user: User, campaignId: UUID): List<Event>? {
         val campaignQuery = campaignRepository.findById(campaignId)
         if (!campaignQuery.isPresent || !campaignQuery.get().isAccessibleBy(user)) {
             return null
         }
         val campaign = campaignQuery.get()
-        return repository.findAllByCampaignOrderByOrdinalAsc(campaign)
+        return repository.findAllByCampaignOrderByOrdinalDesc(campaign)
     }
 }

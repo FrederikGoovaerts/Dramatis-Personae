@@ -4,11 +4,11 @@ import dev.frederik.dramatispersonae.auth.GoogleAuthentication
 import dev.frederik.dramatispersonae.model.*
 import dev.frederik.dramatispersonae.model.note.CharacterNote
 import dev.frederik.dramatispersonae.model.note.NoteVisibility
-import java.util.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 data class CreateCharacterDto(val name: String, val description: String, val visible: Boolean)
 
@@ -21,6 +21,7 @@ data class CharacterListView(
     val visible: Boolean,
     val id: UUID
 )
+
 data class CharacterDetailView(
     val name: String,
     val description: String,
@@ -42,12 +43,14 @@ class CharacterController(private val service: CharacterService) {
             ResponseEntity(HttpStatus.FORBIDDEN)
         } else {
             ResponseEntity(
-                    CharacterDetailView(character.name,
-                                        character.description,
-                                        character.labels.map { LabelView(it.name, it.id!!, it.isVisible) },
-                                        character.isVisible,
-                                        character.id!!),
-                    HttpStatus.OK
+                CharacterDetailView(
+                    character.name,
+                    character.description,
+                    character.labels.map { LabelView(it.name, it.id!!, it.isVisible) },
+                    character.isVisible,
+                    character.id!!
+                ),
+                HttpStatus.OK
             )
         }
     }
@@ -58,7 +61,8 @@ class CharacterController(private val service: CharacterService) {
         @PathVariable id: UUID,
         @RequestBody character: CreateCharacterDto
     ): ResponseEntity<Unit> {
-        val success = this.service.updateCharacter(auth.principal, id, character.name, character.description, character.visible)
+        val success =
+            this.service.updateCharacter(auth.principal, id, character.name, character.description, character.visible)
         return ResponseEntity(if (success) HttpStatus.OK else HttpStatus.FORBIDDEN)
     }
 
@@ -128,9 +132,11 @@ class CharacterController(private val service: CharacterService) {
 }
 
 @Component
-class CharacterService(private val repository: CharacterRepository,
-                       private val labelRepository: LabelRepository,
-                       private val relationRepository: CharacterRelationRepository) {
+class CharacterService(
+    private val repository: CharacterRepository,
+    private val labelRepository: LabelRepository,
+    private val relationRepository: CharacterRelationRepository
+) {
 
     fun getCharacter(user: User, id: UUID): Character? {
         val characterQuery = this.repository.findById(id)
@@ -138,7 +144,9 @@ class CharacterService(private val repository: CharacterRepository,
             null
         } else {
             val filteredCharacter = characterQuery.get()
-            filteredCharacter.labels = filteredCharacter.labels.filter { it.isVisible || filteredCharacter.campaign.isOwnedBy(user) }.toMutableList()
+            filteredCharacter.labels =
+                filteredCharacter.labels.filter { it.isVisible || filteredCharacter.campaign.isOwnedBy(user) }
+                    .toMutableList()
             return filteredCharacter
         }
     }
@@ -255,7 +263,11 @@ class CharacterService(private val repository: CharacterRepository,
         if (!characterQuery.isPresent || !characterQuery.get().campaign.members.contains(user)) {
             return false
         }
-        val visibility = try { NoteVisibility.valueOf(rawVisibility) } catch (e: IllegalArgumentException) { return false }
+        val visibility = try {
+            NoteVisibility.valueOf(rawVisibility)
+        } catch (e: IllegalArgumentException) {
+            return false
+        }
         val character = characterQuery.get()
         val newNote = CharacterNote(contents, user, character, visibility)
         character.notes.add(newNote)

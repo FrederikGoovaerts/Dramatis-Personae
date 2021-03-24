@@ -1,5 +1,3 @@
-import { decode } from 'jsonwebtoken';
-import moment from 'moment';
 import { parse } from 'query-string';
 import { put, takeEvery } from 'redux-saga/effects';
 
@@ -61,33 +59,19 @@ function* initializeApplication() {
         }
     }
 
-    let idToken = localStorage.getItem(storage.idToken);
-    if (idToken) {
-        const decoded = decode(idToken);
-        if (decoded && typeof decoded === 'object' && decoded.exp) {
-            let idTokenValid = false;
-            if (moment.unix(decoded.exp).diff(moment()) > 0) {
-                idTokenValid = true;
-            } else {
-                const refreshToken = localStorage.getItem(storage.refreshToken);
-                if (refreshToken) {
-                    const tokens: TokenResponse = yield refresh(refreshToken);
-                    if (tokens.idToken && tokens.refreshToken) {
-                        localStorage.setItem(storage.idToken, tokens.idToken);
-                        localStorage.setItem(storage.refreshToken, tokens.refreshToken);
-                        idToken = tokens.idToken;
-                        idTokenValid = true;
-                    }
-                }
-            }
-            if (idTokenValid) {
-                setAxiosAuthToken(idToken);
-                yield put(applicationActions.actions.setAuthorized(true));
-                yield put(applicationActions.actions.setInitialized(true));
-                return;
-            }
+    const refreshToken = localStorage.getItem(storage.refreshToken);
+    if (refreshToken) {
+        const tokens: TokenResponse = yield refresh(refreshToken);
+        if (tokens.idToken && tokens.refreshToken) {
+            localStorage.setItem(storage.idToken, tokens.idToken);
+            localStorage.setItem(storage.refreshToken, tokens.refreshToken);
+            setAxiosAuthToken(tokens.idToken);
+            yield put(applicationActions.actions.setAuthorized(true));
+            yield put(applicationActions.actions.setInitialized(true));
+            return;
         }
     }
+
     // Fall through in case no valid token is present
     localStorage.removeItem(storage.idToken);
     localStorage.setItem(storage.preRedirectPath, window.location.pathname);

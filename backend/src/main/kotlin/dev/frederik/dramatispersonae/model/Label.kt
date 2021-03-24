@@ -1,8 +1,8 @@
 package dev.frederik.dramatispersonae.model
 
+import org.springframework.data.repository.CrudRepository
 import java.util.*
 import javax.persistence.*
-import org.springframework.data.repository.CrudRepository
 
 @Entity
 data class Label(

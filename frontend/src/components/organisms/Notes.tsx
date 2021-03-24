@@ -62,7 +62,15 @@ export const Notes = (props: Props) => {
                     <NotesCreateDrawer onCreate={props.onCreate} />
                 </Box>
             </Flex>
-            <Box marginBottom="2em">{props.notes.map(renderNote)}</Box>
+            <Box marginBottom="2em">
+                {props.notes.length === 0 ? (
+                    <Flex justify="center" pt={6}>
+                        <Text fontSize="xl">No notes found.</Text>
+                    </Flex>
+                ) : (
+                    props.notes.map(renderNote)
+                )}
+            </Box>
             {props.sharedNotes.length > 0 && (
                 <Box marginBottom="1em">
                     <Heading size="lg">Notes by others</Heading>

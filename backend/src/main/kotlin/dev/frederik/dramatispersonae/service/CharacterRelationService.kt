@@ -2,16 +2,21 @@ package dev.frederik.dramatispersonae.service
 
 import dev.frederik.dramatispersonae.auth.GoogleAuthentication
 import dev.frederik.dramatispersonae.model.*
-import java.util.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 data class CharacterRelationDto(val origin: UUID, val destination: UUID, val relation: String)
 
 data class CharacterRelationCharacterView(val id: UUID, val name: String)
-data class CharacterRelationView(val origin: CharacterRelationCharacterView, val destination: CharacterRelationCharacterView, val relation: String, val id: UUID)
+data class CharacterRelationView(
+    val origin: CharacterRelationCharacterView,
+    val destination: CharacterRelationCharacterView,
+    val relation: String,
+    val id: UUID
+)
 
 @RestController
 @RequestMapping("/api/charrelation")
@@ -29,12 +34,13 @@ class CharacterRelationController(private val service: CharacterRelationService)
         return if (result == null) {
             ResponseEntity(HttpStatus.FORBIDDEN)
         } else {
-            ResponseEntity(result.map {
-                rel -> CharacterRelationView(
+            ResponseEntity(result.map { rel ->
+                CharacterRelationView(
                     CharacterRelationCharacterView(rel.origin.id!!, rel.origin.name),
                     CharacterRelationCharacterView(rel.destination.id!!, rel.destination.name),
                     rel.relation,
-                    rel.id!!)
+                    rel.id!!
+                )
             }, HttpStatus.OK)
         }
     }
@@ -47,8 +53,10 @@ class CharacterRelationController(private val service: CharacterRelationService)
 }
 
 @Component
-class CharacterRelationService(private val repository: CharacterRelationRepository,
-                               private val characterRepository: CharacterRepository) {
+class CharacterRelationService(
+    private val repository: CharacterRelationRepository,
+    private val characterRepository: CharacterRepository
+) {
 
     private fun editAllowed(user: User, char1: Character, char2: Character): Boolean {
         if (char1.campaign != char2.campaign) {
@@ -91,7 +99,7 @@ class CharacterRelationService(private val repository: CharacterRelationReposito
         }
         val char = charQuery.get()
         val filter: (CharacterRelation) -> Boolean =
-                if (char.campaign.isOwnedBy(user)) { _: CharacterRelation -> true } else { rel -> rel.origin.isVisible && rel.destination.isVisible }
+            if (char.campaign.isOwnedBy(user)) { _: CharacterRelation -> true } else { rel -> rel.origin.isVisible && rel.destination.isVisible }
         val result = mutableListOf<CharacterRelation>()
         result.addAll(this.repository.findByOrigin(char).filter(filter))
         result.addAll(this.repository.findByDestination(char).filter(filter))
