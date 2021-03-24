@@ -1,5 +1,5 @@
 # Build container
-FROM node:8.8.1 as builder
+FROM node:14 as builder
 COPY . /app
 WORKDIR /app
 
